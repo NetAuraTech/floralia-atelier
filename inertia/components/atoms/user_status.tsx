@@ -21,7 +21,7 @@ interface UserStatusProps {
  *
  * - `VERIFIED` — success colors (green tones).
  * - `UNVERIFIED` — danger colors (red tones).
- * - `PENDING_INVITE` — accent colors (invitation not yet accepted).
+ * - `PENDING_INVITE` — secondary colors (invitation not yet accepted).
  *
  * The label text is pulled from the `admin` i18n namespace
  * (`users.status.*`) so it adapts to the current locale automatically.
@@ -45,7 +45,7 @@ export function UserStatus(props: UserStatusProps) {
       </span>
     ),
     PENDING_INVITE: (
-      <span className="px-4 py-1 border rounded text-accent border-accent bg-accent-light/20">
+      <span className="px-4 py-1 border rounded text-secondary border-secondary bg-secondary-light/20">
         {t('users.status.pending_invite')}
       </span>
     ),

@@ -111,6 +111,21 @@
         },
         "help": "Jusqu'à 10 révisions sont conservées automatiquement. Les révisions épinglées ne sont jamais supprimées."
       },
+      "homepage": {
+        "confirm": "Souhaitez-vous définir cette page comme page d'accueil ? La page d'accueil actuelle sera supprimée.",
+        "help": {
+          "title": {
+            "not_set": "Non définie comme page d'accueil",
+            "set": "Page d'accueil actuelle"
+          },
+          "message": {
+            "not_set": "En définissant cette page comme page d'accueil, elle devient accessible à l'adresse / (URL racine).",
+            "set": "Cette page est accessible à l'adresse / (URL racine)."
+          }
+        },
+        "submit": "Définir comme page d'accueil",
+        "value": "Page d'accueil"
+      },
       "last_update": "Dernière mise à jour",
       "default": "Par défaut"
     },

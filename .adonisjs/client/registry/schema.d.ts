@@ -12,8 +12,8 @@ export interface Registry {
     pattern: '/uploads/*'
     types: {
       body: {}
-      paramsTuple: []
-      params: {}
+      paramsTuple: [ParamValue]
+      params: { '*': ParamValue[] }
       query: {}
       response: unknown
       errorResponse: unknown
@@ -57,7 +57,7 @@ export interface Registry {
   }
   'home': {
     methods: ["GET","HEAD"]
-    pattern: '/'
+    pattern: '/home'
     types: {
       body: {}
       paramsTuple: []
@@ -583,6 +583,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_update_controller').default['unpublish']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'admin.pages.set_homepage': {
+    methods: ["POST"]
+    pattern: '/admin/pages/:id/homepage'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/cms/pages_controller').default['setHomepage']>>>
+    }
+  }
   'admin.pages.destroy': {
     methods: ["DELETE"]
     pattern: '/admin/pages/:id'
@@ -935,12 +947,24 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/contact'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/contact').contactValidator)>>
+      body: {}
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/contact').contactValidator)>>
+      query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
+    }
+  }
+  'page.home': {
+    methods: ["GET","HEAD"]
+    pattern: '/'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['home']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/page_controller').default['home']>>>
     }
   }
   'page.localised.render': {

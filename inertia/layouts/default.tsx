@@ -1,9 +1,10 @@
-import { ReactElement, useEffect } from 'react'
+import {ReactElement, useEffect, useRef, useState} from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
-import { usePage } from '@inertiajs/react'
+import {Head, usePage} from '@inertiajs/react'
 import type { SharedProps } from '@adonisjs/inertia/types'
+import {SiteIntro} from "~/components/molecules/site_intro";
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -53,12 +54,24 @@ export default function Layout(props: LayoutProps) {
     toast.info(children.props.flash.info)
   }
 
+  const siteRef = useRef<HTMLDivElement | null>(null)
+
+  const [showIntro, setShowIntro] = useState(false)
+
   return (
-    <div id="page-wrapper">
-      <Header />
-      <Toaster position="top-right" richColors />
-      {children}
-      <Footer />
-    </div>
+    <>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap"
+          rel="stylesheet"/>
+      </Head>
+      {showIntro && <SiteIntro site={siteRef} />}
+      <div ref={siteRef} id={showIntro ? 'site' : ''}>
+        <Header/>
+        <Toaster position="top-right" richColors/>
+        {children}
+        <Footer/>
+      </div>
+    </>
   )
 }

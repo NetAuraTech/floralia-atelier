@@ -93,7 +93,7 @@ export default function TemplatesIndexPage(props: PageProps) {
                       className={`shrink-0 px-3 py-1 rounded-full border font-medium ${
                         template.type === 'page'
                           ? 'bg-primary-light text-primary-deep border-primary-deep'
-                          : 'bg-accent-light text-accent-deep border-accent-deep'
+                          : 'bg-secondary-light text-secondary-deep border-secondary-deep'
                       }`}
                     >
                       {template.type === 'block' && template.blockType

@@ -21,8 +21,8 @@ const statusesClass = {
     dot: 'bg-success',
   },
   draft: {
-    badge: 'text-accent border-accent bg-accent-light/20',
-    dot: 'bg-accent-light',
+    badge: 'text-secondary border-secondary bg-secondary-light/20',
+    dot: 'bg-secondary-light',
   },
   archived: {
     badge: 'text-warning border-warning bg-warning-soft',
@@ -209,16 +209,68 @@ export default function PagesShowPage(props: Props) {
                   <span className="text-ink">
                     {translation.locale.toUpperCase()} — {translation.title}
                   </span>
-                  <span className="text-ink-muted group-hover:text-primary-mid transition-colors">
+                  <span className="text-ink-muted group-hover:text-primary transition-colors">
                     {t('pages.show.revision.view')} →
                   </span>
                 </Link>
               ))}
             </div>
+            <HomepageSection page={page} />
           </div>
         </Card>
       </AdminMain>
     </>
+  )
+}
+
+function HomepageSection({ page }: { page: Data.Page }) {
+  const { t } = useTranslation('admin')
+  function handleSetHomepage() {
+    if (page.isHomepage) return
+    if (!confirm('Set this page as the homepage? The current homepage will be unset.')) return
+
+  }
+
+  return (
+    <div className="grid gap-3">
+      <Heading level={3}>
+        {t('pages.show.homepage.value')}
+      </Heading>
+      <div className="rounded-xl border border-edge bg-canvas px-4 py-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-ink flex items-center gap-2">
+            {page.isHomepage && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-success bg-success-soft px-2 py-0.5 rounded-full border border-success/20">
+                ✓ {t('pages.show.homepage.help.title.set')}
+              </span>
+            )}
+            {!page.isHomepage && t('pages.show.homepage.help.title.not_set')}
+          </p>
+          <p className="text-xs text-ink-muted mt-0.5">
+            {page.isHomepage
+              ? t('pages.show.homepage.help.message.set')
+              : t('pages.show.homepage.help.message.not_set')}
+          </p>
+        </div>
+        {!page.isHomepage && (
+          <Form
+            onBefore={() => {
+              return window.confirm(t('pages.show.homepage.confirm'))
+            }}
+            route="admin.pages.set_homepage"
+            routeParams={{ id: page.id }}
+          >
+            <Button
+              variant="secondary"
+              onClick={handleSetHomepage}
+              fitContent
+            >
+              {t('pages.show.homepage.submit')}
+            </Button>
+          </Form>
+        )}
+      </div>
+    </div>
   )
 }
 

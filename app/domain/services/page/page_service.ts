@@ -334,4 +334,31 @@ export class PageService {
   async toggleRevisionKeep(revisionId: number) {
     return this.revisionRepository.toggleKeep(revisionId)
   }
+
+  /**
+   * Returns the current homepage page, or null.
+   */
+  async findHomepage(): Promise<Page | null> {
+    return this.pageRepository.findHomepage()
+  }
+
+  /**
+   * Sets the given page as the global homepage.
+   * Logs a business event for auditability.
+   */
+  async setHomepage(pageId: number, userId: number): Promise<void> {
+    await this.pageRepository.setHomepage(pageId)
+    this.logService.logBusiness('page.homepage.set', { pageId, userId })
+  }
+
+  async getAvailablePagesForLink() {
+    const pages = await this.pageRepository.listForLinks()
+
+    return pages.map(page => ({
+      id: page.id,
+      label: page.translations[0]?.title,
+      default_locale: page.defaultLocale,
+      locales: page.translations.map(t => ({ locale: t.locale, slug: t.slug }))
+    }))
+  }
 }

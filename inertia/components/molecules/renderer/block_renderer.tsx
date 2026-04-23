@@ -1,13 +1,16 @@
 import type { ResolvedBlock } from '#types/page'
 import SectionBlock from '~/components/atoms/blocks/section_block'
-import HeroBlock from '~/components/atoms/blocks/hero_block'
 import TitleBlock from '~/components/atoms/blocks/title_block'
-import RichTextBlock from '~/components/atoms/blocks/rich_text_block'
 import ImageBlock from '~/components/atoms/blocks/image_block'
 import GridBlock from '~/components/atoms/blocks/grid_block'
-import ButtonCtaBlock from '~/components/atoms/blocks/button_cta_block'
+import ButtonBlock from '~/components/atoms/blocks/button_block'
 import SeparatorBlock from '~/components/atoms/blocks/separator_block'
-import ContactFormBlock from '~/components/atoms/blocks/contact_form_block'
+import FlexBlock from "~/components/atoms/blocks/flex_block";
+import ParagraphBlock from "~/components/atoms/blocks/paragraph_block";
+import IconBlock from "~/components/atoms/blocks/icon_block";
+import FormBlock from "~/components/atoms/blocks/form_block";
+import FieldBlock from "~/components/atoms/blocks/field_block";
+import HtmlTextBlock from "~/components/atoms/blocks/html_text_block";
 
 interface BlockRendererProps {
   block: ResolvedBlock
@@ -31,19 +34,6 @@ export default function BlockRenderer({ block, pageId, locale }: BlockRendererPr
           ))}
         </SectionBlock>
       )
-
-    case 'hero':
-      return <HeroBlock block={block as ResolvedBlock<'hero'>} />
-
-    case 'title':
-      return <TitleBlock block={block as ResolvedBlock<'title'>} />
-
-    case 'rich_text':
-      return <RichTextBlock block={block as ResolvedBlock<'rich_text'>} />
-
-    case 'image':
-      return <ImageBlock block={block as ResolvedBlock<'image'>} />
-
     case 'grid':
       return (
         <GridBlock block={block as ResolvedBlock<'grid'>}>
@@ -52,22 +42,34 @@ export default function BlockRenderer({ block, pageId, locale }: BlockRendererPr
           ))}
         </GridBlock>
       )
-
-    case 'button_cta':
-      return <ButtonCtaBlock block={block as ResolvedBlock<'button_cta'>} />
-
+    case 'flex':
+      return (<FlexBlock block={block as ResolvedBlock<'flex'>}>
+        {block.children?.map((child) => (
+          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+        ))}
+      </FlexBlock>)
+    case 'title':
+      return <TitleBlock block={block as ResolvedBlock<'title'>} />
+    case 'paragraph':
+      return <ParagraphBlock block={block as ResolvedBlock<'paragraph'>} />
+    case 'button':
+      return <ButtonBlock block={block as ResolvedBlock<'button'>} />
     case 'separator':
       return <SeparatorBlock block={block as ResolvedBlock<'separator'>} />
-
-    case 'contact_form':
-      return (
-        <ContactFormBlock
-          block={block as ResolvedBlock<'contact_form'>}
-          pageId={pageId}
-          locale={locale}
-        />
-      )
-
+    case 'icon':
+      return <IconBlock block={block as ResolvedBlock<'icon'>} />
+    case 'form':
+      return <FormBlock block={block as ResolvedBlock<'form'>}>
+        {block.children?.map((child) => (
+          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+        ))}
+      </FormBlock>
+    case 'field':
+      return <FieldBlock block={block as ResolvedBlock<'field'>} />
+    case 'htmltext':
+      return <HtmlTextBlock block={block as ResolvedBlock<'htmltext'>} />
+    case 'image':
+      return <ImageBlock block={block as ResolvedBlock<'image'>} />
     default:
       if (process.env.NODE_ENV === 'development') {
         console.warn(`[BlockRenderer] Unknown block type: ${(block as any).type}`)

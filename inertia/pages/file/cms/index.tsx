@@ -60,7 +60,7 @@ export default function FilesIndexPage(props: Props) {
             </Button>
           </CanAccess>
           <CanAccess permission="users.create">
-            <Button route="admin.file_folders.render" variant="accent" fitContent>
+            <Button route="admin.file_folders.render" variant="secondary" fitContent>
               <Icon name="Folders" />
               {t('files.list.action.folders')}
             </Button>

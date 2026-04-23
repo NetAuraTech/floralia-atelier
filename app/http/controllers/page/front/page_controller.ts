@@ -13,6 +13,48 @@ export default class PageController {
   ) {}
 
   /**
+   * Renders the homepage — the page flagged as `is_homepage = true`.
+   * Called by `GET /`.
+   */
+  async home(ctx: HttpContext) {
+    const { inertia, request, response } = ctx
+
+    const locale = request.input('locale', ctx.i18n?.locale ?? 'en')
+
+    const page = await this.pageService.findHomepage()
+
+    if (!page) {
+      return response.notFound()
+    }
+
+    const translation = page.translationFor(locale) ?? page.translationFor(page.defaultLocale)
+
+    if (!translation || translation.status !== 'published') {
+      return response.notFound()
+    }
+
+    const resolvedContent = await this.resolverService.resolve(
+      translation.content,
+      translation.locale
+    )
+
+    let metaImageUrl: string | null = null
+    if (page.metaImage) {
+      metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
+    }
+
+    return inertia.render('page/front/show', {
+      id: page.id,
+      locale,
+      title: translation.title,
+      metaTitle: translation.metaTitle,
+      metaDescription: translation.metaDescription,
+      metaImage: metaImageUrl,
+      content: resolvedContent,
+    })
+  }
+
+  /**
    * Renders a published page by its slug.
    * The locale is resolved from the URL param, then the request locale,
    * then the page's default locale — in that priority order.

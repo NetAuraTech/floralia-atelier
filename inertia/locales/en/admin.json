@@ -111,6 +111,21 @@
         },
         "help": "Up to 10 revisions are kept automatically. Pinned revisions are never deleted."
       },
+      "homepage": {
+        "confirm": "Set this page as the homepage? The current homepage will be unset.",
+        "help": {
+          "title": {
+            "not_set": "Not set as homepage",
+            "set": "Current homepage"
+          },
+          "message": {
+            "not_set": "Setting this page as homepage makes it accessible at / (root URL).",
+            "set": "This page is served at / (root URL)."
+          }
+        },
+        "submit": "Set as homepage",
+        "value": "Homepage"
+      },
       "last_update": "Last updated",
       "default": "Default"
     },

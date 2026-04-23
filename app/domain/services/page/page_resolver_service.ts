@@ -2,11 +2,10 @@ import { inject } from '@adonisjs/core'
 import { FileRepository } from '#repositories/file/file_repository'
 import { StorageService } from '#services/file/storage_service'
 import type CmsFile from '#models/file/file'
-import type { Block, PageContent, BlockType, HeroProps, ImageProps } from '#types/page'
+import type { Block, PageContent, BlockType, ImageProps } from '#types/page'
 import type {
   ResolvedBlock,
   ResolvedPageContent,
-  ResolvedHeroProps,
   ResolvedImageProps,
 } from '#types/page'
 import type { FileRef, ResolvedFile } from '#types/file'
@@ -50,11 +49,6 @@ export class PageResolverService {
     const ids = new Set<number>()
 
     const visit = (block: Block) => {
-      if (block.type === 'hero') {
-        const props = block.props as HeroProps
-        if (props.image?.fileId) ids.add(props.image.fileId)
-      }
-
       if (block.type === 'image') {
         const props = block.props as ImageProps
         if (props.file?.fileId) ids.add(props.file.fileId)
@@ -123,14 +117,6 @@ export class PageResolverService {
     fileMap: Map<number, CmsFile>
   ): Promise<ResolvedBlock['props']> {
     switch (block.type as BlockType) {
-      case 'hero': {
-        const props = block.props as HeroProps
-        return {
-          ...props,
-          image: props.image ? await this.resolveFileRef(props.image, locale, fileMap) : null,
-        } satisfies ResolvedHeroProps
-      }
-
       case 'image': {
         const props = block.props as ImageProps
         return {

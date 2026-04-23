@@ -85,6 +85,7 @@ export interface ApiDefinition {
     }
     pages: {
       render: typeof routes['admin.pages.render']
+      setHomepage: typeof routes['admin.pages.set_homepage']
       destroy: typeof routes['admin.pages.destroy']
     }
     pagesCreate: {
@@ -157,6 +158,7 @@ export interface ApiDefinition {
     execute: typeof routes['contact.execute']
   }
   page: {
+    home: typeof routes['page.home']
     localised: {
       render: typeof routes['page.localised.render']
     }

@@ -52,6 +52,7 @@ export type ScannedRoutes = {
     'admin.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.page_revisions.index': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue} }
@@ -82,6 +83,7 @@ export type ScannedRoutes = {
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'contact.execute': { paramsTuple?: []; params?: {} }
+    'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
@@ -121,6 +123,7 @@ export type ScannedRoutes = {
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
@@ -160,6 +163,7 @@ export type ScannedRoutes = {
     'api.admin.pages_preview.token': { paramsTuple?: []; params?: {} }
     'api.admin.file.list': { paramsTuple?: []; params?: {} }
     'api.admin.file.find': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'page.home': { paramsTuple?: []; params?: {} }
     'page.localised.render': { paramsTuple: [ParamValue,ParamValue]; params: {'locale': ParamValue,'slug': ParamValue} }
     'page.render': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
   }
@@ -184,6 +188,7 @@ export type ScannedRoutes = {
     'admin.pages_update.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_update.publish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.pages_update.unpublish': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'admin.pages.set_homepage': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.page_translations.execute': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.page_revisions.restore': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }
     'admin.page_revisions.toggle_keep': { paramsTuple: [ParamValue,ParamValue,ParamValue]; params: {'id': ParamValue,'translationId': ParamValue,'revisionId': ParamValue} }

@@ -32,8 +32,8 @@ const routes = {
   },
   'home': {
     methods: ["GET","HEAD"],
-    pattern: '/',
-    tokens: [{"old":"/","type":0,"val":"/","end":""}],
+    pattern: '/home',
+    tokens: [{"old":"/home","type":0,"val":"home","end":""}],
     types: placeholder as Registry['home']['types'],
   },
   'auth.session.render': {
@@ -294,6 +294,12 @@ const routes = {
     tokens: [{"old":"/admin/pages/:id/unpublish","type":0,"val":"admin","end":""},{"old":"/admin/pages/:id/unpublish","type":0,"val":"pages","end":""},{"old":"/admin/pages/:id/unpublish","type":1,"val":"id","end":""},{"old":"/admin/pages/:id/unpublish","type":0,"val":"unpublish","end":""}],
     types: placeholder as Registry['admin.pages_update.unpublish']['types'],
   },
+  'admin.pages.set_homepage': {
+    methods: ["POST"],
+    pattern: '/admin/pages/:id/homepage',
+    tokens: [{"old":"/admin/pages/:id/homepage","type":0,"val":"admin","end":""},{"old":"/admin/pages/:id/homepage","type":0,"val":"pages","end":""},{"old":"/admin/pages/:id/homepage","type":1,"val":"id","end":""},{"old":"/admin/pages/:id/homepage","type":0,"val":"homepage","end":""}],
+    types: placeholder as Registry['admin.pages.set_homepage']['types'],
+  },
   'admin.pages.destroy': {
     methods: ["DELETE"],
     pattern: '/admin/pages/:id',
@@ -473,6 +479,12 @@ const routes = {
     pattern: '/contact',
     tokens: [{"old":"/contact","type":0,"val":"contact","end":""}],
     types: placeholder as Registry['contact.execute']['types'],
+  },
+  'page.home': {
+    methods: ["GET","HEAD"],
+    pattern: '/',
+    tokens: [{"old":"/","type":0,"val":"/","end":""}],
+    types: placeholder as Registry['page.home']['types'],
   },
   'page.localised.render': {
     methods: ["GET","HEAD"],

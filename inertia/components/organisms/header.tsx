@@ -1,33 +1,9 @@
 import { useEffect, useState } from 'react'
 import { router } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next'
-import logo from '~/assets/logo.png'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '@adonisjs/inertia/react'
-import { Avatar } from '~/components/atoms/avatar'
-import { Authenticated } from '~/guards/authenticated'
 
-/**
- * Global application header.
- *
- * Renders a sticky top navigation bar with a logo, a primary nav menu, and
- * an auth-aware user slot. On mobile the nav collapses into a slide-in panel
- * toggled by an animated hamburger button. On desktop (`md` breakpoint and
- * above) the panel is always visible as a horizontal flex row.
- *
- * **Menu state** is managed locally with `useState`. The menu automatically
- * closes after any successful Inertia navigation so users are never left with
- * an open panel on the destination page. Active element focus is also blurred
- * on close to prevent lingering focus rings.
- *
- * **Auth slot** — when the user is authenticated, a `<Link>` to the settings
- * page wrapping `<Avatar showUsername />` is rendered. When unauthenticated,
- * a login `<NavLink>` is shown instead (via the `<Authenticated>` guard).
- *
- * ARIA attributes (`aria-expanded`, `aria-controls`) are kept in sync with
- * the menu state for screen-reader accessibility. The `data-state` attribute
- * is exposed for CSS-driven transitions if needed.
- */
 export function Header() {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -58,35 +34,24 @@ export function Header() {
   const isExpanded = isMenuOpen ? 'true' : 'false'
 
   return (
-    <header className="header bg-surface" data-state={menuState} aria-expanded={isExpanded}>
-      <Link href="/" className="header__logo fs-600" onClick={closeMenu}>
-        <img src={logo} alt="Logo" />
+    <header className="header" data-state={menuState} aria-expanded={isExpanded}>
+      <Link route="page.home" className="header__logo font-semibold tracking-wide text-xl font-cormorant" onClick={closeMenu}>
+        Floralia <span className="text-secondary italic">Atelier</span>
       </Link>
 
       <nav
         id="primary-navigation"
-        className="header__nav bg-surface"
+        className="header__nav"
         data-state={menuState}
         aria-expanded={isExpanded}
       >
-        <NavLink route={'home'} label={t('header.home')} fs="md:xl" variant="nav" />
-        <Authenticated
-          fallback={
-            <NavLink
-              route={'auth.session.render'}
-              label={t('auth:login.value')}
-              fs="md:xl"
-              variant="nav"
-            />
-          }
-        >
-          <Link route="settings.index">
-            <Avatar showUsername />
-          </Link>
-        </Authenticated>
+        <NavLink route={'page.home'} anchor="services" label="Services" variant="nav" />
+        <NavLink route={'page.home'} anchor="about" label="Histoire" variant="nav" />
+        <NavLink route={'page.home'} anchor="creations" label="Créations" variant="nav" />
+        <NavLink route={'page.home'} anchor="contact" label="Contact" variant="nav" />
       </nav>
       <button
-        className="header__burger text-ink md:display-hidden"
+        className="header__burger md:display-hidden"
         aria-controls="primary-navigation"
         aria-expanded={isExpanded}
         data-state={menuState}

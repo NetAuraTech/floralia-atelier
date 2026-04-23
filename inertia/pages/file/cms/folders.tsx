@@ -29,7 +29,7 @@ export default function FileFoldersPage(props: PageProps) {
         icon="Folders"
         action={
           <CanAccess permission="files.view">
-            <Button variant="accent" route="admin.files.render" fitContent>
+            <Button variant="secondary" route="admin.files.render" fitContent>
               <Icon name="Folder" />
               {t('admin:files.list.title')}
             </Button>

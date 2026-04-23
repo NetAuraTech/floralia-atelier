@@ -9,7 +9,7 @@ import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import i18n from "~/lib/i18n";
 
-const appName = import.meta.env.APP_NAME || 'AdonisJS'
+const appName = import.meta.env.VITE_APP_NAME || ''
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),

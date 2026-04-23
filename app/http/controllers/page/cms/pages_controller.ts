@@ -36,4 +36,15 @@ export default class PagesController {
 
     return response.redirect().toRoute('admin.pages.render')
   }
+
+  /**
+   * POST /admin/pages/:id/homepage
+   * Flags this page as the global homepage.
+   */
+  async setHomepage(ctx: HttpContext) {
+    const { params, response, auth } = ctx
+    const user = auth.getUserOrFail()
+    await this.pageService.setHomepage(Number(params.id), user.id)
+    return response.redirect().toRoute('admin.pages_show.render', { id: params.id })
+  }
 }

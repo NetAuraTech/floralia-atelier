@@ -38,7 +38,7 @@ interface AdminMainBaseProps {
  *   icon="Users"
  *   action={
  *     <CanAccess permission="users.create">
- *       <Button route="admin.users_create.render" variant="accent" fitContent>
+ *       <Button route="admin.users_create.render" variant="secondary" fitContent>
  *         Invite a user
  *       </Button>
  *     </CanAccess>

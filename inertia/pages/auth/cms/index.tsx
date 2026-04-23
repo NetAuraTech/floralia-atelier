@@ -38,7 +38,7 @@ export default function UsersIndexPage(props: PageProps) {
       icon={getEntryIcon('admin.users.render')}
       action={
         <CanAccess permission="users.create">
-          <Button route="admin.users_create.render" variant="accent" fitContent>
+          <Button route="admin.users_create.render" variant="secondary" fitContent>
             {t('admin:users.list.action')}
           </Button>
         </CanAccess>
@@ -105,7 +105,7 @@ export default function UsersIndexPage(props: PageProps) {
                     <span className="flex text-ink-muted">{user.email}</span>
                   </Table.Cell>
                   <Table.Cell data-label={t('roles:value', { count: 1 })}>
-                    <span className="px-4 py-1 rounded border border-accent bg-accent-light/20 text-accent">
+                    <span className="px-4 py-1 rounded border border-secondary bg-secondary-light/20 text-secondary">
                       {t(user.role?.name)}
                     </span>
                   </Table.Cell>

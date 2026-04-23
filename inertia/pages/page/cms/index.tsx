@@ -31,7 +31,7 @@ const PAGE_STATUSES: PageStatus[] = ['draft', 'published', 'archived']
 
 const statusesClass = {
   published: 'text-success border-success bg-success-soft',
-  draft: 'text-accent border-accent bg-accent-light/20',
+  draft: 'text-secondary border-secondary bg-secondary-light/20',
   archived: 'text-warning border-warning bg-warning-soft',
 } as const
 
@@ -48,7 +48,7 @@ export default function PagesIndexPage(props: Props) {
         icon={getEntryIcon('admin.pages.render')}
         action={
           <CanAccess permission="pages.create">
-            <Button route="admin.pages_create.render" variant="accent" fitContent>
+            <Button route="admin.pages_create.render" variant="secondary" fitContent>
               {t('admin:pages.list.action')}
             </Button>
           </CanAccess>
