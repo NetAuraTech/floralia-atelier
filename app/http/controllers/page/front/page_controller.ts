@@ -3,13 +3,15 @@ import { inject } from '@adonisjs/core'
 import { PageService } from '#services/page/page_service'
 import { StorageService } from '#services/file/storage_service'
 import { PageResolverService } from '#services/page/page_resolver_service'
+import { CacheService } from "#services/cache/cache_service";
 
 @inject()
 export default class PageController {
   constructor(
     protected pageService: PageService,
     protected resolverService: PageResolverService,
-    protected storageService: StorageService
+    protected storageService: StorageService,
+    protected cache: CacheService
   ) {}
 
   /**
@@ -33,10 +35,14 @@ export default class PageController {
       return response.notFound()
     }
 
-    const resolvedContent = await this.resolverService.resolve(
-      translation.content,
-      translation.locale
-    )
+    const cacheKey = `page_render:home:${page.id}:${translation.locale}:${translation.updatedAt!.toMillis()}`
+
+    const resolvedContent = await this.cache.remember(cacheKey, async () => {
+      return await this.resolverService.resolve(
+        translation.content,
+        translation.locale
+      )
+    }, 3600)
 
     let metaImageUrl: string | null = null
     if (page.metaImage) {
@@ -77,7 +83,11 @@ export default class PageController {
       return response.notFound()
     }
 
-    const resolvedContent = await this.resolverService.resolve(translation.content, locale)
+    const cacheKey = `page_render:${page.id}:${locale}:${translation.updatedAt!.toMillis()}`
+
+    const resolvedContent = await this.cache.remember(cacheKey, async () => {
+      return await this.resolverService.resolve(translation.content, locale)
+    }, 3600)
 
     // Resolve the og:image if set on the page
     let metaImageUrl: string | null = null
