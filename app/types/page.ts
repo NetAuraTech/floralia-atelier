@@ -184,11 +184,7 @@ export interface PageContent {
 }
 
 export interface ContactFormSubmission {
-  pageId: number
-  pageTitle: string
-  locale: string
-  recipientEmail: string
-  fields: Record<string, string>
+  [key: string]: string
 }
 
 // ─── Resolved types ───────────────────────────────────────────────────────────

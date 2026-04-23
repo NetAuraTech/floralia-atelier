@@ -947,12 +947,12 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/contact'
     types: {
-      body: {}
+      body: ExtractBody<InferInput<(typeof import('#validators/contact').contactValidator)>>
       paramsTuple: []
       params: {}
-      query: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/contact').contactValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/page/front/contact_controller').default['execute']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'page.home': {
