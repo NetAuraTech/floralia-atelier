@@ -258,21 +258,6 @@
 
   .select {
     @apply input;
-    appearance: base-select;
-
-    &::picker(select) {
-      appearance: base-select;
-      @apply bg-overlay border border-solid border-edge rounded p-2 opacity-0 -translate-y-2.5;
-      transition: all 0.4s allow-discrete;
-    }
-
-    &::picker(select):popover-open {
-      @apply translate-y-0 opacity-100;
-
-      @starting-style {
-        @apply opacity-0 -translate-y-2.5;
-      }
-    }
 
     option {
       @apply p-2;

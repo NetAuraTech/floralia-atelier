@@ -56,7 +56,7 @@ export default function Layout(props: LayoutProps) {
 
   const siteRef = useRef<HTMLDivElement | null>(null)
 
-  const [showIntro, setShowIntro] = useState(false)
+  const [showIntro, setShowIntro] = useState(true)
 
   return (
     <>
