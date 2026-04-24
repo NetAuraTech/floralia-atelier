@@ -14,7 +14,7 @@ const inertiaConfig = defineConfig({
     /**
      * Entry file used by the SSR server build.
      */
-    entrypoint: `${app.inProduction ? 'build/ssr/ssr.js' : 'inertia/ssr.tsx'}`,
+    entrypoint: `${app.inProduction ? 'ssr/ssr.js' : 'inertia/ssr.tsx'}`,
   },
 })
 
