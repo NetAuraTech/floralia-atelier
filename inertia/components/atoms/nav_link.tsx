@@ -116,7 +116,7 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   const [currentPath] = url.split('?')
   const pathMatches = currentPath === resolvedHref
 
-  const anchorMatches = (props.anchor ?? '') === window.location.hash.replace('#', '')
+  const anchorMatches = typeof window !== 'undefined' ? (props.anchor ?? '') === window.location.hash.replace('#', '') : false
 
   const isActive = (pathMatches && anchorMatches) || props.isActive
 

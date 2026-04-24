@@ -9,7 +9,7 @@ import { TuyauProvider } from '@adonisjs/inertia/react'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import i18n from "~/lib/i18n";
 
-const appName = import.meta.env.VITE_APP_NAME || ''
+let appName = ''
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -23,6 +23,8 @@ createInertiaApp({
   setup({ el, App, props }) {
     const locale = String(props.initialPage.props.locale || 'en')
     i18n.changeLanguage(locale)
+
+    appName = props.initialPage.props.app_name as string
 
     createRoot(el).render(
       <TuyauProvider client={client}>

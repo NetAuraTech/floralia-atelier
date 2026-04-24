@@ -1,6 +1,7 @@
-import { Head } from '@inertiajs/react'
+import {Head, usePage} from '@inertiajs/react'
 import type { ResolvedPageContent } from '#types/page'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
+import type {SharedProps} from "@adonisjs/inertia/types";
 
 type PageProps = {
   id: number
@@ -20,9 +21,10 @@ type PageProps = {
  */
 export default function PageShowPage(props: PageProps) {
   const { id, locale, title, metaTitle, metaDescription, metaImage, content } = props
+  const { email, app_url } = usePage<SharedProps>().props
   const seoTitle = metaTitle ?? title
 
-  const seoOgImage = metaImage ?? `${import.meta.env.VITE_APP_URL}/og-image.jpg`
+  const seoOgImage = metaImage ?? `${app_url}/og-image.jpg`
 
   return (
     <>
@@ -40,14 +42,14 @@ export default function PageShowPage(props: PageProps) {
             JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              "@id": `${import.meta.env.VITE_APP_URL}/#business`,
+              "@id": `${app_url}/#business`,
               "name": "Floralia Atelier",
-              "url": `${import.meta.env.VITE_APP_URL}`,
-              "logo": `${import.meta.env.VITE_APP_URL}/logo.png`,
+              "url": `${app_url}`,
+              "logo": `${app_url}/logo.png`,
               "image": seoOgImage,
               "description": "Artisan fleuriste spécialisé dans l'entretien et le fleurissement de sépultures, ainsi que les créations florales sur mesure pour mariages, baptêmes et événements.",
               "telephone": "+336-58-02-95-39",
-              "email": import.meta.env.VITE_MAIL_FROM_ADDRESS,
+              "email": email,
               "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "Samer",

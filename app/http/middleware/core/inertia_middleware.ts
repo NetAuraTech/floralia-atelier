@@ -5,6 +5,7 @@ import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware'
 import { inject } from '@adonisjs/core'
 import PreferencesService from '#services/preferences/preference_service'
 import { DEFAULT_PREFERENCES } from '#types/preferences'
+import env from "#start/env";
 
 @inject()
 export default class InertiaMiddleware extends BaseInertiaMiddleware {
@@ -61,6 +62,9 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
       currentUser: ctx.inertia.always(user ? UserTransformer.transform(user) : undefined),
       preferences: preferences,
       csrfToken: ctx.request.csrfToken,
+      app_name: env.get('APP_NAME'),
+      app_url: env.get('APP_URL'),
+      email: env.get('MAIL_FROM_ADDRESS')
     }
   }
 

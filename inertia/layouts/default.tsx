@@ -37,6 +37,7 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const { children } = props
+  const { app_name, app_url } = usePage<SharedProps>().props
 
   useEffect(() => {
     toast.dismiss()
@@ -74,16 +75,16 @@ export default function Layout(props: LayoutProps) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-title" content="Floralia Atelier" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta property="og:url" content={import.meta.env.VITE_APP_URL} />
-        <meta property="og:site_name" content={import.meta.env.VITE_APP_NAME} />
+        <meta property="og:url" content={app_url} />
+        <meta property="og:site_name" content={app_name} />
         <meta property="og:locale" content="fr_FR" />
-        <meta property="og:image:alt" content={`${import.meta.env.VITE_APP_NAME} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
+        <meta property="og:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
         <meta property="geo.region" content="FR-62" />
         <meta property="geo.placename" content="Samer" />
-        <meta property="author" content={import.meta.env.VITE_APP_NAME} />
-        <link rel="canonical" href={import.meta.env.VITE_APP_URL} />
+        <meta property="author" content={app_name} />
+        <link rel="canonical" href={app_url} />
         <meta property="twitter.card" content="summary_large_image" />
-        <meta property="twitter.title" content={import.meta.env.VITE_APP_NAME} />
+        <meta property="twitter.title" content={app_name} />
         <meta property="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Head>
       {showIntro && <SiteIntro site={siteRef} />}
