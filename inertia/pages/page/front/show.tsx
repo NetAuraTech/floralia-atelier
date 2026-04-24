@@ -36,7 +36,7 @@ export default function PageShowPage(props: PageProps) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:type" content="website" />
-        <meta property="twitter:image" content={seoOgImage} />
+        <meta name="twitter:image" content={seoOgImage} />
         <script type="application/ld+json">
           {
             JSON.stringify({

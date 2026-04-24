@@ -62,6 +62,7 @@ export default function Layout(props: LayoutProps) {
   return (
     <>
       <Head>
+        <link rel="canonical" href={app_url} />
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
@@ -79,13 +80,13 @@ export default function Layout(props: LayoutProps) {
         <meta property="og:site_name" content={app_name} />
         <meta property="og:locale" content="fr_FR" />
         <meta property="og:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
-        <meta property="geo.region" content="FR-62" />
-        <meta property="geo.placename" content="Samer" />
-        <meta property="author" content={app_name} />
-        <link rel="canonical" href={app_url} />
-        <meta property="twitter.card" content="summary_large_image" />
-        <meta property="twitter.title" content={app_name} />
-        <meta property="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
+        <meta name="geo.region" content="FR-62" />
+        <meta name="geo.placename" content="Samer" />
+        <meta name="author" content={app_name} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={app_name} />
+        <meta name="twitter:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
+        <meta name="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Head>
       {showIntro && <SiteIntro site={siteRef} />}
       <div ref={siteRef} id={showIntro ? 'site' : ''}>
