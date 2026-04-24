@@ -61,9 +61,30 @@ export default function Layout(props: LayoutProps) {
   return (
     <>
       <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap"
           rel="stylesheet"/>
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="language" content="fr" />
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-title" content="Floralia Atelier" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta property="og:url" content={import.meta.env.VITE_APP_URL} />
+        <meta property="og:site_name" content={import.meta.env.VITE_APP_NAME} />
+        <meta property="og:locale" content="fr_FR" />
+        <meta property="og:image:alt" content={`${import.meta.env.VITE_APP_NAME} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
+        <meta property="geo.region" content="FR-62" />
+        <meta property="geo.placename" content="Samer" />
+        <meta property="author" content={import.meta.env.VITE_APP_NAME} />
+        <link rel="canonical" href={import.meta.env.VITE_APP_URL} />
+        <meta property="twitter.card" content="summary_large_image" />
+        <meta property="twitter.title" content={import.meta.env.VITE_APP_NAME} />
+        <meta property="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Head>
       {showIntro && <SiteIntro site={siteRef} />}
       <div ref={siteRef} id={showIntro ? 'site' : ''}>
