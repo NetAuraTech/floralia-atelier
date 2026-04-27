@@ -1,12 +1,4 @@
-let dompurify: any = null
-
-async function getPurifier() {
-  if (!dompurify) {
-    const { default: DOMPurify } = await import('dompurify')
-    dompurify = DOMPurify
-  }
-  return dompurify
-}
+import DOMPurify from 'dompurify'
 
 const PURIFY_CONFIG = {
   USE_PROFILES: { html: true },
@@ -40,25 +32,24 @@ const DEFAULT_OPTIONS: SanitizationOptions = {
   removeMultipleSpaces: true,
 }
 
-async function handleHtmlSanitization(value: string, mode: 'strip' | 'clean'): Promise<string> {
-  const purifier = await getPurifier()
+function handleHtmlSanitization(value: string, mode: 'strip' | 'clean'): string {
   if (mode === 'strip') {
-    return purifier.sanitize(value, { ALLOWED_TAGS: [] })
+    return DOMPurify.sanitize(value, { ALLOWED_TAGS: [] })
   }
 
-  return purifier.sanitize(value, PURIFY_CONFIG)
+  return DOMPurify.sanitize(value, PURIFY_CONFIG)
 }
 
 function collapseSpaces(value: string): string {
   return value.replace(/\s+/g, ' ')
 }
 
-export async function sanitize(value: string, options: SanitizationOptions = {}): Promise<string> {
+export function sanitize(value: string, options: SanitizationOptions = {}): string {
   const opts = { ...DEFAULT_OPTIONS, ...options }
   let sanitized = value
 
   if (opts.htmlMode) {
-    sanitized = await handleHtmlSanitization(sanitized, opts.htmlMode)
+    sanitized = handleHtmlSanitization(sanitized, opts.htmlMode)
   }
 
   if (opts.trim) {
@@ -76,7 +67,7 @@ export async function sanitize(value: string, options: SanitizationOptions = {})
   return sanitized
 }
 
-export async function sanitizeRichText(value: string): Promise<string> {
+export function sanitizeRichText(value: string): string {
   return sanitize(value, {
     htmlMode: 'clean',
     trim: true,
@@ -84,7 +75,7 @@ export async function sanitizeRichText(value: string): Promise<string> {
   })
 }
 
-export async function sanitizeText(value: string): Promise<string> {
+export function sanitizeText(value: string): string {
   return sanitize(value, {
     htmlMode: 'strip',
     trim: true,
@@ -92,7 +83,7 @@ export async function sanitizeText(value: string): Promise<string> {
   })
 }
 
-export async function sanitizeEmail(value: string): Promise<string> {
+export function sanitizeEmail(value: string): string {
   return sanitize(value, {
     htmlMode: 'strip',
     trim: true,
@@ -101,7 +92,7 @@ export async function sanitizeEmail(value: string): Promise<string> {
   })
 }
 
-export async function noSanitization(value: string): Promise<string> {
+export function noSanitization(value: string): string {
   return value
 }
 

@@ -7,7 +7,7 @@ import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
 import { Form } from '@adonisjs/inertia/react'
 import { SelectOption } from '~/components/atoms/select_option'
-import { SUPPORTED_LOCALES } from '~/lib/i18n'
+import { resources } from '~/lib/i18n'
 import { Heading } from '~/components/atoms/heading'
 import type { SharedProps } from '@adonisjs/inertia/types'
 import Layout from '~/layouts/admin'
@@ -26,7 +26,7 @@ export default function PagesCreatePage() {
   const validation = useFormValidation({
     locale: [
       ...presets.selectWithOptions(
-        [...SUPPORTED_LOCALES.map((locale) => locale)],
+        [...Object.keys(resources).map((locale) => locale)],
         t('admin:pages.form.locale.default')
       ),
       rules.required(t('admin:pages.form.locale.default')),
@@ -83,7 +83,7 @@ export default function PagesCreatePage() {
                     required
                     sanitize
                   >
-                    {SUPPORTED_LOCALES.map((l) => (
+                    {Object.keys(resources).map((l) => (
                       <SelectOption key={l} value={l} label={l.toUpperCase()} />
                     ))}
                   </Field>

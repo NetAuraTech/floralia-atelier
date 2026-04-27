@@ -14,7 +14,7 @@ import { Card } from '~/components/atoms/card'
 import Table from '~/components/atoms/table/table'
 import { Icon } from '~/components/atoms/icon'
 import { Field } from '~/components/molecules/field'
-import { SUPPORTED_LOCALES } from '~/lib/i18n'
+import { resources } from '~/lib/i18n'
 import { SelectOption } from '~/components/atoms/select_option'
 import type { PageStatus } from '#types/page'
 
@@ -76,7 +76,7 @@ export default function PagesIndexPage(props: Props) {
                 defaultValue={filters.locale}
                 sanitize
               >
-                {SUPPORTED_LOCALES.map((l) => (
+                {Object.keys(resources).map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>

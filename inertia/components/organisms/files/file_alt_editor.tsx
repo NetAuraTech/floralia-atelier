@@ -9,7 +9,7 @@ import { SelectOption } from '~/components/atoms/select_option'
 import { usePage } from '@inertiajs/react'
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { toast } from 'sonner'
-import { SUPPORTED_LOCALES } from '~/lib/i18n'
+import { resources } from '~/lib/i18n'
 import { useTranslation } from 'react-i18next'
 
 interface FileAlt {
@@ -160,7 +160,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
                 required
                 sanitize
               >
-                {SUPPORTED_LOCALES.map((l) => (
+                {Object.keys(resources).map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>
