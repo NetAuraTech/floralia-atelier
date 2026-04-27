@@ -1,10 +1,9 @@
-import {ReactElement, useEffect, useRef, useState} from 'react'
+import {ReactElement, useEffect} from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
 import {Head, usePage} from '@inertiajs/react'
 import type { SharedProps } from '@adonisjs/inertia/types'
-import SiteIntro from "~/components/molecules/site_intro";
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -47,20 +46,6 @@ export default function Layout(props: LayoutProps) {
   if (children.props.flash.success) toast.success(children.props.flash.success)
   if (children.props.flash.info) toast.info(children.props.flash.info)
 
-  const siteRef = useRef<HTMLDivElement | null>(null)
-  const [showIntro, setShowIntro] = useState(false)
-  const [siteHidden, setSiteHidden] = useState(true)
-
-  useEffect(() => {
-    if (!sessionStorage.getItem('intro_seen')) {
-      sessionStorage.setItem('intro_seen', '1')
-      setSiteHidden(true)
-      setShowIntro(true)
-    } else {
-      setSiteHidden(false)
-    }
-  }, [])
-
   return (
     <>
       <Head>
@@ -85,15 +70,12 @@ export default function Layout(props: LayoutProps) {
         <meta name="twitter:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
         <meta name="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Head>
-      {showIntro && (
-        <SiteIntro site={siteRef} onDone={() => setSiteHidden(false)} />
-      )}
-      <div ref={siteRef} id={showIntro ? 'site' : ''} style={siteHidden ? { visibility: 'hidden' } : undefined}>
+      <>
         <Header/>
         <Toaster position="top-right" richColors/>
         {children}
         <Footer/>
-      </div>
+      </>
     </>
   )
 }
