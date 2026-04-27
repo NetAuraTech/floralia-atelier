@@ -35,59 +35,69 @@ interface JsonModule {
  */
 
 /**
- * `import.meta.glob` scans the locales folder eagerly so all JSON files are
- * bundled and available synchronously — no async loading, no Suspense needed.
+ * `import.meta.glob` scans the locales folder. We use dynamic imports to split
+ * each translation file into its own chunk.
  */
-const locales = import.meta.glob<JsonModule>('~/locales/**/*.json', { eager: true })
-
-export const resources: Record<string, any> = {}
-const namespaces: string[] = []
+const locales = import.meta.glob<JsonModule>('~/locales/**/*.json')
 
 /**
- * Parse each discovered path to build the i18next `resources` map.
+ * Extract supported languages from the directory structure.
  * Path format: `…/locales/<lng>/<namespace>.json`
  */
-Object.keys(locales).forEach((path) => {
-  const parts = path.split('/')
-  const lng = parts[parts.length - 2]
-  const ns = parts[parts.length - 1].replace('.json', '')
+export const SUPPORTED_LOCALES = Array.from(
+  new Set(
+    Object.keys(locales).map((path) => {
+      const parts = path.split('/')
+      return parts[parts.length - 2]
+    })
+  )
+)
 
-  if (!resources[lng]) {
-    resources[lng] = {}
-  }
+i18n
+  .use({
+    type: 'backend',
+    async read(language: string, namespace: string, callback: any) {
+      // Find the file path that matches the language and namespace
+      const path = Object.keys(locales).find(
+        (p) => p.includes(`/${language}/`) && p.includes(`/${namespace}.json`)
+      )
 
-  resources[lng][ns] = locales[path].default
-
-  if (!namespaces.includes(ns)) {
-    namespaces.push(ns)
-  }
-})
-
-i18n.use(initReactI18next).init({
-  resources,
-  lng: 'en',
-  fallbackLng: 'en',
-  defaultNS: 'common',
-  ns: namespaces,
-  interpolation: {
-    escapeValue: false,
-    prefix: '{',
-    suffix: '}',
-    format: (value, format, lng, options) => {
-      if (value instanceof Date) {
-        const dateStyle = (format || 'long') as 'long' | 'full' | 'medium' | 'short'
-
-        return new Intl.DateTimeFormat(lng, {
-          dateStyle: dateStyle,
-          ...(options?.withTime && { timeStyle: 'short' }),
-        }).format(value)
+      if (path && locales[path]) {
+        try {
+          const mod = await locales[path]()
+          callback(null, mod.default)
+        } catch (error) {
+          callback(error, null)
+        }
+      } else {
+        callback(null, null) // Fallback to other languages if not found
       }
-      return value
     },
-  },
-  react: {
-    useSuspense: false,
-  },
-})
+  })
+  .use(initReactI18next)
+  .init({
+    lng: 'en',
+    fallbackLng: 'en',
+    defaultNS: 'common',
+    interpolation: {
+      escapeValue: false,
+      prefix: '{',
+      suffix: '}',
+      format: (value, format, lng, options) => {
+        if (value instanceof Date) {
+          const dateStyle = (format || 'long') as 'long' | 'full' | 'medium' | 'short'
+
+          return new Intl.DateTimeFormat(lng, {
+            dateStyle: dateStyle,
+            ...(options?.withTime && { timeStyle: 'short' }),
+          }).format(value)
+        }
+        return value
+      },
+    },
+    react: {
+      useSuspense: true, // Enabled for lazy loading
+    },
+  })
 
 export default i18n

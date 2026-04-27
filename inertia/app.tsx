@@ -1,5 +1,5 @@
 import './css/app.css'
-import { ReactElement } from 'react'
+import { ReactElement, Suspense } from 'react'
 import { client } from './client'
 import Layout from '~/layouts/default'
 import { Data } from '@generated/data'
@@ -28,7 +28,9 @@ createInertiaApp({
 
     createRoot(el).render(
       <TuyauProvider client={client}>
-        <App {...props} />
+        <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-canvas">...</div>}>
+          <App {...props} />
+        </Suspense>
       </TuyauProvider>
     )
   },

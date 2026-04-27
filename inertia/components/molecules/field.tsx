@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import type { ChangeEvent, ReactNode } from 'react'
 import { Label } from '~/components/atoms/label'
 import { getSanitizer } from '~/helpers/sanitization'
@@ -6,7 +7,8 @@ import { Input } from '~/components/atoms/input'
 import { Textarea } from '~/components/atoms/textarea'
 import { Select } from '~/components/atoms/select'
 import { Checkbox } from '~/components/atoms/checkbox'
-import { ImagePicker } from '~/components/molecules/image_picker'
+
+const ImagePicker = lazy(() => import('~/components/molecules/image_picker').then(m => ({ default: m.ImagePicker })))
 
 interface FieldProps {
   /** Visible label text associated with the input. */
@@ -131,11 +133,11 @@ export function Field(props: FieldProps) {
   }
 
   /** Handle blur — apply sanitization when the user leaves the field. */
-  const handleBlur = (
+  const handleBlur = async (
     event?: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null
   ) => {
     if (event && type !== 'checkbox' && type !== 'radio' && sanitize) {
-      const sanitizedValue = sanitizer(event.target.value)
+      const sanitizedValue = await sanitizer(event.target.value)
 
       if (sanitizedValue !== event.target.value) {
         event.target.value = sanitizedValue
@@ -172,13 +174,15 @@ export function Field(props: FieldProps) {
     <div className={`grid`}>
       <div className={`${variants[variant]}`}>
         {!isInline && <Label label={label} htmlFor={name} required={props.required} />}
-        <Component
-          {...inputProps}
-          name={name}
-          type={type}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
+        <Suspense fallback={<div className="input h-10 w-full animate-pulse bg-sunken" />}>
+          <Component
+            {...inputProps}
+            name={name}
+            type={type}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </Suspense>
         {isInline && <Label label={label} htmlFor={name} required={props.required} />}
       </div>
       {errorMessage && (

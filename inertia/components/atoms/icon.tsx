@@ -1,33 +1,37 @@
-import { icons } from 'lucide-react'
+import { useMemo } from 'react'
+import { LucideProps } from 'lucide-react'
+//@ts-ignore
+import {DynamicIcon} from "lucide-react/dynamic.mjs";
 
-interface IconProps {
-  /** Name of the Lucide icon to render. Must be a valid key of the `icons` map. */
-  name: keyof typeof icons
-  /** Icon size in pixels. Forwarded directly to the Lucide component. */
+/**
+ * Converts PascalCase (Lucide default in JS) to kebab-case (required for dynamic imports).
+ * Example: ArrowRight -> arrow-right, Trash2 -> trash-2
+ */
+const toKebabCase = (str: string) =>
+  str
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase()
+    .replace(/^-/, '')
+
+interface IconProps extends Omit<LucideProps, 'ref'> {
+  /** Name of the Lucide icon to render. Can be PascalCase or kebab-case. */
+  name: string
+  /** Icon size in pixels. */
   size?: number
-  /** Additional Tailwind classes (e.g. `text-danger`, `shrink-0`). */
+  /** Additional Tailwind classes. */
   className?: string
 }
 
 /**
- * Thin wrapper around the Lucide icon library.
+ * Optimized wrapper around Lucide icons.
  *
- * Looks up `name` in the Lucide `icons` map and renders the matching SVG
- * component. Returns an empty fragment when the icon is not found, so
- * invalid names fail silently rather than throwing.
- *
- * @example
- * <Icon name="Trash" size={18} className="text-danger" />
- * <Icon name="Check" size={16} />
+ * Uses dynamic imports to load only the required icon SVG code.
+ * This significantly reduces the bundle size by avoiding importing the entire library.
  */
-export function Icon(props: IconProps) {
-  const { name, size, ...iconProps } = props
+export function Icon({ name, size, ...props }: IconProps) {
+  const kebabName = useMemo(() => toKebabCase(name), [name])
 
-  const Item = icons[name]
-
-  if (Item) {
-    return <Item size={size} {...iconProps} />
-  }
-
-  return <></>
+  return (
+    <DynamicIcon name={kebabName} size={size}   {...props}/>
+  )
 }
