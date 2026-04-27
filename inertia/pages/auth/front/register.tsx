@@ -1,5 +1,5 @@
 import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from 'react-helmet-async'
+import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { useTranslation } from 'react-i18next'
 import { Section } from '~/components/atoms/section'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'

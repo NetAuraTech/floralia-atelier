@@ -1,4 +1,4 @@
-import { Helmet as Head } from 'react-helmet-async'
+import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import type { ResolvedPageContent } from '#types/page'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
 import type { SharedProps } from '~/types/shared_props'

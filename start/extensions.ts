@@ -13,16 +13,16 @@ HttpRequest.macro('wantsJSON', function (this: HttpRequest) {
 
 HttpContext.macro('reactSSR', async function (this: HttpContext, component: string, pageProps: any = {}) {
   const props = { ...this.sharedProps, ...pageProps }
-  
+
   const { html, helmet } = await ReactSSRService.render(this, component, props)
-  
+
   const pageData = JSON.stringify({ component, props })
-  
+
   return this.view.render('app', {
     ssrHtml: html,
-    helmetTitle: helmet?.title?.toString() || '',
-    helmetMeta: helmet?.meta?.toString() || '',
-    helmetLink: helmet?.link?.toString() || '',
+    helmetTitle: helmet?.title || '',
+    helmetMeta: helmet?.meta || '',
+    helmetLink: helmet?.link || '',
     pageData
   })
 })

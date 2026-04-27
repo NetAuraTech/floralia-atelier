@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { Helmet as Head } from 'react-helmet-async'
+import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { applyOperation } from '~/utils/builder_reducer'
 import type { ResolvedPageContent } from '#types/page'
 import type { BroadcastPayload } from '#types/builder'

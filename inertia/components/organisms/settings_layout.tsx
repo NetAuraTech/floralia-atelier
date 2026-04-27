@@ -1,7 +1,7 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from '@dr.pogodin/react-helmet'
 import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'

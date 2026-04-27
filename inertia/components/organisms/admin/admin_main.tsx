@@ -1,6 +1,6 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from '@dr.pogodin/react-helmet'
 import { Heading } from '~/components/atoms/heading'
 import { Icon } from '~/components/atoms/icon'
 import type { icons } from 'lucide-react'

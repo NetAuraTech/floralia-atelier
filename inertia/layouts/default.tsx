@@ -2,7 +2,7 @@ import {ReactElement, useEffect} from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from '@dr.pogodin/react-helmet'
 import { usePageContext } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
 

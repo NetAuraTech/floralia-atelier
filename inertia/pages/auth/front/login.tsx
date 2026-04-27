@@ -1,6 +1,6 @@
 import { Form } from '~/components/atoms/form'
 import { useTranslation } from 'react-i18next'
-import { Helmet as Head } from 'react-helmet-async'
+import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Paragraph } from '~/components/atoms/paragraph'

@@ -18,11 +18,15 @@ export default defineConfig({
       '~/': `${import.meta.dirname}/inertia/`,
       '@generated': `${import.meta.dirname}/.adonisjs/client/`,
     },
+    dedupe: ['@dr.pogodin/react-helmet', 'react', 'react-dom'],
   },
 
   server: {
     watch: {
       ignored: ['**/storage/**', '**/tmp/**'],
     },
+  },
+  ssr: {
+    external: ['react-i18next', 'i18next'],
   },
 })

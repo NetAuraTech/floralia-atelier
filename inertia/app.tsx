@@ -1,6 +1,6 @@
 import './css/app.css'
 import { hydrateRoot } from 'react-dom/client'
-import { HelmetProvider } from 'react-helmet-async'
+import { HelmetProvider } from '@dr.pogodin/react-helmet'
 import { PageProvider } from '~/context/page_context'
 import Layout from '~/layouts/default'
 import AdminLayout from '~/layouts/admin'

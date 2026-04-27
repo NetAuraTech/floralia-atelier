@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from '@dr.pogodin/react-helmet'
 import { usePageContext } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
 import { useIsLarge } from '~/hooks/use_is_large'
