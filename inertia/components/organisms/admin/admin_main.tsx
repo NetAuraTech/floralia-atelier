@@ -1,6 +1,6 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
-import { Head } from '@inertiajs/react'
+import { Helmet } from 'react-helmet-async'
 import { Heading } from '~/components/atoms/heading'
 import { Icon } from '~/components/atoms/icon'
 import type { icons } from 'lucide-react'
@@ -52,7 +52,7 @@ export function AdminMain(props: AdminMainBaseProps) {
 
   return (
     <Section className="py-8 grid gap-4">
-      <Head title={title} />
+      <Helmet><title>{title}</title></Helmet>
       <div className="flex gap-3 flex-col md:flex-row justify-between md:items-center w-full">
         <Heading level={2} flex>
           {icon && <Icon name={icon} size={32} />}

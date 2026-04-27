@@ -10,12 +10,12 @@ export default class AcceptInvitationController {
   constructor(protected invitationService: InvitationService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const payload = await invitationValidator.validate(params)
     const user = await this.invitationService.get(payload.token as FullToken)
 
-    return inertia.render('auth/front/accept_invitation', {
+    return ctx.reactSSR('auth/front/accept_invitation', {
       token: payload.token,
       user: UserTransformer.transform(user),
     })

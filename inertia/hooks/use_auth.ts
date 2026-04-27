@@ -1,6 +1,6 @@
-import { usePage } from '@inertiajs/react'
+import { usePageContext } from '~/context/page_context'
 import * as authHelpers from '~/helpers/authorization'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import type { SharedProps } from '~/types/shared_props'
 import { type Data } from '@generated/data'
 
 type SharedPropsWithAuth = Omit<SharedProps, 'currentUser'> & {
@@ -22,7 +22,7 @@ type SharedPropsWithAuth = Omit<SharedProps, 'currentUser'> & {
  * }
  */
 export function useAuth() {
-  const { currentUser } = usePage<SharedPropsWithAuth>().props
+  const { currentUser } = usePageContext<SharedPropsWithAuth>().props
 
   return {
     /**

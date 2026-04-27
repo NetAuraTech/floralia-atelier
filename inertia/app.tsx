@@ -1,38 +1,46 @@
 import './css/app.css'
-import { ReactElement } from 'react'
-import { client } from './client'
+import { hydrateRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
+import { PageProvider } from '~/context/page_context'
 import Layout from '~/layouts/default'
-import { Data } from '@generated/data'
-import { createRoot } from 'react-dom/client'
-import { createInertiaApp } from '@inertiajs/react'
-import { TuyauProvider } from '@adonisjs/inertia/react'
-import { resolvePageComponent } from '@adonisjs/inertia/helpers'
-import i18n from "~/lib/i18n";
+import AdminLayout from '~/layouts/admin'
+import i18n from '~/lib/i18n'
 
-let appName = ''
+declare global {
+  interface Window {
+    __PAGE__: {
+      component: string
+      props: any
+    }
+  }
+}
 
-createInertiaApp({
-  title: (title) => (title ? `${title} - ${appName}` : appName),
-  resolve: (name) => {
-    return resolvePageComponent(
-      `./pages/${name}.tsx`,
-      import.meta.glob('./pages/**/*.tsx'),
-      (page: ReactElement<Data.SharedProps>) => <Layout children={page} />
-    )
-  },
-  setup({ el, App, props }) {
-    const locale = String(props.initialPage.props.locale || 'en')
-    i18n.changeLanguage(locale)
+const { component, props } = window.__PAGE__
 
-    appName = props.initialPage.props.app_name as string
+const pages = import.meta.glob('./pages/**/*.tsx')
 
-    createRoot(el).render(
-      <TuyauProvider client={client}>
-        <App {...props} />
-      </TuyauProvider>
-    )
-  },
-  progress: {
-    color: '#4B5563',
-  },
-})
+async function bootstrap() {
+  const locale = String(props.locale || 'en')
+  await i18n.changeLanguage(locale)
+
+  const module = (await pages[`./pages/${component}.tsx`]()) as any
+  const Page = module.default
+
+  const LayoutType = component.includes('admin') || component.includes('cms') ? AdminLayout : Layout
+
+  const app = document.getElementById('app')
+  if (!app) throw new Error('Root element #app not found')
+
+  hydrateRoot(
+    app,
+    <HelmetProvider>
+      <PageProvider data={props} url={window.location.pathname}>
+        <LayoutType>
+          <Page {...props} />
+        </LayoutType>
+      </PageProvider>
+    </HelmetProvider>
+  )
+}
+
+bootstrap()

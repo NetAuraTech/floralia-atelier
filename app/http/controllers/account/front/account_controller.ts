@@ -16,11 +16,11 @@ export default class AccountController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, inertia } = ctx
+    const { auth, } = ctx
 
     const user = auth.user!
 
-    return inertia.render('settings/account/front/index', {
+    return ctx.reactSSR('settings/account/front/index', {
       user: UserTransformer.transform(user),
       providers: enabledProviders,
     })

@@ -55,18 +55,6 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'home': {
-    methods: ["GET","HEAD"]
-    pattern: '/home'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-      errorResponse: unknown
-    }
-  }
   'auth.session.render': {
     methods: ["GET","HEAD"]
     pattern: '/login'

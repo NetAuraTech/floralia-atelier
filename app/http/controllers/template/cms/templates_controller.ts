@@ -17,7 +17,7 @@ export default class TemplatesController {
   constructor(protected templateService: TemplateService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request } = ctx
+    const { request } = ctx
 
     const data = stripEmptyStrings(request.all())
     const payload = await listTemplateValidator.validate(data)
@@ -28,7 +28,7 @@ export default class TemplatesController {
       search: payload.search,
     })
 
-    return inertia.render('template/cms/index', {
+    return ctx.reactSSR('template/cms/index', {
       templates: TemplateTransformer.transform(templates),
       filters: payload,
     })

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
 import { useTranslation } from 'react-i18next'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
@@ -12,7 +12,7 @@ import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
-import { Form } from '@adonisjs/inertia/react'
+import { Form } from '~/components/atoms/form'
 import { SelectOption } from '~/components/atoms/select_option'
 
 type PageProps = {

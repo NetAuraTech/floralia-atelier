@@ -1,7 +1,7 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Head } from '@inertiajs/react'
+import { Helmet } from 'react-helmet-async'
 import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'
@@ -54,7 +54,7 @@ export function SettingsLayout(props: PageProps) {
 
   return (
     <>
-      <Head title={t('settings:title')} />
+      <Helmet><title>{t('settings:title')}</title></Helmet>
       <Section>
         <div className="container">
           <div className="text-center mb-8">

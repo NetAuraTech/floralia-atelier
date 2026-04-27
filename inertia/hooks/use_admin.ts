@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
-import { type LinkParams, type LinkProps } from '@adonisjs/inertia/react'
 import { useTranslation } from 'react-i18next'
 import { type icons } from 'lucide-react'
+import { type LinkProps } from '~/components/atoms/link'
 
 interface MenuEntryBase {
   label: string
@@ -11,9 +11,8 @@ interface MenuEntryBase {
 
 type MenuEntry<R extends NonNullable<LinkProps['route']>> = MenuEntryBase & {
   route: R
-} & (LinkParams<R>['routeParams'] extends undefined | never
-    ? { routeParams?: never }
-    : { routeParams: LinkParams<R>['routeParams'] })
+  routeParams?: any
+}
 
 type AnyMenuEntry = {
   [R in NonNullable<LinkProps['route']>]: MenuEntry<R>

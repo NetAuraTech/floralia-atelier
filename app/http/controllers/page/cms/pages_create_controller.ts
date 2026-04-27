@@ -8,9 +8,9 @@ export default class PagesCreateController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('page/cms/create', {})
+    return ctx.reactSSR('page/cms/create', {})
   }
 
   async execute(ctx: HttpContext) {

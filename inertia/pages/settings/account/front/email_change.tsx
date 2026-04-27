@@ -1,6 +1,6 @@
-import { Form } from '@adonisjs/inertia/react'
+import { Form } from '~/components/atoms/form'
 import { useTranslation } from 'react-i18next'
-import { Head } from '@inertiajs/react'
+import { Helmet as Head } from 'react-helmet-async'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Button } from '~/components/atoms/button'

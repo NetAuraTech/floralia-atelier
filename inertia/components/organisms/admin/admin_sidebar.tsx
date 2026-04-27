@@ -1,6 +1,6 @@
 import { useIsLarge } from '~/hooks/use_is_large'
-import { usePage } from '@inertiajs/react'
-import { SharedProps } from '@adonisjs/inertia/types'
+import { usePageContext } from '~/context/page_context'
+import type { SharedProps } from '~/types/shared_props'
 import { useTranslation } from 'react-i18next'
 import { Card } from '../../atoms/card'
 import { Avatar } from '~/components/atoms/avatar'
@@ -46,7 +46,7 @@ interface AdminSidebarProps {
 export function AdminSidebar(props: AdminSidebarProps) {
   const { sidebarOpen, setIsMenuOpen } = props
   const isLarge = useIsLarge()
-  const pageProps = usePage<SharedProps>().props
+  const { props: pageProps } = usePageContext<SharedProps>()
   const { t, i18n } = useTranslation('admin')
 
   const { menu } = useMenu()

@@ -8,9 +8,9 @@ export default class PreferencesController {
   constructor(private preferencesService: PreferencesService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('settings/preferences/front/index', {})
+    return ctx.reactSSR('settings/preferences/front/index', {})
   }
 
   async execute(ctx: HttpContext): Promise<void> {

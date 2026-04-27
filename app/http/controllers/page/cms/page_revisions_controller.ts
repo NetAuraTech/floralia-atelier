@@ -14,12 +14,12 @@ export default class PageRevisionsController {
   constructor(protected pageService: PageService) {}
 
   async index(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const { translationId } = await translationIdValidator.validate(params)
     const revisions = await this.pageService.listRevisions(translationId)
 
-    return inertia.render('page/cms/revisions', {
+    return ctx.reactSSR('page/cms/revisions', {
       revisions: PageRevisionTransformer.transform(revisions),
       translation_id: translationId,
       page_id: params.id,

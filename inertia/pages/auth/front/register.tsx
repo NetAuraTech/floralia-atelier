@@ -1,5 +1,5 @@
-import { Form } from '@adonisjs/inertia/react'
-import { Head } from '@inertiajs/react'
+import { Form } from '~/components/atoms/form'
+import { Helmet as Head } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { Section } from '~/components/atoms/section'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'

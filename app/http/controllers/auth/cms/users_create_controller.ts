@@ -13,11 +13,11 @@ export default class UsersCreateController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
     const roles = await this.roleService.findAll()
 
-    return inertia.render('auth/cms/form', {
+    return ctx.reactSSR('auth/cms/form', {
       roles: RoleTransformer.transform(roles),
     })
   }

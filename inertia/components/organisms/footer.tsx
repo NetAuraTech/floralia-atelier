@@ -1,6 +1,6 @@
 import {Paragraph} from "~/components/atoms/paragraph";
 import {NavLink, variants} from "~/components/atoms/nav_link";
-import {Link} from "@adonisjs/inertia/react";
+import { Link } from '~/components/atoms/link'
 import {Heading} from "~/components/atoms/heading";
 
 export function Footer() {
@@ -9,7 +9,7 @@ export function Footer() {
   >
     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 pb-10 mb-8 border-b border-primary">
       <div className="col-span-2 md:col-span-1">
-        <Link route="home" className="text-ink-inverted font-semibold tracking-wide text-xl font-cormorant">
+        <Link route="page.home" className="text-ink-inverted font-semibold tracking-wide text-xl font-cormorant">
           Floralia <span className="text-secondary italic">Atelier</span>
         </Link>
         <Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
@@ -21,22 +21,22 @@ export function Footer() {
           Services
         </Heading>
         <NavLink
-          route="home"
+          route="page.home"
           label="Nettoyage"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Fleurissement"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Abonnements"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Bouquets"
           variant="footer"
         />
@@ -46,22 +46,22 @@ export function Footer() {
           Infos
         </Heading>
         <NavLink
-          route="home"
+          route="page.home"
           label="Notre histoire"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Tarifs"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Mentions légales"
           variant="footer"
         />
         <NavLink
-          route="home"
+          route="page.home"
           label="Confidentialité"
           variant="footer"
         />

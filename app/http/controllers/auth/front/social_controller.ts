@@ -95,9 +95,9 @@ export default class SocialController {
   }
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('auth/front/define_password', {})
+    return ctx.reactSSR('auth/front/define_password', {})
   }
 
   async execute(ctx: HttpContext) {

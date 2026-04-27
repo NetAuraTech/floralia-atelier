@@ -1,7 +1,7 @@
 import { SettingsLayout } from '~/components/organisms/settings_layout'
 import { useTranslation } from 'react-i18next'
 import { Card } from '~/components/atoms/card'
-import { Form } from '@adonisjs/inertia/react'
+import { Form } from '~/components/atoms/form'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'

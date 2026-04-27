@@ -30,12 +30,6 @@ const routes = {
     tokens: [{"old":"/__transmit/unsubscribe","type":0,"val":"__transmit","end":""},{"old":"/__transmit/unsubscribe","type":0,"val":"unsubscribe","end":""}],
     types: placeholder as Registry['unsubscribe']['types'],
   },
-  'home': {
-    methods: ["GET","HEAD"],
-    pattern: '/home',
-    tokens: [{"old":"/home","type":0,"val":"home","end":""}],
-    types: placeholder as Registry['home']['types'],
-  },
   'auth.session.render': {
     methods: ["GET","HEAD"],
     pattern: '/login',

@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react'
+import { usePageContext as usePage } from '~/context/page_context'
 import { EditorProps } from "~/types/builder"
 import { LFW } from "~/components/organisms/builder/editor/locked_file_wrapper"
 import {SelectOption} from "~/components/atoms/select_option";

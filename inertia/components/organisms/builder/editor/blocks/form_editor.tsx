@@ -1,6 +1,6 @@
 import {LFW} from "~/components/organisms/builder/editor/locked_file_wrapper";
 import {EditorProps} from "~/types/builder";
-import {usePage} from "@inertiajs/react";
+import { usePageContext as usePage } from '~/context/page_context'
 
 export function FormEditor(props: EditorProps) {
   const { block, onChange, lockProps } = props

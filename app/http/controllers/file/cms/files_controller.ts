@@ -22,7 +22,7 @@ export default class FilesController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request } = ctx
+    const { request } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -39,7 +39,7 @@ export default class FilesController {
 
     const folders = await this.fileFolderService.listRoots()
 
-    return inertia.render('file/cms/index', {
+    return ctx.reactSSR('file/cms/index', {
       files: FileTransformer.paginate(files.all(), files.getMeta()),
       folders: FileFolderTransformer.transform(folders),
       filters: payload,

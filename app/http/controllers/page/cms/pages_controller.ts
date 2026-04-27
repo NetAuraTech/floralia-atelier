@@ -11,7 +11,7 @@ export default class PagesController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request } = ctx
+    const { request } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -19,7 +19,7 @@ export default class PagesController {
 
     const pages = await this.pageService.list(payload, pagination)
 
-    return inertia.render('page/cms/index', {
+    return ctx.reactSSR('page/cms/index', {
       pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
     })

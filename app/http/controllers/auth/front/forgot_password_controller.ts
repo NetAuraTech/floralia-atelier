@@ -9,9 +9,9 @@ export default class ForgotPasswordController {
   constructor(protected passwordService: PasswordService) {}
 
   render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('auth/front/forgot_password', {})
+    return ctx.reactSSR('auth/front/forgot_password', {})
   }
 
   async execute(ctx: HttpContext) {

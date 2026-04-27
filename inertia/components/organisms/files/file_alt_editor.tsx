@@ -3,11 +3,11 @@ import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 import { Paragraph } from '~/components/atoms/paragraph'
 import type { Data } from '@generated/data'
-import { Form } from '@adonisjs/inertia/react'
+import { Form } from '~/components/atoms/form'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
-import { usePage } from '@inertiajs/react'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import { usePageContext } from '~/context/page_context'
+import type { SharedProps } from '~/types/shared_props'
 import { toast } from 'sonner'
 import { resources } from '~/lib/i18n'
 import { useTranslation } from 'react-i18next'
@@ -40,7 +40,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
   const [alts, setAlts] = useState<FileAlt[]>([])
   const { t } = useTranslation('admin')
 
-  const pageProps = usePage<SharedProps>().props
+  const { props: pageProps } = usePageContext<SharedProps>()
 
   function rowKey(locale: string, key: string) {
     return `${locale}:${key}`

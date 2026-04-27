@@ -1,9 +1,8 @@
-import { usePage } from '@inertiajs/react'
-import {ReactNode, MouseEvent} from 'react'
+import { usePageContext } from '~/context/page_context'
+import { ReactNode, MouseEvent, useState, useEffect } from 'react'
 import type { FontSize } from '~/types/font'
 import { getFontSizeClass } from '~/utils/font'
-import { Link } from '@adonisjs/inertia/react'
-import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
+import { Link, type LinkProps } from '~/components/atoms/link'
 import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
@@ -31,33 +30,6 @@ type NavLinkBaseProps = {
   disabled?: boolean
   /** Bypass isActive logic */
   isActive?: boolean
-}
-
-type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
-  route: R
-  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
-  anchor?: string
-  /**
-   * Query-string parameters merged into the URL. When provided the link uses
-   * a plain `href` instead of an Inertia route so the query string is
-   * preserved correctly.
-   */
-  qs?: Record<string, any> | undefined
-} & (LinkParams<R>['routeParams'] extends undefined | never
-    ? { routeParams?: never }
-    : { routeParams: LinkParams<R>['routeParams'] })
-
-type NavLinkNoRouteProps = NavLinkBaseProps & {
-  route?: never
-  routeParams?: never
-  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
-  anchor?: string
-  /**
-   * Query-string parameters merged into the URL. When provided the link uses
-   * a plain `href` instead of an Inertia route so the query string is
-   * preserved correctly.
-   */
-  qs?: Record<string, any> | undefined
 }
 
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
@@ -97,7 +69,7 @@ export const variants = {
  *
  * @example
  * // Simple nav link
- * <NavLink route="home" label="Home" variant="nav" />
+ * <NavLink route="page.home" label="Home" variant="nav" />
  *
  * // Settings tab
  * <NavLink route="settings.profile.render" label="Profile" variant="setting_nav" />
@@ -107,7 +79,7 @@ export const variants = {
  */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
   const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
-  const { url } = usePage()
+  const { url } = usePageContext()
 
   const resolvedHref = props.route
     ? (urlFor as (route: string, params?: unknown) => string)(props.route, props.routeParams)
@@ -116,7 +88,16 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   const [currentPath] = url.split('?')
   const pathMatches = currentPath === resolvedHref
 
-  const anchorMatches = typeof window !== 'undefined' ? (props.anchor ?? '') === window.location.hash.replace('#', '') : false
+  const [clientHash, setClientHash] = useState('')
+
+  useEffect(() => {
+    setClientHash(window.location.hash.replace('#', ''))
+    const onHashChange = () => setClientHash(window.location.hash.replace('#', ''))
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const anchorMatches = (props.anchor ?? '') === clientHash
 
   const isActive = (pathMatches && anchorMatches) || props.isActive
 
@@ -129,18 +110,18 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
 
   const state = disabled ? 'disabled' : 'active'
 
-  let linkProps: LinkProps<R> = { href: '#' }
+  let linkProps: any = { href: '#' }
 
   if (props.route) {
-    linkProps =
-      props.anchor || props.qs
-        ? {
-            href: `${urlFor(props.route as any, props.routeParams as any, { qs: props.qs })}${props.anchor ? `#${props.anchor}` : ''}`,
-          }
-        : ({
-            route: props.route,
-            routeParams: props.routeParams,
-          } as unknown as LinkProps<R>)
+    linkProps = {
+      route: props.route,
+      routeParams: (props as any).routeParams,
+      qs: (props as any).qs,
+      href: props.anchor ? `#${props.anchor}` : undefined
+    }
+  } else if ((props as any).href) {
+    linkProps.href = (props as any).href
+    if (props.anchor) linkProps.href += `#${props.anchor}`
   }
 
   return (

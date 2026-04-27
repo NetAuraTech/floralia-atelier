@@ -1,22 +1,14 @@
 import { useEffect, useState } from 'react'
-import { router } from '@inertiajs/react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from '~/components/atoms/nav_link'
-import { Link } from '@adonisjs/inertia/react'
+import { Link } from '~/components/atoms/link'
 
 export function Header() {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
-    const unregisterListener = router.on('success', () => {
-      setIsMenuOpen(false)
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur()
-      }
-    })
-
-    return () => unregisterListener()
+    // router.on is removed
   }, [])
 
   const toggleMenu = () => {

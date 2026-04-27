@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title inertia>
-      AdonisJS
-    </title>
+    {{{ helmetTitle }}}
+    {{{ helmetMeta }}}
+    {{{ helmetLink }}}
     <script>
       (function () {
         const stored = localStorage.getItem('theme')
@@ -15,10 +15,12 @@
     </script>
     @viteReactRefresh()
     @vite(['inertia/app.tsx'])
-    @inertiaHead()
     @stack('dumper')
   </head>
   <body>
-    @inertia()
+    <div id="app">{{{ ssrHtml }}}</div>
+    <script>
+      window.__PAGE__ = {{{ pageData }}}
+    </script>
   </body>
 </html>

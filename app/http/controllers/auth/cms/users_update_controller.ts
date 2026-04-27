@@ -14,7 +14,7 @@ export default class UsersUpdateController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const payload = await editValidator.validate(params)
 
@@ -22,7 +22,7 @@ export default class UsersUpdateController {
 
     const roles = await this.roleService.findAll()
 
-    return inertia.render('auth/cms/form', {
+    return ctx.reactSSR('auth/cms/form', {
       user: UserTransformer.transform(user),
       roles: RoleTransformer.transform(roles),
     })

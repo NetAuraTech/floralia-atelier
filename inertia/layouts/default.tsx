@@ -2,8 +2,9 @@ import {ReactElement, useEffect} from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
-import {Head, usePage} from '@inertiajs/react'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import { Helmet } from 'react-helmet-async'
+import { usePageContext } from '~/context/page_context'
+import type { SharedProps } from '~/types/shared_props'
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -36,19 +37,20 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const { children } = props
-  const { app_name, app_url } = usePage<SharedProps>().props
+  const { props: pageProps, url } = usePageContext<SharedProps>()
+  const { app_name, app_url, flash } = pageProps
 
   useEffect(() => {
     toast.dismiss()
-  }, [usePage().url])
+  }, [url])
 
-  if (children.props.flash.error) toast.error(children.props.flash.error)
-  if (children.props.flash.success) toast.success(children.props.flash.success)
-  if (children.props.flash.info) toast.info(children.props.flash.info)
+  if (flash?.error) toast.error(flash.error)
+  if (flash?.success) toast.success(flash.success)
+  if (flash?.info) toast.info(flash.info)
 
   return (
     <>
-      <Head>
+      <Helmet>
         <link rel="canonical" href={app_url} />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <meta name="language" content="fr" />
@@ -69,7 +71,7 @@ export default function Layout(props: LayoutProps) {
         <meta name="twitter:title" content={app_name} />
         <meta name="twitter:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
         <meta name="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
-      </Head>
+      </Helmet>
       <>
         <Header/>
         <Toaster position="top-right" richColors/>

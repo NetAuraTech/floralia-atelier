@@ -1,7 +1,8 @@
-import {Head, usePage} from '@inertiajs/react'
+import { Helmet as Head } from 'react-helmet-async'
 import type { ResolvedPageContent } from '#types/page'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
-import type {SharedProps} from "@adonisjs/inertia/types";
+import type { SharedProps } from '~/types/shared_props'
+import { usePageContext as usePage } from '~/context/page_context'
 
 type PageProps = {
   id: number

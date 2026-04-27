@@ -9,11 +9,11 @@ export default class FileFoldersController {
   constructor(protected folderService: FileFolderService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
     const roots = await this.folderService.listRoots()
 
-    return inertia.render('file/cms/folders', { roots: FileFolderTransformer.transform(roots) })
+    return ctx.reactSSR('file/cms/folders', { roots: FileFolderTransformer.transform(roots) })
   }
 
   async execute(ctx: HttpContext) {

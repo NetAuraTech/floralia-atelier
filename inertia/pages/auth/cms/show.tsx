@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
 import { useTranslation } from 'react-i18next'
 import { AdminMain } from '~/components/organisms/admin/admin_main'

@@ -1,7 +1,7 @@
 import { useMemo, MouseEvent } from 'react'
 import { MetaData } from '~/types/paginated'
 import { useTranslation } from 'react-i18next'
-import type { LinkParams, LinkProps } from '@adonisjs/inertia/react'
+import { type LinkProps } from '~/components/atoms/link'
 import { NavLink } from '~/components/atoms/nav_link'
 
 interface PaginationBaseProps {
@@ -25,9 +25,8 @@ interface PaginationBaseProps {
 
 type PaginationRouteProps<R extends NonNullable<LinkProps['route']>> = PaginationBaseProps & {
   route: R
-} & (LinkParams<R>['routeParams'] extends undefined | never
-    ? { routeParams?: never }
-    : { routeParams: LinkParams<R>['routeParams'] })
+  routeParams?: any
+}
 
 type PaginationNoRouteProps = PaginationBaseProps & {
   route?: never

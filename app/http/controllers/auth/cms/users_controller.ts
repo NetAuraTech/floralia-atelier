@@ -16,7 +16,7 @@ export default class UsersController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, request } = ctx
+    const { request } = ctx
 
     const pagination = await extractPagination(request)
 
@@ -29,7 +29,7 @@ export default class UsersController {
 
     const users = await this.userService.list(payload, pagination)
 
-    return inertia.render('auth/cms/index', {
+    return ctx.reactSSR('auth/cms/index', {
       users: UserTransformer.paginate(users.all(), users.getMeta()),
       roles: RoleTransformer.transform(roles),
       filters: payload,

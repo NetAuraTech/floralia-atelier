@@ -15,7 +15,7 @@ export default class UsersShowsController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const payload = await showValidator.validate(params)
 
@@ -23,7 +23,7 @@ export default class UsersShowsController {
 
     const permissions = await this.permissionService.findAll()
 
-    return inertia.render('auth/cms/show', {
+    return ctx.reactSSR('auth/cms/show', {
       user: UserTransformer.transform(user),
       providers: enabledProviders,
       permissions: PermissionTransformer.transform(permissions),

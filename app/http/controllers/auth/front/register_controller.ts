@@ -14,9 +14,9 @@ export default class RegisterController {
   ) {}
 
   render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('auth/front/register', {
+    return ctx.reactSSR('auth/front/register', {
       providers: enabledProviders,
     })
   }

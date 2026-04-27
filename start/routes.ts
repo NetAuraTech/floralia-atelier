@@ -12,7 +12,7 @@ import { controllers } from '#generated/controllers'
 import router from '@adonisjs/core/services/router'
 import { throttle } from '#start/limiter'
 
-router.on('/home').renderInertia('home', {}).as('home')
+
 
 router
   .group(() => {

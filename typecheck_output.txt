@@ -1,0 +1,131 @@
+
+> adonisjs-foundry@0.0.0 typecheck
+> tsc --noEmit && tsc --noEmit --project inertia/tsconfig.json
+
+.adonisjs/client/registry/index.ts(481,5): error TS2322: Type '{ body: Omit<{ [K: string]: string; }, "params" | "query" | "headers" | "cookies">; paramsTuple: []; params: {}; query: unknown; response: void; errorResponse: { status: 422; response: { errors: SimpleError[]; }; }; }' is not assignable to type 'EndpointTypes'.
+  Types of property 'query' are incompatible.
+    Type 'unknown' is not assignable to type 'Record<string, any>'.
+inertia/client.ts(6,3): error TS2322: Type '{ routes: { readonly 'drive.fs.serve': { readonly methods: ["GET", "HEAD"]; readonly pattern: "/uploads/*"; readonly tokens: [{ readonly old: "/uploads/*"; readonly type: 0; readonly val: "uploads"; readonly end: ""; }, { ...; }]; readonly types: Registry["drive.fs.serve"]["types"]; }; ... 80 more ...; readonly 'pag...' is not assignable to type 'TuyauRegistry<Record<string, AdonisEndpoint>, unknown>'.
+  Types of property 'routes' are incompatible.
+    Type '{ readonly 'drive.fs.serve': { readonly methods: ["GET", "HEAD"]; readonly pattern: "/uploads/*"; readonly tokens: [{ readonly old: "/uploads/*"; readonly type: 0; readonly val: "uploads"; readonly end: ""; }, { ...; }]; readonly types: Registry["drive.fs.serve"]["types"]; }; ... 80 more ...; readonly 'page.render':...' is not assignable to type 'Record<string, AdonisEndpoint>'.
+      Property ''contact.execute'' is incompatible with index signature.
+        Type '{ readonly methods: ["POST"]; readonly pattern: "/contact"; readonly tokens: [{ readonly old: "/contact"; readonly type: 0; readonly val: "contact"; readonly end: ""; }]; readonly types: Registry["contact.execute"]["types"]; }' is not assignable to type 'AdonisEndpoint'.
+          The types of 'types.query' are incompatible between these types.
+            Type 'unknown' is not assignable to type 'Record<string, any>'.
+inertia/components/atoms/blocks/image_block.tsx(3,7): error TS6133: 'fitMap' is declared but its value is never read.
+inertia/components/atoms/file_upload_input.tsx(225,30): error TS2322: Type '"foreground"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/components/atoms/form.tsx(10,18): error TS2430: Interface 'FormProps' incorrectly extends interface 'Omit<FormHTMLAttributes<HTMLFormElement>, "children">'.
+  Types of property 'onError' are incompatible.
+    Type '((errors: Record<string, string>) => void) | undefined' is not assignable to type 'ReactEventHandler<HTMLFormElement> | undefined'.
+      Type '(errors: Record<string, string>) => void' is not assignable to type 'ReactEventHandler<HTMLFormElement>'.
+        Types of parameters 'errors' and 'event' are incompatible.
+          Type 'SyntheticEvent<HTMLFormElement, Event>' is not assignable to type 'Record<string, string>'.
+            Index signature for type 'string' is missing in type 'SyntheticEvent<HTMLFormElement, Event>'.
+inertia/components/atoms/form.tsx(41,28): error TS2345: Argument of type 'FormEvent<HTMLFormElement>' is not assignable to parameter of type 'SubmitEvent<HTMLFormElement>'.
+  Types of property 'target' are incompatible.
+    Type 'EventTarget' is not assignable to type 'EventTarget & HTMLFormElement'.
+      Type 'EventTarget' is missing the following properties from type 'HTMLFormElement': acceptCharset, action, autocomplete, elements, and 330 more.
+inertia/components/atoms/form.tsx(70,32): error TS2345: Argument of type 'string | ((formData: FormData) => void | Promise<void>)' is not assignable to parameter of type 'string | URL'.
+  Type '(formData: FormData) => void | Promise<void>' is not assignable to type 'string | URL'.
+inertia/components/atoms/form.tsx(77,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type 'string | ((formData: FormData) => void | Promise<void>)' is not assignable to parameter of type 'string | URL | Request'.
+      Type '(formData: FormData) => void | Promise<void>' is not assignable to type 'string | URL | Request'.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type 'string | ((formData: FormData) => void | Promise<void>)' is not assignable to parameter of type 'URL | RequestInfo'.
+      Type '(formData: FormData) => void | Promise<void>' is not assignable to type 'URL | RequestInfo'.
+inertia/components/atoms/nav_link.tsx(8,6): error TS6196: 'NavLinkBaseProps' is declared but never used.
+inertia/components/atoms/nav_link.tsx(36,5): error TS2552: Cannot find name 'NavLinkRouteProps'. Did you mean 'NavLinkProps'?
+inertia/components/atoms/nav_link.tsx(37,5): error TS2304: Cannot find name 'NavLinkNoRouteProps'.
+inertia/components/atoms/nav_link.tsx(123,38): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ link: string; nav: string; setting_nav: string; pagination: string; admin_nav: string; external: string; footer: string; }'.
+inertia/components/atoms/user_status.tsx(33,19): error TS6133: 'user' is declared but its value is never read.
+inertia/components/molecules/banner.tsx(58,18): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/components/molecules/banner.tsx(61,18): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/components/molecules/pagination.tsx(114,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+inertia/components/molecules/pagination.tsx(124,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+inertia/components/molecules/pagination.tsx(142,35): error TS7006: Parameter 'e' implicitly has an 'any' type.
+inertia/components/molecules/pagination.tsx(154,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+inertia/components/molecules/pagination.tsx(164,23): error TS7006: Parameter 'e' implicitly has an 'any' type.
+inertia/components/molecules/site_intro.tsx(44,52): error TS2322: Type '{ id: string; href: string; fetchpriority: string; width: string; height: string; overflow: string; transform: string; }' is not assignable to type 'SVGProps<SVGImageElement>'.
+  Property 'fetchpriority' does not exist on type 'SVGProps<SVGImageElement>'.
+inertia/components/organisms/admin/admin_sidebar.tsx(47,24): error TS6133: 'setIsMenuOpen' is declared but its value is never read.
+inertia/components/organisms/admin/admin_sidebar.tsx(48,9): error TS6133: 'isLarge' is declared but its value is never read.
+inertia/components/organisms/admin/admin_sidebar.tsx(49,9): error TS6133: 'pageProps' is declared but its value is never read.
+inertia/components/organisms/builder/block_types.ts(95,7): error TS2353: Object literal may only specify known properties, and 'href' does not exist in type 'SectionProps | GridProps | TitleProps | ParagraphProps | SeparatorProps | FormProps | FieldProps | HtmlTextProps | ImageProps | ButtonProps'.
+inertia/components/organisms/builder/editor/blocks/commons/spacing_select.tsx(15,94): error TS2322: Type '(v: string) => void' is not assignable to type '(value: string | boolean) => void'.
+  Types of parameters 'v' and 'value' are incompatible.
+    Type 'string | boolean' is not assignable to type 'string'.
+      Type 'boolean' is not assignable to type 'string'.
+inertia/hooks/use_admin.ts(61,9): error TS2322: Type 'string' is not assignable to type 'never'.
+inertia/hooks/use_admin.ts(69,9): error TS2322: Type 'string' is not assignable to type 'never'.
+inertia/hooks/use_admin.ts(75,9): error TS2322: Type 'string' is not assignable to type 'never'.
+inertia/hooks/use_admin.ts(81,9): error TS2322: Type 'string' is not assignable to type 'never'.
+inertia/hooks/use_admin.ts(89,9): error TS2322: Type 'string' is not assignable to type 'never'.
+inertia/hooks/use_builder_sync-olf.ts(2,25): error TS2307: Cannot find module '@inertiajs/react' or its corresponding type declarations.
+inertia/hooks/use_builder_sync-olf.ts(13,34): error TS2307: Cannot find module '@adonisjs/inertia/types' or its corresponding type declarations.
+inertia/pages/auth/cms/form.tsx(87,50): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/cms/form.tsx(103,53): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/cms/form.tsx(119,52): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(80,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(96,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(113,35): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(114,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(135,42): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/accept_invitation.tsx(136,70): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/define_password.tsx(63,35): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/define_password.tsx(64,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/define_password.tsx(85,42): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/define_password.tsx(86,70): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/forgot_password.tsx(57,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/login.tsx(81,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/login.tsx(95,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/register.tsx(74,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/register.tsx(90,35): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/register.tsx(91,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/register.tsx(112,42): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/register.tsx(113,70): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/reset_password.tsx(12,10): error TS2305: Module '"~/types"' has no exported member 'InertiaProps'.
+inertia/pages/auth/front/reset_password.tsx(69,35): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/reset_password.tsx(70,57): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/reset_password.tsx(91,42): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/auth/front/reset_password.tsx(92,70): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/home.tsx(22,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(131,26): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(143,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(254,24): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(276,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(291,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(302,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(308,35): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(318,37): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(328,39): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(337,39): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(346,39): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(355,39): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(366,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/home.tsx(434,22): error TS2322: Type '"custom"' is not assignable to type 'ParagraphVariants | undefined'.
+inertia/pages/page/cms/create.tsx(81,55): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/page/cms/create.tsx(100,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/page/cms/create.tsx(114,53): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/page/cms/create.tsx(136,58): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/page/cms/create.tsx(152,64): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/page/cms/edit.tsx(115,5): error TS2304: Cannot find name 'router'.
+inertia/pages/page/cms/edit.tsx(367,16): error TS2304: Cannot find name 'useForm'.
+inertia/pages/page/cms/edit.tsx(399,12): error TS2739: Type '{ defaultValue: any; onChange: (e: ChangeEvent<HTMLInputElement, Element>) => any; placeholder: string; }' is missing the following properties from type 'InputProps': name, type
+inertia/pages/page/cms/edit.tsx(404,12): error TS2739: Type '{ defaultValue: any; onChange: (e: ChangeEvent<HTMLInputElement, Element>) => any; placeholder: string; }' is missing the following properties from type 'InputProps': name, type
+inertia/pages/page/cms/show.tsx(203,18): error TS2304: Cannot find name 'Link'.
+inertia/pages/page/cms/show.tsx(215,19): error TS2304: Cannot find name 'Link'.
+inertia/pages/settings/account/front/email_change.tsx(69,54): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(72,61): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(159,75): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(177,33): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(178,67): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(199,40): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(200,80): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/account/front/index.tsx(240,41): error TS2339: Property 'reset' does not exist on type 'FormRenderProps'.
+inertia/pages/settings/account/front/index.tsx(253,69): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/preferences/front/index.tsx(42,58): error TS2339: Property 'props' does not exist on type 'Response'.
+inertia/pages/settings/preferences/front/index.tsx(43,42): error TS2339: Property 'props' does not exist on type 'Response'.
+inertia/pages/settings/preferences/front/index.tsx(59,59): error TS18048: 'event' is possibly 'undefined'.
+inertia/pages/settings/profile/front/index.tsx(71,55): error TS18048: 'event' is possibly 'undefined'.
+inertia/types/shared_props.ts(2,15): error TS2305: Module '"#types/preferences"' has no exported member 'Preferences'.

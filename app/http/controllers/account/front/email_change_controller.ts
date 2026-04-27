@@ -10,9 +10,9 @@ export default class EmailChangeController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { params, inertia } = ctx
+    const { params, } = ctx
 
-    return inertia.render('settings/account/front/email_change', {
+    return ctx.reactSSR('settings/account/front/email_change', {
       token: params.token,
     })
   }

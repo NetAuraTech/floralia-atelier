@@ -10,7 +10,6 @@ export interface ApiDefinition {
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']
-  home: typeof routes['home']
   auth: {
     session: {
       render: typeof routes['auth.session.render']

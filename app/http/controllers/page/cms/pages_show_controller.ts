@@ -9,11 +9,11 @@ export default class PagesShowController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const { id } = await showPageValidator.validate(params)
     const page = await this.pageService.detail(id)
 
-    return inertia.render('page/cms/show', { page: PageTransformer.transform(page) })
+    return ctx.reactSSR('page/cms/show', { page: PageTransformer.transform(page) })
   }
 }

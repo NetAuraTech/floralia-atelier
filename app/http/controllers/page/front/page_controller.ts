@@ -19,7 +19,7 @@ export default class PageController {
    * Called by `GET /`.
    */
   async home(ctx: HttpContext) {
-    const { inertia, request, response } = ctx
+    const { request, response } = ctx
 
     const locale = request.input('locale', ctx.i18n?.locale ?? 'en')
 
@@ -49,7 +49,7 @@ export default class PageController {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return inertia.render('page/front/show', {
+    return ctx.reactSSR('page/front/show', {
       id: page.id,
       locale,
       title: translation.title,
@@ -68,7 +68,7 @@ export default class PageController {
    * is not in `published` status.
    */
   async render(ctx: HttpContext) {
-    const { params, request, inertia, response } = ctx
+    const { params, request, response } = ctx
 
     const page = await this.pageService.findBySlug(params.slug)
 
@@ -95,7 +95,7 @@ export default class PageController {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return inertia.render('page/front/show', {
+    return ctx.reactSSR('page/front/show', {
       id: page.id,
       locale,
       title: translation.title,

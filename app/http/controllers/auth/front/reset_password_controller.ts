@@ -10,11 +10,11 @@ export default class ResetPasswordController {
   constructor(protected passwordService: PasswordService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     await this.passwordService.validate(params.token)
 
-    return inertia.render('auth/front/reset_password', { token: params.token })
+    return ctx.reactSSR('auth/front/reset_password', { token: params.token })
   }
 
   async execute(ctx: HttpContext) {

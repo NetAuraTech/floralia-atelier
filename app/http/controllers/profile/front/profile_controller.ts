@@ -9,11 +9,11 @@ export default class ProfileController {
   constructor(protected profileService: ProfileService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, inertia } = ctx
+    const { auth, } = ctx
 
     const user = auth.user!
 
-    return inertia.render('settings/profile/front/index', {
+    return ctx.reactSSR('settings/profile/front/index', {
       user: UserTransformer.transform(user),
     })
   }

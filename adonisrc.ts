@@ -1,4 +1,3 @@
-import { indexPages } from '@adonisjs/inertia'
 import { indexEntities } from '@adonisjs/core'
 import { defineConfig } from '@adonisjs/core/app'
 import { generateRegistry } from '@tuyau/core/hooks'
@@ -29,7 +28,6 @@ export default defineConfig({
     () => import('@adonisjs/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/session/commands'),
-    () => import('@adonisjs/inertia/commands'),
     () => import('@adonisjs/mail/commands'),
   ],
 
@@ -70,7 +68,6 @@ export default defineConfig({
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/cors/cors_provider'),
-    () => import('@adonisjs/inertia/inertia_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('#providers/api_provider'),
     () => import('@adonisjs/redis/redis_provider'),
@@ -172,7 +169,6 @@ export default defineConfig({
           glob: ['**\/*_controller.ts'],
         },
       }),
-      indexPages({ framework: 'react' }),
       generateRegistry(),
     ],
     buildStarting: [() => import('@adonisjs/vite/build_hook')],

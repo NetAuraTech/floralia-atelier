@@ -1,6 +1,6 @@
 import type { ResolvedBlock } from '#types/page'
 import {ReactNode} from "react";
-import {Form} from "@adonisjs/inertia/react";
+import { Form } from '~/components/atoms/form'
 
 interface FormBlockProps {
   block: ResolvedBlock<'form'>

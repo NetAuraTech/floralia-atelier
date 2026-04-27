@@ -9,9 +9,9 @@ import { enabledProviders } from '#helpers/auth/oauth'
 export default class SessionController {
   constructor(protected authService: AuthService) {}
   render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('auth/front/login', {
+    return ctx.reactSSR('auth/front/login', {
       providers: enabledProviders,
     })
   }

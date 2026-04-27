@@ -10,7 +10,7 @@ export default class PagesUpdateController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { inertia, params } = ctx
+    const { params } = ctx
 
     const allRoutes = router.toJSON().root
     const availableRoutes = allRoutes
@@ -58,7 +58,7 @@ export default class PagesUpdateController {
     const { id } = await showPageValidator.validate(params)
     const page = await this.pageService.detail(id)
 
-    return inertia.render('page/cms/edit', {
+    return ctx.reactSSR('page/cms/edit', {
       page: PageTransformer.transform(page),
       availableRoutes,
       availablePages,

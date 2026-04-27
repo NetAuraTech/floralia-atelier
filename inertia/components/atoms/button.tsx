@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
-import { Link } from '@adonisjs/inertia/react'
-import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
+import { Link, type LinkProps } from '~/components/atoms/link'
 import { urlFor } from '~/client'
 
 interface ButtonBaseProps {
@@ -57,9 +56,8 @@ interface ButtonBaseProps {
 
 type ButtonRouteProps<R extends NonNullable<LinkProps['route']>> = ButtonBaseProps & {
   route: R
-} & (LinkParams<R>['routeParams'] extends undefined | never
-    ? { routeParams?: never }
-    : { routeParams: LinkParams<R>['routeParams'] })
+  routeParams?: any
+}
 
 type ButtonNoRouteProps = ButtonBaseProps & {
   route?: never

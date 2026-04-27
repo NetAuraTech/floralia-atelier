@@ -2,7 +2,7 @@ import { Section } from '~/components/atoms/section'
 import { Heading } from '~/components/atoms/heading'
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '@adonisjs/inertia/types'
+import type { SharedProps } from '~/types/shared_props'
 
 export default function DashboardPage() {
   return (

@@ -4,8 +4,8 @@ import { inject } from '@adonisjs/core'
 @inject()
 export default class DashboardController {
   async render(ctx: HttpContext) {
-    const { inertia } = ctx
+    
 
-    return inertia.render('core/cms/dashboard', {})
+    return ctx.reactSSR('core/cms/dashboard', {})
   }
 }

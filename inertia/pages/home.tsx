@@ -1,5 +1,5 @@
 import { Section } from '~/components/atoms/section'
-import {Head} from "@inertiajs/react";
+import { Helmet as Head } from 'react-helmet-async'
 import { Paragraph } from "~/components/atoms/paragraph";
 import { Heading } from "~/components/atoms/heading";
 import { Button } from "~/components/atoms/button";
@@ -31,12 +31,12 @@ export default function Home() {
           </Paragraph>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <NavLink
-              route="home"
+              route="page.home"
               anchor="services"
               label="Nos services"
             />
             <NavLink
-              route="home"
+              route="page.home"
               anchor="services"
               label="Voir nos création"
             >
@@ -168,7 +168,7 @@ export default function Home() {
               Entretien complet du monument funéraire : démoussage, nettoyage du granit ou du marbre. Votre sépulture retrouve sa dignité. Intervention ponctuelle ou abonnement annuel disponible.
             </Paragraph>
             <NavLink
-              route="home"
+              route="page.home"
               label="En savoir plus"
             >
               <span className="group-hover:translate-x-1 transition-transform ml-1">→</span>
@@ -191,7 +191,7 @@ export default function Home() {
               Compositions fraîches, renouvelées selon vos souhaits tout au long de l'année. Abonnement planifiés sur les dates qui vous tiennent à cœur: Toussaint, anniversaires, fêtes.
             </Paragraph>
             <NavLink
-              route="home"
+              route="page.home"
               label="En savoir plus"
             >
               <span className="group-hover:translate-x-1 transition-transform ml-1">→</span>
@@ -214,7 +214,7 @@ export default function Home() {
               Bouquet de mariés, brassé champêtre, composition d'anniversaire ou de naissance... Chaque bouquet est imaginé selon vos couleurs, vos envies et la saison.
             </Paragraph>
             <NavLink
-              route="home"
+              route="page.home"
               label="En savoir plus"
             >
               <span className="group-hover:translate-x-1 transition-transform ml-1">→</span>
@@ -237,7 +237,7 @@ export default function Home() {
               Centres de table, arche florales, chemins de table pour mariages, baptêmes, communions, anniversaires. Un rendu unique, pensés en cohérence avec votre thème.
             </Paragraph>
             <NavLink
-              route="home"
+              route="page.home"
               label="En savoir plus"
             >
               <span className="group-hover:translate-x-1 transition-transform ml-1">→</span>
