@@ -1,10 +1,10 @@
-import {lazy, ReactElement, Suspense, useEffect, useRef, useState} from 'react'
+import {ReactElement, useEffect, useRef, useState} from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
 import {Head, usePage} from '@inertiajs/react'
 import type { SharedProps } from '@adonisjs/inertia/types'
-const SiteIntro = lazy(() => import('~/components/molecules/site_intro'))
+import SiteIntro from "~/components/molecules/site_intro";
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -86,9 +86,7 @@ export default function Layout(props: LayoutProps) {
         <meta name="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Head>
       {showIntro && (
-        <Suspense fallback={null}>
-          <SiteIntro site={siteRef} onDone={() => setSiteHidden(false)} />
-        </Suspense>
+        <SiteIntro site={siteRef} onDone={() => setSiteHidden(false)} />
       )}
       <div ref={siteRef} id={showIntro ? 'site' : ''} style={siteHidden ? { visibility: 'hidden' } : undefined}>
         <Header/>
