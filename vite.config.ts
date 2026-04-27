@@ -29,4 +29,10 @@ export default defineConfig({
   ssr: {
     external: ['react-i18next', 'i18next'],
   },
+  build: {
+    modulePreload: {
+      polyfill: false,
+      resolveDependencies: () => []
+    }
+  }
 })
