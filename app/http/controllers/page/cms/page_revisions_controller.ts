@@ -20,7 +20,7 @@ export default class PageRevisionsController {
     const revisions = await this.pageService.listRevisions(translationId)
 
     return ctx.reactSSR('page/cms/revisions', {
-      revisions: PageRevisionTransformer.transform(revisions),
+      revisions: await PageRevisionTransformer.transform(revisions).resolve(ctx.containerResolver, 0),
       translation_id: translationId,
       page_id: params.id,
     })

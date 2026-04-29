@@ -14,6 +14,6 @@ export default class PagesShowController {
     const { id } = await showPageValidator.validate(params)
     const page = await this.pageService.detail(id)
 
-    return ctx.reactSSR('page/cms/show', { page: PageTransformer.transform(page) })
+    return ctx.reactSSR('page/cms/show', { page: await PageTransformer.transform(page).resolve(ctx.containerResolver, 0) })
   }
 }

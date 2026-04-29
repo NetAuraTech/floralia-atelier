@@ -20,7 +20,7 @@ export default class PagesController {
     const pages = await this.pageService.list(payload, pagination)
 
     return ctx.reactSSR('page/cms/index', {
-      pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
+      pages: await PageTransformer.paginate(pages.all(), pages.getMeta()).resolve(ctx.containerResolver, 0),
       filters: payload,
     })
   }

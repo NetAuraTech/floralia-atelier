@@ -59,7 +59,7 @@ export default class PagesUpdateController {
     const page = await this.pageService.detail(id)
 
     return ctx.reactSSR('page/cms/edit', {
-      page: PageTransformer.transform(page),
+      page: await PageTransformer.transform(page).resolve(ctx.containerResolver, 0),
       availableRoutes,
       availablePages,
       availablePostRoutes

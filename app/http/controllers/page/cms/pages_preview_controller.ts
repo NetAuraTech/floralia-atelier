@@ -137,7 +137,7 @@ export default class PagesPreviewController {
     )
 
     return ctx.reactSSR('page/front/preview', {
-      page: PageTranslationTransformer.transform(translation),
+      page: await PageTranslationTransformer.transform(translation).resolve(ctx.containerResolver, 0),
       editable: true,
     })
   }
