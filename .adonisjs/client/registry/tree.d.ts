@@ -157,6 +157,8 @@ export interface ApiDefinition {
     execute: typeof routes['contact.execute']
   }
   page: {
+    sitemap: typeof routes['page.sitemap']
+    robots: typeof routes['page.robots']
     home: typeof routes['page.home']
     localised: {
       render: typeof routes['page.localised.render']

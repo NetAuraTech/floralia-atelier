@@ -51,7 +51,7 @@ export default function Layout(props: LayoutProps) {
   return (
     <>
       <Helmet>
-        <link rel="canonical" href={app_url} />
+        <link rel="canonical" href={`${app_url}${url}`} />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <meta name="language" content="fr" />
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -60,8 +60,9 @@ export default function Layout(props: LayoutProps) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-title" content="Floralia Atelier" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta property="og:url" content={app_url} />
+        <meta property="og:url" content={`${app_url}${url}`} />
         <meta property="og:site_name" content={app_name} />
+        <meta property="og:type" content="website" />
         <meta property="og:locale" content="fr_FR" />
         <meta property="og:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
         <meta name="geo.region" content="FR-62" />
@@ -70,7 +71,6 @@ export default function Layout(props: LayoutProps) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={app_name} />
         <meta name="twitter:image:alt" content={`${app_name} - Fleuriste artisan, compositions florales et entretien de sépultures`} />
-        <meta name="twitter:description" content="Entretien et fleurissement de sépultures avec délicatesse. Créations florales sur mesure pour mariages, baptêmes et événements. Devis gratuit." />
       </Helmet>
       <>
         <Header/>

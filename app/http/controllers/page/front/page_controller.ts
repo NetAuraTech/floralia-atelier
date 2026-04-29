@@ -105,4 +105,27 @@ export default class PageController {
       content: resolvedContent,
     })
   }
+
+  /**
+   * Generates and serves the XML sitemap for search engines.
+   */
+  async sitemap({ response }: HttpContext) {
+    const xml = await this.pageService.generateSitemap()
+
+    return response
+      .header('Content-Type', 'application/xml')
+      .header('Cache-Control', 'public, max-age=3600')
+      .send(xml)
+  }
+
+  /**
+   * Generates and serves the robots.txt configuration file.
+   */
+  async robots({ response }: HttpContext) {
+    const robotsTxt = this.pageService.getRobotsTxt()
+
+    return response
+      .header('Content-Type', 'text/plain')
+      .send(robotsTxt)
+  }
 }

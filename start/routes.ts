@@ -306,6 +306,9 @@ router
 
 router.post('/contact', [controllers.page.front.Contact, 'execute'])
 
+router.get('/sitemap.xml', [controllers.page.front.Page, 'sitemap'])
+router.get('/robots.txt', [controllers.page.front.Page, 'robots'])
+
 router.get('/', [controllers.page.front.Page, 'home']).as('page.home')
 
 router

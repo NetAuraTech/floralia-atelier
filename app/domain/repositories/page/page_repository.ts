@@ -98,4 +98,18 @@ export class PageRepository {
       .preload('translations', (q) => q.select('title', 'locale', 'slug'))
       .orderBy('id', 'asc')
   }
+
+  /**
+   * Retrieves all pages that have at least one published translation.
+   * Specifically used for XML Sitemap generation.
+   */
+  async listPublishedForSitemap() {
+    return Page.query()
+      .whereHas('translations', (query) => {
+        query.where('status', 'published')
+      })
+      .preload('translations', (query) => {
+        query.where('status', 'published')
+      });
+  }
 }
