@@ -15,6 +15,7 @@ import { Icon } from '~/components/atoms/icon'
 import { Separator } from '~/components/atoms/separator'
 import { Heading } from '~/components/atoms/heading'
 import {Data} from "@generated/data";
+import {router, useForm} from "~/hooks/use_form";
 
 interface Props {
   page: Data.Page
@@ -141,8 +142,28 @@ export default function PagesEditPage({ page }: Props) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [handleSave])
-  function handlePublish() {}
-  function handleUnpublish() {}
+  function handlePublish() {
+    router.post(
+      urlFor('admin.pages_update.publish', { id: page.id }),
+      {
+        locale: activeLocale
+      },
+      {
+        preserveScroll: true,
+      }
+    )
+  }
+  function handleUnpublish() {
+    router.post(
+      urlFor('admin.pages_update.unpublish', { id: page.id }),
+      {
+        locale: activeLocale
+      },
+      {
+        preserveScroll: true,
+      }
+    )
+  }
 
   const showEditor = panelMode === 'editor' || panelMode === 'split'
   const showPreview = panelMode === 'preview' || panelMode === 'split'

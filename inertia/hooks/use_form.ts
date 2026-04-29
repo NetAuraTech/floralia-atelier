@@ -1,12 +1,70 @@
 import { useState } from 'react'
 
+const csrfToken = () =>
+  (window as any)?.__PAGE__?.props?.csrfToken || ''
+
+async function routerSubmit(
+  method: string,
+  url: string,
+  data?: Record<string, any>,
+  options?: {
+    preserveScroll?: boolean
+    onSuccess?: (res: Response) => void
+    onError?: (errors: Record<string, string>) => void
+    onFinish?: () => void
+  }
+) {
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRF-Token': csrfToken(),
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    })
+
+    if (res.ok) {
+      if (res.redirected && !options?.preserveScroll) {
+        window.location.href = res.url
+      } else if (options?.onSuccess) {
+        options.onSuccess(res)
+      } else {
+        window.location.reload()
+      }
+    } else if (res.status === 422) {
+      const json = await res.json()
+      const errors: Record<string, string> = json.errors
+        ? json.errors.reduce((acc: any, err: any) => {
+          acc[err.field] = err.message
+          return acc
+        }, {})
+        : {}
+      options?.onError?.(errors)
+    } else {
+      if (res.redirected) {
+        window.location.href = res.url
+      } else {
+        options?.onError?.({})
+      }
+    }
+  } catch (e) {
+    console.error(e)
+    options?.onError?.({})
+  } finally {
+    options?.onFinish?.()
+  }
+}
+
 export const router = {
-  get: (url: string) => { window.location.href = url },
-  post: (url: string) => { window.location.href = url },
-  put: (url: string) => { window.location.href = url },
-  delete: (url: string) => { window.location.href = url },
+  get:    (url: string) => { window.location.href = url },
+  post:   (url: string, data?: Record<string, any>, options?: any) => routerSubmit('POST',   url, data, options),
+  put:    (url: string, data?: Record<string, any>, options?: any) => routerSubmit('PUT',    url, data, options),
+  delete: (url: string, data?: Record<string, any>, options?: any) => routerSubmit('DELETE', url, data, options),
   reload: () => { window.location.reload() },
-  on: () => { return () => {} },
+  on:     () => () => {},
 }
 
 export function useForm<T extends Record<string, any>>(initialData: T | (() => T)) {
