@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '~/components/atoms/link'
@@ -7,15 +7,11 @@ export function Header() {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  useEffect(() => {
-    // router.on is removed
-  }, [])
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const closeMenu = () => {
+  const closeMenu = (_?: any) => {
     setIsMenuOpen(false)
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur()
@@ -37,10 +33,10 @@ export function Header() {
         data-state={menuState}
         aria-expanded={isExpanded}
       >
-        <NavLink route={'page.home'} anchor="services" label="Services" variant="nav" />
-        <NavLink route={'page.home'} anchor="about" label="Histoire" variant="nav" />
-        <NavLink route={'page.home'} anchor="creations" label="Créations" variant="nav" />
-        <NavLink route={'page.home'} anchor="contact" label="Contact" variant="nav" />
+        <NavLink route={'page.home'} anchor="services" label="Services" variant="nav" onClick={closeMenu} />
+        <NavLink route={'page.home'} anchor="about" label="Histoire" variant="nav" onClick={closeMenu} />
+        <NavLink route={'page.home'} anchor="creations" label="Créations" variant="nav" onClick={closeMenu} />
+        <NavLink route={'page.home'} anchor="contact" label="Contact" variant="nav" onClick={closeMenu} />
       </nav>
       <button
         className="header__burger md:display-hidden"

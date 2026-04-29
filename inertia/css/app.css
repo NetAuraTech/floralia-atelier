@@ -207,8 +207,8 @@
 
     .header__nav {
       @apply fixed p-4 grid gap-3 shadow-2xl transition-all duration-500
-      top-19 -right-75 bottom-0 w-3xs h-max
-      opacity-0 rounded-bl-lg items-center bg-overlay;
+      top-16 -right-75 bottom-0 w-3xs h-max
+      opacity-0 rounded-bl-lg items-center bg-surface;
 
       &[aria-expanded=true] {
         @apply right-0 opacity-100;

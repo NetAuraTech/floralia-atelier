@@ -11,6 +11,7 @@ export function Link({ route, routeParams, qs, href, children, ...props }: LinkP
   let resolvedHref = href ?? '#'
   if (route) {
     resolvedHref = urlFor(route as any, routeParams as any, { qs })
+    resolvedHref += href ?? ''
   }
 
   return (

@@ -16,53 +16,55 @@ export function Footer() {
           Art floral & entretien de sépultures. Nous prenons soin des lieux de mémoire avec respect et délicatesse.
         </Paragraph>
       </div>
-      <div>
+      <div className="grid gap-1.5">
         <Heading level={4} color="text-secondary">
           Services
         </Heading>
         <NavLink
-          route="page.home"
-          label="Nettoyage"
+          route="page.render"
+          routeParams={{slug: 'nettoyage-sepultures'}}
+          label="Nettoyage de sépultures"
           variant="footer"
         />
         <NavLink
-          route="page.home"
-          label="Fleurissement"
+          route="page.render"
+          routeParams={{slug: 'fleurissement-sepultures'}}
+          label="Fleurissement de sépultures"
           variant="footer"
         />
         <NavLink
-          route="page.home"
-          label="Abonnements"
+          route="page.render"
+          routeParams={{slug: 'bouquets-compositions-sur-mesure'}}
+          label="Bouquets & compositions sur mesure"
           variant="footer"
         />
         <NavLink
-          route="page.home"
-          label="Bouquets"
+          route="page.render"
+          routeParams={{slug: 'decoration-florale-evenements'}}
+          label="Décoration florales d'événements"
           variant="footer"
         />
       </div>
-      <div>
+      <div className="grid gap-1.5">
         <Heading level={4} color="text-secondary">
           Infos
         </Heading>
         <NavLink
           route="page.home"
           label="Notre histoire"
+          anchor="about"
           variant="footer"
         />
         <NavLink
-          route="page.home"
-          label="Tarifs"
-          variant="footer"
-        />
-        <NavLink
-          route="page.home"
+          route="page.render"
+          routeParams={{slug: 'mentions-legales'}}
           label="Mentions légales"
           variant="footer"
         />
         <NavLink
-          route="page.home"
-          label="Confidentialité"
+          route="page.render"
+          routeParams={{slug: 'politique-de-confidentialite'}}
+          label="Politique de confidentialité"
           variant="footer"
         />
       </div>

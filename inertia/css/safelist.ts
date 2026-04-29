@@ -56,6 +56,7 @@ const classes = [
   'py-5',
   'flex-shrink-0',
   'text-lg',
+  'text-6xl',
   '-mt-1',
   '-mt-2',
   'my-5'

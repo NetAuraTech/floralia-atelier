@@ -32,6 +32,18 @@ type NavLinkBaseProps = {
   isActive?: boolean
 }
 
+type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
+  route: R
+  routeParams?: any
+  anchor?: string
+}
+
+type NavLinkNoRouteProps = NavLinkBaseProps & {
+  route?: never
+  routeParams?: never
+  anchor?: string
+}
+
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
   | NavLinkRouteProps<R>
   | NavLinkNoRouteProps
