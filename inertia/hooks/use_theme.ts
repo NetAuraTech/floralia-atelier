@@ -62,16 +62,9 @@ async function switchTheme(theme: Theme, element: HTMLElement): Promise<void> {
  * 3. OS `prefers-color-scheme` (first visit)
  */
 function resolveInitialTheme(serverTheme: Theme | undefined, isAuthenticated: boolean): Theme {
-  const stored = localStorage.getItem('theme')
-
   if (isAuthenticated && serverTheme) {
-    if (stored !== serverTheme) {
-      applyTheme(serverTheme)
-    }
     return serverTheme
   }
-
-  if (stored === 'light' || stored === 'dark') return stored
 
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }

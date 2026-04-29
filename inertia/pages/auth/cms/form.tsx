@@ -2,7 +2,6 @@ import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
 import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
-import { useTranslation } from 'react-i18next'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
@@ -14,15 +13,18 @@ import { presets, rules } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { Form } from '~/components/atoms/form'
 import { SelectOption } from '~/components/atoms/select_option'
+import {useTranslation} from "~/hooks/use_translation";
+import {CmsUsersFormTranslations} from "#types/translations";
 
 type PageProps = {
   user?: Data.User
   roles: Data.Role[]
+  translations: CmsUsersFormTranslations
 }
 
 export default function UsersFormPage(props: PageProps) {
-  const { user, roles } = props
-  const { t } = useTranslation()
+  const { user, roles, translations } = props
+  const { t } = useTranslation<CmsUsersFormTranslations>(translations)
 
   const isEditing = user !== undefined
 
@@ -41,8 +43,8 @@ export default function UsersFormPage(props: PageProps) {
     <AdminMain
       title={
         isEditing
-          ? t('admin:users.edit.title', { username: user!.username })
-          : t('admin:users.create.title')
+          ? t('title.edit', { username: user!.username })
+          : t('title.create')
       }
       icon={getEntryIcon('admin.users.render')}
     >
@@ -53,7 +55,7 @@ export default function UsersFormPage(props: PageProps) {
               <Button
                 variant="icon"
                 route="admin.users.render"
-                title={t('admin:users.list.title')}
+                title={t('actions.list')}
                 fitContent
               >
                 <Icon name="ArrowLeft" />
@@ -74,58 +76,58 @@ export default function UsersFormPage(props: PageProps) {
           {({ errors, processing }) => (
             <>
               <Field
-                label={t('admin:users.form.email.value')}
+                label={t('email.value')}
                 name="email"
                 type="email"
                 defaultValue={user?.email}
-                placeholder={t('admin:users.form.email.placeholder')}
+                placeholder={t('email.placeholder')}
                 errorMessage={errors.email || validation.getValidationMessage('email')}
                 onChange={(event) => {
                   validation.handleChange('email', event.target.value)
                 }}
                 onBlur={(event) => {
-                  validation.handleBlur('email', event.target.value)
+                  validation.handleBlur('email', event!.target.value)
                 }}
                 required
                 sanitize
               />
               <Field
-                label={t('admin:users.form.username.value')}
+                label={t('username.value')}
                 name="username"
                 type="text"
                 defaultValue={user?.username}
-                placeholder={t('admin:users.form.username.placeholder')}
+                placeholder={t('username.placeholder')}
                 errorMessage={errors.username || validation.getValidationMessage('username')}
                 onChange={(event) => {
                   validation.handleChange('username', event.target.value)
                 }}
                 onBlur={(event) => {
-                  validation.handleBlur('username', event.target.value)
+                  validation.handleBlur('username', event!.target.value)
                 }}
                 required
                 sanitize
               />
               <Field
-                label={t('admin:users.form.role.value')}
+                label={t('roles.value')}
                 name="role_id"
                 type="select"
                 defaultValue={user?.role?.id}
-                placeholder={t('admin:users.form.role.placeholder')}
+                placeholder={t('roles.placeholder')}
                 errorMessage={errors.role_id || validation.getValidationMessage('role_id')}
                 onChange={(event) => {
                   validation.handleChange('role_id', event.target.value)
                 }}
                 onBlur={(event) => {
-                  validation.handleBlur('role_id', event.target.value)
+                  validation.handleBlur('role_id', event!.target.value)
                 }}
                 required
                 sanitize
               >
                 {roles &&
-                  roles.map((role) => <SelectOption label={t(role.name)} value={role.id} />)}
+                  roles.map((role) => <SelectOption key={`role-${role.id}`} label={t(role.name as any)} value={role.id} />)}
               </Field>
               <Button loading={processing} type={'submit'} fitContent>
-                {t('admin:users.form.submit')}
+                {t('submit')}
               </Button>
             </>
           )}

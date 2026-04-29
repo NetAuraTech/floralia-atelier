@@ -30,7 +30,7 @@ interface UserStatusProps {
  * <UserStatus status={StatusEnum.VERIFIED} user={user.id} />
  */
 export function UserStatus(props: UserStatusProps) {
-  const { status, user } = props
+  const { status } = props
   const { t } = useTranslation('admin')
 
   const statuses = {

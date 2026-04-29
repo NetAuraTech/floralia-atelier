@@ -1,5 +1,4 @@
 import { Form } from '~/components/atoms/form'
-import { useTranslation } from 'react-i18next'
 import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
@@ -9,28 +8,30 @@ import { rules } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Field } from '~/components/molecules/field'
 import { Banner } from '~/components/molecules/banner'
+import {useTranslation} from "~/hooks/use_translation";
+import {EmailChangeTranslations} from "#types/translations";
 
 interface PageProps {
   token: string
+  translations: EmailChangeTranslations
 }
 
 export default function EmailChangePage(props: PageProps) {
-  const { t } = useTranslation('settings')
-
-  const { token } = props
+  const { token, translations } = props
+  const { t } = useTranslation<EmailChangeTranslations>(translations)
 
   const validation = useFormValidation({
     token: [rules.required('token')],
   })
 
   return (
-    <>
-      <Head title={t('account.email.change.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('account.email.change.title')}
-            text={t('account.email.change.sub_title')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -52,12 +53,12 @@ export default function EmailChangePage(props: PageProps) {
               {({ errors, processing }) => (
                 <>
                   <Banner
-                    title={t('account.email.change.info.title')}
-                    message={t('account.email.change.info.message')}
+                    title={t('info.title')}
+                    message={t('info.message')}
                     type="info"
                   />
                   <Field
-                    label={t('account.email.change.token')}
+                    label={t('token')}
                     name="token"
                     type="text"
                     defaultValue={token}
@@ -66,7 +67,7 @@ export default function EmailChangePage(props: PageProps) {
                       validation.handleChange('token', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('token', event.target.value)
+                      validation.handleBlur('token', event!.target.value)
                     }}
                     required
                     disabled
@@ -75,10 +76,10 @@ export default function EmailChangePage(props: PageProps) {
                   <input id="token" name="token" type="hidden" value={token} />
                   <div className="flex gap-3">
                     <Button loading={processing} type={'submit'} fitContent>
-                      {t('account.email.change.submit')}
+                      {t('submit')}
                     </Button>
                     <Button route="settings.account.render" fitContent variant="outline">
-                      {t('account.email.change.cancel')}
+                      {t('cancel')}
                     </Button>
                   </div>
                 </>
@@ -87,6 +88,6 @@ export default function EmailChangePage(props: PageProps) {
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

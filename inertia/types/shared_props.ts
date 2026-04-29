@@ -1,5 +1,6 @@
 import { type Data } from '@generated/data'
 import { type Preferences } from '#types/preferences'
+import type {TranslationNodes} from "#types/translations";
 
 export interface SharedProps {
   currentUser?: Data.User
@@ -15,4 +16,5 @@ export interface SharedProps {
   email: string
   preferences?: Preferences
   locale: string
+  translations: TranslationNodes
 }

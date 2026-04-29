@@ -8,7 +8,9 @@ import env from '#start/env'
 
 @inject()
 export default class SharePropsMiddleware {
-  constructor(private preferencesService: PreferencesService) {}
+  constructor(
+    private preferencesService: PreferencesService
+  ) {}
 
   async handle(ctx: HttpContext, next: NextFn) {
     const { session, auth } = ctx as Partial<HttpContext>
@@ -32,6 +34,13 @@ export default class SharePropsMiddleware {
 
     const preferences = user ? await this.preferencesService.get(user) : DEFAULT_PREFERENCES
 
+    let transformedUser = undefined
+
+    if (user) {
+      const transformer = new UserTransformer(user)
+      transformedUser = transformer.toObject()
+    }
+
     ctx.sharedProps = {
       errors: session?.flashMessages.get('errors') ?? {},
       flash: {
@@ -39,13 +48,20 @@ export default class SharePropsMiddleware {
         success,
         info,
       },
-      currentUser: user ? UserTransformer.transform(user) : undefined,
+      currentUser: transformedUser,
       preferences,
       csrfToken: ctx.request.csrfToken,
       app_name: env.get('APP_NAME'),
       app_url: env.get('APP_URL'),
       email: env.get('MAIL_FROM_ADDRESS'),
       locale: ctx.i18n?.locale || 'en',
+      translations: {
+        pagination: {
+          showing: ctx.i18n.t('pagination.showing', { start: '{start}', end: '{end}', total: '{total}'}),
+          previous: ctx.i18n.t('pagination.previous'),
+          next: ctx.i18n.t('pagination.next'),
+        }
+      }
     }
 
     return next()

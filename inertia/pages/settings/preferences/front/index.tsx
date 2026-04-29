@@ -1,5 +1,4 @@
 import { SettingsLayout } from '~/components/organisms/settings_layout'
-import { useTranslation } from 'react-i18next'
 import { Card } from '~/components/atoms/card'
 import { Form } from '~/components/atoms/form'
 import { useFormValidation } from '~/hooks/use_form_validation'
@@ -9,12 +8,18 @@ import { Field } from '~/components/molecules/field'
 import { usePageContext as usePage } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
 import { SelectOption } from '~/components/atoms/select_option'
-import i18n from 'i18next'
-import type { Locale } from '#types/preferences'
 import { ThemeToggle } from '~/components/molecules/theme_toggle'
 import { Label } from '~/components/atoms/label'
-export default function PreferencesPage() {
-  const { t } = useTranslation('settings')
+import type {SettingsPreferencesTranslations} from "#types/translations";
+import {useTranslation} from "~/hooks/use_translation";
+
+interface PreferencesPageProps {
+  translations: SettingsPreferencesTranslations
+}
+
+export default function PreferencesPage(props: PreferencesPageProps) {
+  const { translations } = props
+  const { t } = useTranslation<SettingsPreferencesTranslations>(translations)
 
   const pageProps = usePage<SharedProps>().props
 
@@ -23,13 +28,14 @@ export default function PreferencesPage() {
   })
 
   return (
-    <>
+    <main>
       <SettingsLayout
         tab='preferences'
+        translations={translations}
       >
         <Card
-          title={t('preferences.interface.title')}
-          subtitle={t('preferences.interface.sub_title')}
+          title={t('interface.title')}
+          subtitle={t('interface.sub_title')}
         >
           <Form
             route="settings.preferences.execute"
@@ -38,16 +44,11 @@ export default function PreferencesPage() {
               const isValid = validationLocale.validateAll(visit.data as Record<string, any>)
               if (!isValid) return false
             }}
-            onSuccess={(data) => {
-              if (pageProps.preferences?.locale !== data.props.locale) {
-                i18n.changeLanguage(data.props.locale as Locale)
-              }
-            }}
           >
             {({ errors, processing }) => (
               <>
                 <Field
-                  label={t('preferences.interface.locale.value')}
+                  label={t('interface.locale.value')}
                   name="locale"
                   type="select"
                   defaultValue={pageProps.preferences?.locale || 'en'}
@@ -56,18 +57,18 @@ export default function PreferencesPage() {
                     validationLocale.handleChange('locale', event.target.value)
                   }}
                   onBlur={(event) => {
-                    validationLocale.handleBlur('locale', event.target.value)
+                    validationLocale.handleBlur('locale', event!.target.value)
                   }}
                   required
                   sanitize
                 >
                   <SelectOption
                     value="en"
-                    label={t('preferences.interface.locale.english')}
+                    label={t('interface.locale.english')}
                   />
                   <SelectOption
                     value="fr"
-                    label={t('preferences.interface.locale.french')}
+                    label={t('interface.locale.french')}
                   />
                 </Field>
                 <Button
@@ -75,25 +76,25 @@ export default function PreferencesPage() {
                   type={"submit"}
                   fitContent
                 >
-                  {t('preferences.interface.submit')}
+                  {t('interface.submit')}
                 </Button>
               </>
             )}
           </Form>
         </Card>
         <Card
-          title={t('preferences.appearance.title')}
-          subtitle={t('preferences.appearance.sub_title')}
+          title={t('appearance.title')}
+          subtitle={t('appearance.sub_title')}
         >
           <div className="flex gap-4">
             <Label
-              label={t('preferences.appearance.value')}
+              label={t('appearance.value')}
               htmlFor="theme"
             />
             <ThemeToggle />
           </div>
         </Card>
       </SettingsLayout>
-    </>
+    </main>
   )
 }

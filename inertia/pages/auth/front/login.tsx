@@ -1,5 +1,4 @@
 import { Form } from '~/components/atoms/form'
-import { useTranslation } from 'react-i18next'
 import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
@@ -12,15 +11,17 @@ import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import type { OAuthProvider } from '#types/auth'
 import { AuthProviders } from '~/components/molecules/auth/auth_providers'
+import {useTranslation} from "~/hooks/use_translation";
+import type {LoginTranslations} from "#types/translations";
 
 interface PageProps {
-  providers: OAuthProvider[]
+  providers: OAuthProvider[],
+  translations: LoginTranslations
 }
 
 export default function LoginPage(props: PageProps) {
-  const { t } = useTranslation('auth')
-
-  const { providers } = props
+  const { providers, translations } = props
+  const { t } = useTranslation<LoginTranslations>(translations)
 
   const validation = useFormValidation({
     email: presets.email,
@@ -28,13 +29,13 @@ export default function LoginPage(props: PageProps) {
   })
 
   return (
-    <>
-      <Head title={t('login.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('login.title')}
-            text={t('login.subtitle')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -48,10 +49,10 @@ export default function LoginPage(props: PageProps) {
             footer={
               <div className="text-center">
                 <Paragraph fs="sm">
-                  {t('login.no_account')}{' '}
+                  {t('account.no')}{' '}
                   <NavLink
                     route={'auth.register.render'}
-                    label={t('login.create_account')}
+                    label={t('account.create')}
                     fs="sm"
                   />
                 </Paragraph>
@@ -69,22 +70,22 @@ export default function LoginPage(props: PageProps) {
               {({ errors, processing }) => (
                 <>
                   <Field
-                    label={t('login.email')}
+                    label={t('email.value')}
                     name="email"
                     type="email"
-                    placeholder={t('login.email_placeholder')}
+                    placeholder={t('email.placeholder')}
                     errorMessage={errors.email || validation.getValidationMessage('email')}
                     onChange={(event) => {
                       validation.handleChange('email', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('email', event.target.value)
+                      validation.handleBlur('email', event!.target.value)
                     }}
                     required
                     sanitize
                   />
                   <Field
-                    label={t('login.password')}
+                    label={t('password.value')}
                     name="password"
                     type="password"
                     errorMessage={errors.password || validation.getValidationMessage('password')}
@@ -92,28 +93,28 @@ export default function LoginPage(props: PageProps) {
                       validation.handleChange('password', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('password', event.target.value)
+                      validation.handleBlur('password', event!.target.value)
                     }}
                     required
                     sanitize={false}
                   />
                   <div className="grid gap-2 md:flex md:items-center md:justify-between">
-                    <Field label={t('login.remember_me')} name="remember_me" type="checkbox" />
+                    <Field label={t('remember_me')} name="remember_me" type="checkbox" />
                     <NavLink
                       route="auth.forgot_password.render"
-                      label={t('login.forgot_password')}
+                      label={t('password.forgot')}
                     />
                   </div>
                   <Button loading={processing} type={'submit'} fitContent>
-                    {t('login.submit')}
+                    {t('submit')}
                   </Button>
                 </>
               )}
             </Form>
-            <AuthProviders providers={providers} />
+            <AuthProviders providers={providers} translations={translations} />
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

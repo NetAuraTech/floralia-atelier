@@ -10,7 +10,8 @@ import { usePageContext } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
 import { toast } from 'sonner'
 import { resources } from '~/lib/i18n'
-import { useTranslation } from 'react-i18next'
+import {CmsFilesTranslations} from "#types/translations";
+import {useTranslation} from "~/hooks/use_translation";
 
 interface FileAlt {
   locale: string
@@ -20,6 +21,7 @@ interface FileAlt {
 
 interface FileAltEditorProps {
   file: Data.File
+  translations: CmsFilesTranslations
 }
 
 /**
@@ -35,10 +37,10 @@ interface FileAltEditorProps {
  * pressing Enter. The list is refreshed automatically via Inertia.
  */
 export function FileAltEditor(props: FileAltEditorProps) {
-  const { file } = props
+  const { file, translations } = props
   const [adding, setAdding] = useState(false)
   const [alts, setAlts] = useState<FileAlt[]>([])
-  const { t } = useTranslation('admin')
+  const { t } = useTranslation<CmsFilesTranslations>(translations)
 
   const { props: pageProps } = usePageContext<SharedProps>()
 
@@ -127,14 +129,14 @@ export function FileAltEditor(props: FileAltEditorProps) {
     <div className="grid gap-2">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">
-          {t('files.show.alts.title')}
+          {t('alts.title')}
         </p>
         <Button
           type="button"
           variant="icon"
           fitContent
           onClick={() => setAdding(!adding)}
-          title={adding ? t('files.show.alts.close') : t('files.show.alts.add')}
+          title={adding ? t('alts.close') : t('alts.add')}
         >
           <Icon name={adding ? 'X' : 'Plus'} size={14} />
         </Button>
@@ -155,7 +157,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
             <>
               <Field
                 type="select"
-                label={t('files.show.alts.form.locale.value')}
+                label={t('alts.form.locale.value')}
                 name="locale"
                 required
                 sanitize
@@ -167,16 +169,16 @@ export function FileAltEditor(props: FileAltEditorProps) {
               <Field
                 type="text"
                 name="key"
-                label={t('files.show.alts.form.key.value')}
-                placeholder={t('files.show.alts.form.key.placeholder')}
+                label={t('alts.form.key.value')}
+                placeholder={t('alts.form.key.placeholder')}
                 required
                 sanitize
               />
               <Field
                 type="textarea"
                 name="value"
-                label={t('files.show.alts.form.alt_text.value')}
-                placeholder={t('files.show.alts.form.alt_text.placeholder')}
+                label={t('alts.form.alt_text.value')}
+                placeholder={t('alts.form.alt_text.placeholder')}
                 required
                 sanitize
               />
@@ -188,10 +190,10 @@ export function FileAltEditor(props: FileAltEditorProps) {
                   onClick={() => setAdding(false)}
                   disabled={processing}
                 >
-                  {t('files.show.alts.form.cancel')}
+                  {t('alts.form.cancel')}
                 </Button>
                 <Button type="submit" variant="primary" fitContent disabled={processing}>
-                  {t('files.show.alts.form.submit')}
+                  {t('alts.form.submit')}
                 </Button>
               </div>
             </>
@@ -199,7 +201,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
         </Form>
       )}
       {alts.length === 0 && !adding ? (
-        <Paragraph variant="muted">{t('files.show.alts.empty')}</Paragraph>
+        <Paragraph variant="muted">{t('alts.empty')}</Paragraph>
       ) : (
         <div className="grid gap-1">
           {alts.map((alt) => (
@@ -210,6 +212,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
               rowKey={rowKey}
               handleSubmit={handleSubmit}
               handleDelete={handleDelete}
+              translations={translations}
             />
           ))}
         </div>
@@ -224,9 +227,10 @@ const AltRow = (props: {
   rowKey: (locale: string, key: string) => string
   handleSubmit: (event: SubmitEvent<HTMLFormElement>, callback: (value: boolean) => void) => void
   handleDelete: (event: SubmitEvent<HTMLFormElement>) => void
+  translations: CmsFilesTranslations
 }) => {
-  const { file, alt, rowKey, handleSubmit, handleDelete } = props
-  const { t } = useTranslation('admin')
+  const { file, alt, rowKey, handleSubmit, handleDelete, translations } = props
+  const { t } = useTranslation<CmsFilesTranslations>(translations)
   const k = rowKey(alt.locale, alt.key)
   const [isEditing, setIsEditing] = useState<boolean>(false)
 
@@ -254,7 +258,7 @@ const AltRow = (props: {
                 type="submit"
                 variant="icon_warning"
                 fitContent
-                title={t('files.show.alts.edit')}
+                title={t('alts.edit')}
                 onClick={() => setIsEditing(true)}
               >
                 <Icon name="Pen" size={18} />
@@ -263,7 +267,7 @@ const AltRow = (props: {
                 onSubmitCapture={async (e) => {
                   e.stopPropagation()
                   e.preventDefault()
-                  const confirmed = window.confirm(t('files.show.alts.delete.confirm'))
+                  const confirmed = window.confirm(t('alts.delete.confirm'))
 
                   if (confirmed) {
                     handleDelete(e)
@@ -280,7 +284,7 @@ const AltRow = (props: {
                       type="submit"
                       variant="icon_danger"
                       fitContent
-                      title={t('files.show.alts.delete.value')}
+                      title={t('alts.delete.value')}
                       disabled={processing}
                     >
                       <Icon name="Trash" size={18} />
@@ -311,14 +315,14 @@ const AltRow = (props: {
               <Field
                 type="textarea"
                 name="value"
-                label={t('files.show.alts.form.alt_text.value')}
-                placeholder={t('files.show.alts.form.alt_text.placeholder')}
+                label={t('alts.form.alt_text.value')}
+                placeholder={t('alts.form.alt_text.placeholder')}
                 required
                 sanitize
                 defaultValue={alt.value}
               />
               <Button type="submit" variant="primary" fitContent disabled={processing}>
-                {t('files.show.alts.form.update')}
+                {t('alts.form.update')}
               </Button>
             </>
           )}

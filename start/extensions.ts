@@ -12,7 +12,14 @@ HttpRequest.macro('wantsJSON', function (this: HttpRequest) {
 })
 
 HttpContext.macro('reactSSR', async function (this: HttpContext, component: string, pageProps: any = {}) {
-  const props = { ...this.sharedProps, ...pageProps }
+  const props = {
+    ...this.sharedProps,
+    ...pageProps,
+    translations: {
+      ...(this.sharedProps?.translations || {}),
+      ...(pageProps?.translations || {})
+    }
+  }
 
   const { html, helmet } = await ReactSSRService.render(this, component, props)
 

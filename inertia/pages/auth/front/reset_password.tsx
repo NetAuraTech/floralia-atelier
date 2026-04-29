@@ -1,5 +1,4 @@
 import { Form } from '~/components/atoms/form'
-import { useTranslation } from 'react-i18next'
 import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
@@ -9,14 +8,17 @@ import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
-import { InertiaProps } from '~/types'
+import type {ResetPasswordTranslations} from "#types/translations";
+import {useTranslation} from "~/hooks/use_translation";
 
-type PageProps = InertiaProps<{ token: string }>
+interface ResetPasswordPageProps {
+  token: string
+  translations: ResetPasswordTranslations
+}
 
-export default function ResetPasswordPage(props: PageProps) {
-  const { t } = useTranslation('auth')
-
-  const { token } = props
+export default function ResetPasswordPage(props: ResetPasswordPageProps) {
+  const { token, translations } = props
+  const { t } = useTranslation<ResetPasswordTranslations>(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -27,13 +29,13 @@ export default function ResetPasswordPage(props: PageProps) {
   })
 
   return (
-    <>
-      <Head title={t('reset_password.title')} />
+    <main>
+      <Head title={t('title')} />
       <Section>
         <div className="container">
           <AuthIntro
-            title={t('forgot_password.title')}
-            text={t('forgot_password.subtitle')}
+            title={t('title')}
+            text={t('sub_title')}
             icon={
               <path
                 strokeLinecap="round"
@@ -56,7 +58,7 @@ export default function ResetPasswordPage(props: PageProps) {
                 <>
                   <input type="hidden" id="token" name="token" value={token} />
                   <Field
-                    label={t('register.password')}
+                    label={t('password.value')}
                     name="password"
                     type="password"
                     errorMessage={errors.password || validation.getValidationMessage('password')}
@@ -66,17 +68,17 @@ export default function ResetPasswordPage(props: PageProps) {
                       validation.handleChange('password_confirmation', confirmPassword)
                     }}
                     onBlur={(event) => {
-                      setPassword(event.target.value)
-                      validation.handleBlur('password', event.target.value)
+                      setPassword(event!.target.value)
+                      validation.handleBlur('password', event!.target.value)
                       validation.handleBlur('password_confirmation', confirmPassword)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('register.password_help')}
+                    helpText={t('password.help')}
                     helpClassName={validation.getHelpClassName('password')}
                   />
                   <Field
-                    label={t('register.confirmation')}
+                    label={t('password.confirmation.value')}
                     name="password_confirmation"
                     type="password"
                     errorMessage={
@@ -88,20 +90,20 @@ export default function ResetPasswordPage(props: PageProps) {
                       validation.handleChange('password_confirmation', event.target.value)
                     }}
                     onBlur={(event) => {
-                      setConfirmPassword(event.target.value)
-                      validation.handleBlur('password_confirmation', event.target.value)
+                      setConfirmPassword(event!.target.value)
+                      validation.handleBlur('password_confirmation', event!.target.value)
                     }}
                     required
                     sanitize={false}
-                    helpText={t('register.confirmation_help')}
+                    helpText={t('password.confirmation.help')}
                     helpClassName={validation.getHelpClassName('password_confirmation')}
                   />
                   <div className="flex gap-3">
                     <Button loading={processing} type={'submit'} fitContent>
-                      {t('reset_password.submit')}
+                      {t('submit')}
                     </Button>
                     <Button route="auth.session.render" fitContent variant="outline">
-                      {t('reset_password.back_to_login')}
+                      {t('back_to_login')}
                     </Button>
                   </div>
                 </>
@@ -110,6 +112,6 @@ export default function ResetPasswordPage(props: PageProps) {
           </Card>
         </div>
       </Section>
-    </>
+    </main>
   )
 }

@@ -4,15 +4,35 @@ import { inject } from '@adonisjs/core'
 import { AuthService } from '#services/auth/auth_service'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { enabledProviders } from '#helpers/auth/oauth'
+import {LoginTranslations} from "#types/translations";
 
 @inject()
 export default class SessionController {
   constructor(protected authService: AuthService) {}
   render(ctx: HttpContext) {
-    
+    const {i18n} = ctx
 
     return ctx.reactSSR('auth/front/login', {
       providers: enabledProviders,
+      translations: {
+        'title': i18n.t('auth.session.login.title'),
+        'sub_title': i18n.t('auth.session.login.sub_title'),
+        'account': {
+          'no': i18n.t('auth.session.login.account.no'),
+          'create': i18n.t('auth.session.login.account.create'),
+        },
+        'email': {
+          'value': i18n.t('auth.session.login.email.value'),
+          'placeholder': i18n.t('auth.session.login.email.placeholder'),
+        },
+        'password': {
+          'value': i18n.t('auth.session.login.password.value'),
+          'forgot': i18n.t('auth.session.login.password.forgot'),
+        },
+        'remember_me': i18n.t('auth.session.login.remember_me'),
+        'submit': i18n.t('auth.session.login.submit'),
+        'or_continue_with': i18n.t('auth.session.login.or_continue_with'),
+      } as LoginTranslations
     })
   }
 

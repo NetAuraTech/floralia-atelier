@@ -5,6 +5,7 @@ import { usePageContext } from '~/context/page_context'
 interface FormRenderProps {
   errors: Record<string, string>
   processing: boolean
+  reset: (id: string) => void
 }
 
 export interface FormProps extends Omit<FormHTMLAttributes<HTMLFormElement>, 'children'> {
@@ -31,6 +32,7 @@ export function Form({
   ...props
 }: FormProps) {
   const { props: pageProps } = usePageContext()
+
   const [processing, setProcessing] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -39,7 +41,6 @@ export function Form({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (onSubmit) onSubmit(e)
-    if (e.defaultPrevented) return
 
     const formData = new FormData(e.currentTarget)
     const data = Object.fromEntries(formData.entries())
@@ -108,9 +109,13 @@ export function Form({
     }
   }
 
+  const reset = (id: string) => {
+    // TODO
+  }
+
   return (
     <form action={resolvedAction} method={method} onSubmit={handleSubmit} {...props}>
-      {typeof children === 'function' ? children({ errors, processing }) : children}
+      {typeof children === 'function' ? children({ errors, processing, reset }) : children}
     </form>
   )
 }

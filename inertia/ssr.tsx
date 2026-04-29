@@ -1,5 +1,5 @@
 import { renderToString } from 'react-dom/server'
-import { Helmet, HelmetProvider } from '@dr.pogodin/react-helmet'
+import { HelmetProvider } from '@dr.pogodin/react-helmet'
 import { PageProvider } from '~/context/page_context'
 import Layout from '~/layouts/default'
 import AdminLayout from '~/layouts/admin'

@@ -5,6 +5,7 @@ import { editValidator, updateValidator } from '#validators/user'
 import { RoleService } from '#services/auth/role_service'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
+import {CmsUsersFormTranslations, TranslationNodes} from "#types/translations";
 
 @inject()
 export default class UsersUpdateController {
@@ -14,7 +15,7 @@ export default class UsersUpdateController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { params } = ctx
+    const { params, i18n } = ctx
 
     const payload = await editValidator.validate(params)
 
@@ -22,9 +23,40 @@ export default class UsersUpdateController {
 
     const roles = await this.roleService.findAll()
 
+    const userTransformer = new UserTransformer(user)
+
     return ctx.reactSSR('auth/cms/form', {
-      user: UserTransformer.transform(user),
-      roles: RoleTransformer.transform(roles),
+      user: userTransformer.toObject(),
+      roles: await RoleTransformer.transform(roles).resolve(ctx.containerResolver, 0),
+      translations: {
+        title: {
+          create: i18n.t('cms.users.create.title'),
+          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
+        },
+        email: {
+          value: i18n.t('cms.users.form.email.value'),
+          placeholder: i18n.t('cms.users.form.email.placeholder'),
+        },
+        username: {
+          value: i18n.t('cms.users.form.username.value'),
+          placeholder: i18n.t('cms.users.form.username.placeholder'),
+        },
+        roles: {
+          value: i18n.t('cms.users.form.role.value'),
+          placeholder: i18n.t('cms.users.form.role.placeholder'),
+          ...roles.reduce((acc, role) => {
+            acc[role.slug] = {
+              value: i18n.t(`cms.users.roles.${role.slug}.value`),
+              description: i18n.t(`cms.users.roles.${role.slug}.description`),
+            }
+            return acc
+          }, {} as TranslationNodes)
+        },
+        submit: i18n.t('cms.users.form.submit'),
+        actions: {
+          list: i18n.t('cms.users.list.title')
+        }
+      } as CmsUsersFormTranslations
     })
   }
 
@@ -40,10 +72,10 @@ export default class UsersUpdateController {
 
     const updated = await this.userService.update(id, payload)
 
-    let flash = i18n.t('admin.users.updated')
+    let flash = i18n.t('cms.users.updated')
 
     if (updated?.pendingEmail === payload.email) {
-      flash = `${flash} ${i18n.t('admin.users.updated_email')}`
+      flash = `${flash} ${i18n.t('cms.users.updated_email')}`
     }
 
     session.flash('success', flash)

@@ -4,20 +4,48 @@ import { InvitationService } from '#services/auth/invitation_service'
 import { acceptInvitationValidator, invitationValidator } from '#validators/auth'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
+import {AcceptInvitationTranslations} from "#types/translations";
 
 @inject()
 export default class AcceptInvitationController {
   constructor(protected invitationService: InvitationService) {}
 
   async render(ctx: HttpContext) {
-    const { params } = ctx
+    const { params, i18n } = ctx
 
     const payload = await invitationValidator.validate(params)
     const user = await this.invitationService.get(payload.token as FullToken)
 
     return ctx.reactSSR('auth/front/accept_invitation', {
       token: payload.token,
-      user: UserTransformer.transform(user),
+      user: await UserTransformer.transform(user).resolve(ctx.containerResolver, 0),
+      translations: {
+        title: i18n.t('auth.invitation.title'),
+        sub_title: i18n.t('auth.invitation.sub_title'),
+        banner: {
+          title: i18n.t('auth.invitation.banner.title', {email: user.email}),
+          message: i18n.t('auth.invitation.banner.message'),
+        },
+        email: {
+          value: i18n.t('auth.invitation.email.value'),
+          placeholder: i18n.t('auth.invitation.email.placeholder'),
+          help: i18n.t('auth.invitation.email.help'),
+        },
+        username: {
+          value: i18n.t('auth.invitation.username.value'),
+          placeholder: i18n.t('auth.invitation.username.placeholder'),
+          help: i18n.t('auth.invitation.username.help'),
+        },
+        password: {
+          confirmation: {
+            help: i18n.t('auth.invitation.password.confirmation.help'),
+            value: i18n.t('auth.invitation.password.confirmation.value'),
+          },
+          help: i18n.t('auth.invitation.password.help'),
+          value: i18n.t('auth.invitation.password.value'),
+        },
+        submit: i18n.t('auth.invitation.submit')
+      } as AcceptInvitationTranslations
     })
   }
 
