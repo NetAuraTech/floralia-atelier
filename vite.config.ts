@@ -6,14 +6,13 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [
     react(),
-    adonisjs({ entrypoints: ['inertia/app.tsx', 'inertia/ssr.tsx'], reload: ['resources/views/**/*.edge'] }),
+    adonisjs({
+      entrypoints: ['inertia/app.tsx', 'inertia/ssr.tsx'],
+      reload: ['resources/views/**/*.edge']
+    }),
     tailwindcss(),
   ],
 
-  /**
-   * Define aliases for importing modules from
-   * your frontend code
-   */
   resolve: {
     alias: {
       '~/': `${import.meta.dirname}/inertia/`,
@@ -27,10 +26,8 @@ export default defineConfig({
       ignored: ['**/storage/**', '**/tmp/**'],
     },
   },
+
   build: {
-    modulePreload: {
-      polyfill: false,
-      resolveDependencies: () => []
-    },
+    chunkSizeWarningLimit: 1000,
   }
 })

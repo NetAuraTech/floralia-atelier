@@ -12,28 +12,6 @@ interface LayoutProps {
 
 /**
  * Root layout for all public-facing pages.
- *
- * Wraps page content in the `#page-wrapper` flex-column container with a
- * persistent `<Header>` at the top and a `<Footer>` pinned to the bottom via
- * `mt-auto`. A `<Toaster>` is mounted at top-right to surface flash messages
- * passed via Inertia shared props (`flash.error`, `flash.success`, `flash.info`).
- *
- * **Flash messages** are displayed as `sonner` toast notifications and
- * automatically dismissed on every Inertia navigation so stale messages never
- * carry over to the next page.
- *
- * @example
- * // Attached to a public page component
- * LoginPage.layout = (page) => <Layout>{page}</Layout>
- *
- * // Or used as the default layout in the Inertia setup
- * createInertiaApp({
- *   resolve: (name) => {
- *     const page = pages[name]
- *     page.layout ??= (page) => <Layout>{page}</Layout>
- *     return page
- *   }
- * })
  */
 export default function Layout(props: LayoutProps) {
   const { children } = props
@@ -52,6 +30,9 @@ export default function Layout(props: LayoutProps) {
     <>
       <Helmet>
         <link rel="canonical" href={`${app_url}${url}`} />
+        <link rel="preconnect" href="https://api.iconify.design" />
+        <link rel="dns-prefetch" href="https://api.iconify.design" />
+
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <meta name="language" content="fr" />
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
