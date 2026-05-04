@@ -1,4 +1,4 @@
-import {ReactElement, useEffect} from 'react'
+import { ReactElement, useEffect } from 'react'
 import { Header } from '~/components/organisms/header'
 import { Footer } from '~/components/organisms/footer'
 import { toast, Toaster } from 'sonner'
@@ -20,11 +20,11 @@ export default function Layout(props: LayoutProps) {
 
   useEffect(() => {
     toast.dismiss()
-  }, [url])
 
-  if (flash?.error) toast.error(flash.error)
-  if (flash?.success) toast.success(flash.success)
-  if (flash?.info) toast.info(flash.info)
+    if (flash?.error) toast.error(flash.error)
+    if (flash?.success) toast.success(flash.success)
+    if (flash?.info) toast.info(flash.info)
+  }, [url, flash])
 
   return (
     <>
