@@ -79,7 +79,7 @@ export interface SeparatorProps {
 }
 
 export interface IconProps {
-  name?: keyof typeof icons
+  name?: string
   color: 'default' | 'ink-inverted' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light'
   background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
   size: number
@@ -195,7 +195,6 @@ export interface ContactFormSubmission {
 import type { ResolvedFile } from '#types/file'
 import {type ParagraphSpacing, type ParagraphVariants} from "../../inertia/types/paragraph.js";
 import {FontSize} from "../../inertia/types/font.js";
-import {icons} from "lucide-react";
 
 export interface ResolvedSectionProps {
   background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'

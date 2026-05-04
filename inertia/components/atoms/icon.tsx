@@ -1,47 +1,39 @@
-//@ts-ignore
-import { DynamicIcon } from 'lucide-react/dynamic.mjs'
-import { LucideProps } from 'lucide-react'
+import { Icon as IconifyIcon } from '@iconify/react'
 
-interface IconProps extends LucideProps {
-  /** Name of the Lucide icon to render. Supports PascalCase (e.g. ArrowLeft) or kebab-case (arrow-left). */
+interface IconProps {
   name: string
-  /** Icon size in pixels. Forwarded directly to the Lucide component. */
+  /** Icon size in pixels. */
   size?: number
-  /** Additional Tailwind classes (e.g. `text-danger`, `shrink-0`). */
+  /** Additional Tailwind classes. */
   className?: string
 }
 
 /**
- * Converts PascalCase to kebab-case.
- * Lucide's dynamic imports use kebab-case keys.
+ * Converts PascalCase to kebab-case for Iconify compatibility.
  */
 function toKebabCase(str: string) {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 }
 
 /**
- * Thin wrapper around the Lucide DynamicIcon component.
+ * Icon component using Iconify for dynamic loading.
  *
- * Each icon is loaded as a separate chunk only when needed.
- * Returns a placeholder while loading to prevent layout shifts.
+* - Usage: Pass a string (e.g. `<Icon name="ArrowLeft" />`).
  *
- * @example
- * <Icon name="ArrowLeft" size={18} />
- * <Icon name="trash" size={18} className="text-danger" />
+ * Icons are fetched on-demand from Iconify's API without any local map/dictionary.
  */
 export function Icon(props: IconProps) {
   const { name, size, className, ...iconProps } = props
 
-  // DynamicIcon expects kebab-case names
-  const kebabName = toKebabCase(name)
+  const iconName = name.includes(':') ? name : `lucide:${toKebabCase(name)}`
 
   return (
-    <DynamicIcon
-      name={kebabName as any}
-      size={size}
+    <IconifyIcon
+      icon={iconName}
+      width={size}
+      height={size}
       className={className}
-      fallback={() => <div style={{ width: size, height: size }} className={className} />}
-      {...iconProps}
+      {...(iconProps as any)}
     />
   )
 }

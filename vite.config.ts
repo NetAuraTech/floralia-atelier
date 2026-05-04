@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import adonisjs from '@adonisjs/vite/client'
 import tailwindcss from '@tailwindcss/vite'
+
 export default defineConfig({
   plugins: [
     react(),
@@ -31,14 +32,5 @@ export default defineConfig({
       polyfill: false,
       resolveDependencies: () => []
     },
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('lucide-react/dynamic')) {
-            return 'lucide-dynamic'
-          }
-        }
-      }
-    }
   }
 })
