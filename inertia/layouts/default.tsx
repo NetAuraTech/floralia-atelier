@@ -30,9 +30,11 @@ export default function Layout(props: LayoutProps) {
     <>
       <Helmet>
         <link rel="canonical" href={`${app_url}${url}`} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
         <link rel="preconnect" href="https://api.iconify.design" />
         <link rel="dns-prefetch" href="https://api.iconify.design" />
-
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <meta name="language" content="fr" />
         <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
