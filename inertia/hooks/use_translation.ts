@@ -3,6 +3,11 @@ import { TranslationNodes } from "#types/translations";
 type Format = 'long' | 'full' | 'medium' | 'short'
 export type Lang = 'en' | 'fr'
 
+export const locales: Lang[] = [
+  'fr',
+  'en'
+]
+
 type Paths<T> = T extends string
   ? never
   : {

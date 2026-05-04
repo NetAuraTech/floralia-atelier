@@ -7,7 +7,7 @@ import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
-import {TranslationNodes} from "#types/translations";
+import {CmsUsersIndexTranslations, TranslationNodes} from "#types/translations";
 
 @inject()
 export default class UsersController {
@@ -69,7 +69,7 @@ export default class UsersController {
           edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
           delete: i18n.t('cms.users.delete.title', {username: '{username}'})
         }
-      }
+      } as CmsUsersIndexTranslations
     })
   }
 

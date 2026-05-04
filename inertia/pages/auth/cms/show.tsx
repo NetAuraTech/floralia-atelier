@@ -94,7 +94,7 @@ export default function UsersShowPage(props: PageProps) {
               <div className="grid">
                 <span className="font-bold">{t('info.email')}</span>
                 <span className="flex gap-2 items-center text-ink-muted">
-                  {user.email} <UserStatus user={user.id} status={user.status as StatusEnum} />
+                  {user.email} <UserStatus user={user.id} status={user.status as StatusEnum} translations={translations} />
                 </span>
               </div>
               <div className="grid">

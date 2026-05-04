@@ -249,8 +249,8 @@ export type EmailChangeTranslations = {
 }
 
 export type CmsUsersIndexTranslations = {
-  title: string,
-  action: string,
+  title: string
+  action: string
   search: {
     value: string
     placeholder: string
@@ -262,9 +262,9 @@ export type CmsUsersIndexTranslations = {
     placeholder: string
   }
   status: {
-    verified: string,
-    unverified: string,
-    pending_invite: string,
+    verified: string
+    unverified: string
+    pending_invite: string
     value: string
   }
   empty: string
@@ -307,6 +307,11 @@ export type CmsUsersShowTranslations = {
     category: Record<string, string>
     [key: string]: string | Record<string, string>
   }
+  status: {
+    verified: string
+    unverified: string
+    pending_invite: string
+  }
   actions: {
     edit: string
     delete: string
@@ -317,7 +322,7 @@ export type CmsUsersFormTranslations = {
   title: {
     create: string
     edit: string
-  },
+  }
   roles: {
     value: string
     [k: string]: string
@@ -437,4 +442,163 @@ export type CmsFileFoldersTranslations = {
       confirm: string
     }
   }
+}
+
+export type CmsTemplatesTranslations = {
+  title: string
+  empty: {
+    value: string
+    help: string
+  }
+  search: {
+    value: string
+    placeholder: string
+    type: {
+      value: string
+      placeholder: string
+      page: string
+      block: string
+    }
+    filter: string
+  }
+  delete: {
+    value: string
+    confirm: string
+  }
+}
+
+export type CmsPagesIndexTranslations = {
+  title: string
+  action: string
+  search: {
+    value: string
+    placeholder: string
+    filter: string
+  }
+  status: {
+    all: string
+    draft: string
+    published: string
+    archived: string
+    value: string
+  }
+  locale: {
+    value: string
+    all: string
+  }
+  page_title: string
+  slug: string
+  empty: string
+  value: string
+  value_one: string
+  actions: {
+    value: string
+    show: string
+    edit: string
+    delete: {
+      confirm: string
+      value: string
+    }
+  }
+}
+
+export type CmsPagesCreateTranslations = {
+  title: string
+  action: string
+  details: string
+  seo: {
+    value: string
+    help: string
+  }
+  page_title: {
+    value: string
+    placeholder: string
+  }
+  slug: string
+  locale: string
+  meta: {
+    title: {
+      value: string
+      placeholder: string
+    }
+    description: {
+      value: string
+      placeholder: string
+    }
+  }
+  submit: string
+}
+
+export type CmsPagesShowTranslations = {
+  title: string
+  actions: {
+    back: string
+    edit: string
+    show: string
+    delete: {
+      confirm: string
+      value: string
+    }
+  }
+  status: {
+    draft: string
+    published: string
+    archived: string
+  }
+  meta: {
+    value: string
+    title: string
+    id: string
+    locale: string
+    translations: string
+    created: string
+    updated: string
+  }
+  revision: {
+    value: string
+    view: string
+  }
+  homepage: {
+    value: string
+    confirm: string
+    submit: string
+    help: {
+      title:  {
+        not_set: string
+        set: string
+      }
+      message:  {
+        not_set: string
+        set: string
+      }
+    }
+  }
+  last_update: string
+  translation: string
+  default: string
+}
+
+export type CmsPagesRevisionTranslations = {
+  title: string
+  actions: {
+    value: string
+    back: string
+    restore: {
+      value: string
+      confirm: string
+    }
+    unpin: string
+    pin: string
+  }
+  help: string
+  index: string
+  created: {
+    at: string
+    by: string
+  }
+  empty: {
+    value: string
+    help: string
+  }
+  latest: string
 }

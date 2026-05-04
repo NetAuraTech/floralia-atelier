@@ -31,7 +31,11 @@ export default class UsersShowsController {
       providers: enabledProviders,
       permissions: await PermissionTransformer.transform(permissions).resolve(ctx.containerResolver, 0),
       translations: {
-        title: i18n.t('cms.users.show.title', {username: '{username}'}),
+        title: i18n.t('cms.users.list.title'),
+        actions: {
+          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
+          delete: i18n.t('cms.users.delete.title', {username: '{username}'})
+        },
         info: {
           email: i18n.t('cms.users.show.info.email'),
           username: i18n.t('cms.users.show.info.username'),
@@ -75,7 +79,12 @@ export default class UsersShowsController {
 
             return acc;
           }, { category: {} } as Record<string, Record<string, string | { value: string; }>>)
-        }
+        },
+        status: {
+          verified: i18n.t('cms.users.status.verified'),
+          unverified: i18n.t('cms.users.status.unverified'),
+          pending_invite: i18n.t('cms.users.status.pending_invite'),
+        },
       } as CmsUsersShowTranslations
     })
   }

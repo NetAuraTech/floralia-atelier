@@ -4,7 +4,6 @@ import { HelmetProvider } from '@dr.pogodin/react-helmet'
 import { PageProvider } from '~/context/page_context'
 import Layout from '~/layouts/default'
 import AdminLayout from '~/layouts/admin'
-import i18n from '~/lib/i18n'
 
 declare global {
   interface Window {
@@ -20,9 +19,6 @@ const { component, props } = window.__PAGE__
 const pages = import.meta.glob('./pages/**/*.tsx')
 
 async function bootstrap() {
-  const locale = String(props.locale || 'en')
-  await i18n.changeLanguage(locale)
-
   const module = (await pages[`./pages/${component}.tsx`]()) as any
   const Page = module.default
 

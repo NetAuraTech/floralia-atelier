@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { type icons } from 'lucide-react'
 import { type LinkProps } from '~/components/atoms/link'
+import {useTranslation} from "~/hooks/use_translation";
+import {usePageContext} from "~/context/page_context";
 
 interface MenuEntryBase {
   label: string
@@ -51,12 +52,13 @@ interface Menu {
  * const icon = getEntryIcon('admin.dashboard.render')
  */
 export function useMenu(overrides: Menu = {}) {
-  const { t } = useTranslation('admin')
+  const { props: pageProps } = usePageContext()
+  const { t } = useTranslation(pageProps.translations)
 
   const defaultMenu: Menu = {
     main: [
       {
-        label: t('dashboard.value'),
+        label: t('admin.dashboard.value'),
         icon: 'House',
         route: 'admin.dashboard.render',
         permission: 'admin.access',
@@ -64,19 +66,19 @@ export function useMenu(overrides: Menu = {}) {
     ],
     content: [
       {
-        label: t('pages.value'),
+        label: t('admin.pages.value'),
         icon: 'PanelsTopLeft',
         route: 'admin.pages.render',
         permission: 'pages.view',
       },
       {
-        label: t('templates.value'),
+        label: t('admin.templates.value'),
         icon: 'LayoutTemplate',
         route: 'admin.templates.render',
         permission: 'templates.manage',
       },
       {
-        label: t('files.value'),
+        label: t('admin.files.value'),
         icon: 'Folder',
         route: 'admin.files.render',
         permission: 'files.view',
@@ -84,7 +86,7 @@ export function useMenu(overrides: Menu = {}) {
     ],
     access_control: [
       {
-        label: t('users.value'),
+        label: t('admin.users.value'),
         icon: 'Users',
         route: 'admin.users.render',
         permission: 'users.view',

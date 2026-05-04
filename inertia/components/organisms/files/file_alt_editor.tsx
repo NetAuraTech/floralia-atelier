@@ -9,9 +9,8 @@ import { SelectOption } from '~/components/atoms/select_option'
 import { usePageContext } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
 import { toast } from 'sonner'
-import { resources } from '~/lib/i18n'
 import {CmsFilesTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import {locales, useTranslation} from "~/hooks/use_translation";
 
 interface FileAlt {
   locale: string
@@ -162,7 +161,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
                 required
                 sanitize
               >
-                {Object.keys(resources).map((l) => (
+                {Object.keys(locales).map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>

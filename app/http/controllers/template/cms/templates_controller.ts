@@ -11,13 +11,14 @@ import {
 } from '#validators/template'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import TemplateTransformer from '#transformers/template_transformer'
+import {CmsTemplatesTranslations} from "#types/translations";
 
 @inject()
 export default class TemplatesController {
   constructor(protected templateService: TemplateService) {}
 
   async render(ctx: HttpContext) {
-    const { request } = ctx
+    const { request, i18n } = ctx
 
     const data = stripEmptyStrings(request.all())
     const payload = await listTemplateValidator.validate(data)
@@ -29,8 +30,30 @@ export default class TemplatesController {
     })
 
     return ctx.reactSSR('template/cms/index', {
-      templates: TemplateTransformer.transform(templates),
+      templates: await TemplateTransformer.transform(templates).resolve(ctx.containerResolver, 0),
       filters: payload,
+      translations: {
+        title: i18n.t('cms.templates.list.title'),
+        empty: {
+          value: i18n.t('cms.templates.list.empty.value'),
+          help: i18n.t('cms.templates.list.empty.help'),
+        },
+        search: {
+          value: i18n.t('cms.templates.search.value'),
+          placeholder: i18n.t('cms.templates.search.placeholder'),
+          type: {
+            value: i18n.t('cms.templates.search.type.value'),
+            placeholder: i18n.t('cms.templates.search.type.placeholder'),
+            page: i18n.t('cms.templates.search.type.page'),
+            block: i18n.t('cms.templates.search.type.block'),
+          },
+          filter: i18n.t('cms.templates.search.filter'),
+        },
+        delete: {
+          value: i18n.t('cms.templates.delete.title', {name: '{name}'}),
+          confirm: i18n.t('cms.templates.delete.confirm')
+        }
+      } as CmsTemplatesTranslations
     })
   }
 

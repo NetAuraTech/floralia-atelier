@@ -26,9 +26,6 @@ export default defineConfig({
       ignored: ['**/storage/**', '**/tmp/**'],
     },
   },
-  ssr: {
-    external: ['react-i18next', 'i18next'],
-  },
   build: {
     modulePreload: {
       polyfill: false,

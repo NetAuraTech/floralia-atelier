@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
-import { validate, type ValidationRule, type ValidationResult } from '~/helpers/validation_rules'
+import { validate, type LazyValidationRule, type ValidationResult } from '~/helpers/validation_rules'
+import { useTranslation } from "~/hooks/use_translation"
+import { usePageContext } from "~/context/page_context"
 
 /**
  * Field validation state
@@ -30,7 +32,7 @@ export interface FieldState {
  * Form validation config
  */
 export interface FormValidationConfig {
-  [fieldName: string]: ValidationRule[]
+  [fieldName: string]: LazyValidationRule[]
 }
 
 /**
@@ -82,6 +84,9 @@ export interface UseFormValidationReturn {
  * Form validation hook
  */
 export function useFormValidation(config: FormValidationConfig): UseFormValidationReturn {
+  const { props: pageProps } = usePageContext()
+  const { t } = useTranslation(pageProps.translations)
+
   const [fieldStates, setFieldStates] = useState<Record<string, FieldState>>(() => {
     const initial: Record<string, FieldState> = {}
     Object.keys(config).forEach((field) => {
@@ -121,9 +126,9 @@ export function useFormValidation(config: FormValidationConfig): UseFormValidati
       if (!rules) {
         return { valid: true }
       }
-      return validate(value, rules, fieldName)
+      return validate(value, rules, t, fieldName)
     },
-    [config]
+    [config, t]
   )
 
   /**

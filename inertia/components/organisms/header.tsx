@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Link } from '~/components/atoms/link'
 
 export function Header() {
-  const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -43,7 +41,7 @@ export function Header() {
         aria-controls="primary-navigation"
         aria-expanded={isExpanded}
         data-state={menuState}
-        aria-label={t('header.menu_label')}
+        aria-label="Menu"
         onClick={toggleMenu}
       >
         <svg

@@ -1,5 +1,6 @@
 import { Data } from '@generated/data'
-import { useTranslation } from 'react-i18next'
+import {TranslationNodes} from "#types/translations";
+import {useTranslation} from "~/hooks/use_translation";
 
 export enum StatusEnum {
   VERIFIED = 'VERIFIED',
@@ -11,6 +12,7 @@ interface UserStatusProps {
   /** The user's current account status. */
   status: StatusEnum
   user: Data.User['id']
+  translations: TranslationNodes
 }
 
 /**
@@ -30,23 +32,23 @@ interface UserStatusProps {
  * <UserStatus status={StatusEnum.VERIFIED} user={user.id} />
  */
 export function UserStatus(props: UserStatusProps) {
-  const { status } = props
-  const { t } = useTranslation('admin')
+  const { status, translations } = props
+  const { t } = useTranslation(translations)
 
   const statuses = {
     VERIFIED: (
       <span className="px-4 py-1 border rounded text-success border-success bg-success-soft">
-        {t('users.status.verified')}
+        {t('status.verified')}
       </span>
     ),
     UNVERIFIED: (
       <span className="px-4 py-1 border rounded text-danger border-danger bg-danger-soft">
-        {t('users.status.unverified')}
+        {t('status.unverified')}
       </span>
     ),
     PENDING_INVITE: (
       <span className="px-4 py-1 border rounded text-secondary border-secondary bg-secondary-light/20">
-        {t('users.status.pending_invite')}
+        {t('status.pending_invite')}
       </span>
     ),
   }

@@ -1,13 +1,11 @@
 import { ReactElement } from 'react'
 import { Button } from '~/components/atoms/button'
 import { Field } from '~/components/molecules/field'
-import { useTranslation } from 'react-i18next'
 import { Card } from '~/components/atoms/card'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
 import { Form } from '~/components/atoms/form'
 import { SelectOption } from '~/components/atoms/select_option'
-import { resources } from '~/lib/i18n'
 import { Heading } from '~/components/atoms/heading'
 import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
@@ -17,29 +15,36 @@ import { CanAccess } from '~/guards/can_access'
 import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
+import {locales, useTranslation} from "~/hooks/use_translation";
+import {CmsPagesCreateTranslations} from "#types/translations";
 
-export default function PagesCreatePage() {
-  const { t } = useTranslation()
+interface PagesCreatePageProps {
+  translations: CmsPagesCreateTranslations
+}
+
+export default function PagesCreatePage(props: PagesCreatePageProps) {
+  const { translations } = props
+  const { t } = useTranslation<CmsPagesCreateTranslations>(translations)
 
   const { getEntryIcon } = useMenu()
 
   const validation = useFormValidation({
     locale: [
       ...presets.selectWithOptions(
-        [...Object.keys(resources).map((locale) => locale)],
-        t('admin:pages.form.locale.default')
+        [...Object.keys(locales).map((locale) => locale)],
+        t('locale')
       ),
-      rules.required(t('admin:pages.form.locale.default')),
+      rules.required(t('locale')),
     ],
-    title: presets.title(t('admin:pages.form.title.value')),
-    slug: presets.slug(t('admin:pages.form.slug.value')),
-    metaTitle: [rules.maxLength(150, t('admin:pages.form.meta.title.value'))],
-    metaDescription: [rules.maxLength(500, t('admin:pages.form.meta.description.value'))],
+    title: presets.title(t('page_title.value')),
+    slug: presets.slug(t('slug')),
+    metaTitle: [rules.maxLength(150, t('meta.title.value'))],
+    metaDescription: [rules.maxLength(500, t('meta.description.value'))],
   })
 
   return (
     <>
-      <AdminMain title={t('admin:pages.create.title')} icon={getEntryIcon('admin.pages.render')}>
+      <AdminMain title={t('title')} icon={getEntryIcon('admin.pages.render')}>
         <Card
           header={
             <div className="flex items-center justify-between gap-3">
@@ -47,7 +52,7 @@ export default function PagesCreatePage() {
                 <Button
                   variant="icon"
                   route="admin.pages.render"
-                  title={t('admin:pages.list.title')}
+                  title={t('action')}
                   fitContent
                 >
                   <Icon name="ArrowLeft" />
@@ -67,37 +72,37 @@ export default function PagesCreatePage() {
             {({ processing, errors }) => (
               <>
                 <div className="grid gap-3">
-                  <Heading level={3}>{t('admin:pages.create.details.value')}</Heading>
+                  <Heading level={3}>{t('details')}</Heading>
                   <Separator />
                   <Field
                     type="select"
                     name="locale"
-                    label={t('admin:pages.form.locale.default')}
+                    label={t('locale')}
                     errorMessage={errors.locale || validation.getValidationMessage('locale')}
                     onChange={(event) => {
                       validation.handleChange('locale', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('locale', event.target.value)
+                      validation.handleBlur('locale', event!.target.value)
                     }}
                     required
                     sanitize
                   >
-                    {Object.keys(resources).map((l) => (
+                    {Object.keys(locales).map((l) => (
                       <SelectOption key={l} value={l} label={l.toUpperCase()} />
                     ))}
                   </Field>
                   <Field
                     type="text"
                     name="title"
-                    label={t('admin:pages.form.title.value')}
-                    placeholder={t('admin:pages.form.title.placeholder')}
+                    label={t('page_title.value')}
+                    placeholder={t('page_title.placeholder')}
                     errorMessage={errors.title || validation.getValidationMessage('title')}
                     onChange={(event) => {
                       validation.handleChange('title', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('title', event.target.value)
+                      validation.handleBlur('title', event!.target.value)
                     }}
                     required
                     sanitize
@@ -105,43 +110,43 @@ export default function PagesCreatePage() {
                   <Field
                     type="text"
                     name="slug"
-                    label={t('admin:pages.form.slug.value')}
+                    label={t('slug')}
                     errorMessage={errors.slug || validation.getValidationMessage('slug')}
                     onChange={(event) => {
                       validation.handleChange('slug', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('slug', event.target.value)
+                      validation.handleBlur('slug', event!.target.value)
                     }}
                     required
                     sanitize
                   />
                 </div>
                 <div className="grid gap-3 mt-5">
-                  <Heading level={3}>{t('admin:pages.create.seo.value')}</Heading>
+                  <Heading level={3}>{t('seo.value')}</Heading>
                   <Paragraph variant="muted" spacing="xs">
-                    {t('admin:pages.create.seo.help', { title: t('admin:pages.form.title.value') })}
+                    {t('seo.help', { title: t('page_title.value') })}
                   </Paragraph>
                   <Separator />
                   <Field
                     type="text"
                     name="metaTitle"
-                    label={t('admin:pages.form.meta.title.value')}
-                    placeholder={t('admin:pages.form.meta.title.placeholder')}
+                    label={t('meta.title.value')}
+                    placeholder={t('meta.title.placeholder')}
                     errorMessage={errors.metaTitle || validation.getValidationMessage('metaTitle')}
                     onChange={(event) => {
                       validation.handleChange('metaTitle', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('metaTitle', event.target.value)
+                      validation.handleBlur('metaTitle', event!.target.value)
                     }}
                     sanitize
                   />
                   <Field
                     type="textarea"
                     name="metaDescription"
-                    label={t('admin:pages.form.meta.description.value')}
-                    placeholder={t('admin:pages.form.meta.description.placeholder')}
+                    label={t('meta.description.value')}
+                    placeholder={t('meta.description.placeholder')}
                     errorMessage={
                       errors.metaDescription || validation.getValidationMessage('metaDescription')
                     }
@@ -149,13 +154,13 @@ export default function PagesCreatePage() {
                       validation.handleChange('metaDescription', event.target.value)
                     }}
                     onBlur={(event) => {
-                      validation.handleBlur('metaDescription', event.target.value)
+                      validation.handleBlur('metaDescription', event!.target.value)
                     }}
                     sanitize
                   />
                 </div>
                 <Button loading={processing} type={'submit'} fitContent>
-                  {t('admin:pages.form.submit')}
+                  {t('submit')}
                 </Button>
               </>
             )}

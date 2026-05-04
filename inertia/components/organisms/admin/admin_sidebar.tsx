@@ -1,7 +1,6 @@
 import { useIsLarge } from '~/hooks/use_is_large'
 import { usePageContext } from '~/context/page_context'
 import type { SharedProps } from '~/types/shared_props'
-import { useTranslation } from 'react-i18next'
 import { Card } from '../../atoms/card'
 import { Avatar } from '~/components/atoms/avatar'
 import { ThemeToggle } from '~/components/molecules/theme_toggle'
@@ -10,6 +9,7 @@ import { NavLink } from '../../atoms/nav_link'
 import { CanAccess } from '~/guards/can_access'
 import { useMenu } from '~/hooks/use_admin'
 import { Icon } from '~/components/atoms/icon'
+import {Lang, useTranslation} from "~/hooks/use_translation";
 
 interface AdminSidebarProps {
   /**
@@ -47,7 +47,7 @@ export function AdminSidebar(props: AdminSidebarProps) {
   const { sidebarOpen, setIsMenuOpen } = props
   const isLarge = useIsLarge()
   const { props: pageProps } = usePageContext<SharedProps>()
-  const { t, i18n } = useTranslation('admin')
+  const { t, format } = useTranslation(pageProps.translations)
 
   const { menu } = useMenu()
 
@@ -59,14 +59,14 @@ export function AdminSidebar(props: AdminSidebarProps) {
             <Avatar showUsername />
             <ThemeToggle />
           </div>
-          <span>{i18n.format(new Date(), 'long', i18n.language)}</span>
+          <span>{format(new Date(), 'long', pageProps.locale as Lang)}</span>
         </div>
       </Card>
       <Card>
         <nav className="grid gap-1">
           {Object.entries(menu).map(([category, entries]) => (
             <div key={`admin-category-${category}`}>
-              <Heading level={4}>{t(`category.${category}`)}</Heading>
+              <Heading level={4}>{t(`admin.category.${category}`)}</Heading>
               <ul className="grid gap-1">
                 {entries.map((entry) => (
                   <li key={`admin-category-${category}-${entry.label}`}>

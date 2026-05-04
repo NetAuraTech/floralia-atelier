@@ -2,15 +2,43 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { PageService } from '#services/page/page_service'
 import { createPageValidator } from '#validators/page'
+import {CmsPagesCreateTranslations} from "#types/translations";
 
 @inject()
 export default class PagesCreateController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    
+    const { i18n } = ctx
 
-    return ctx.reactSSR('page/cms/create', {})
+    return ctx.reactSSR('page/cms/create', {
+      translations: {
+        title: i18n.t('cms.pages.create.title'),
+        action: i18n.t('cms.pages.list.title'),
+        details: i18n.t('cms.pages.create.details.value'),
+        locale: i18n.t('cms.pages.form.locale.default'),
+        slug: i18n.t('cms.pages.form.slug.value'),
+        page_title: {
+          value: i18n.t('cms.pages.form.title.value'),
+          placeholder: i18n.t('cms.pages.form.title.placeholder'),
+        },
+        seo: {
+          value: i18n.t('cms.pages.create.seo.value'),
+          help: i18n.t('cms.pages.create.seo.help', {title: '{title}'}),
+        },
+        meta: {
+          title: {
+            value: i18n.t('cms.pages.form.meta.title.value'),
+            placeholder: i18n.t('cms.pages.form.meta.title.placeholder'),
+          },
+          description: {
+            value: i18n.t('cms.pages.form.meta.description.value'),
+            placeholder: i18n.t('cms.pages.form.meta.description.placeholder'),
+          }
+        },
+        submit: i18n.t('cms.pages.form.submit'),
+      } as CmsPagesCreateTranslations
+    })
   }
 
   async execute(ctx: HttpContext) {

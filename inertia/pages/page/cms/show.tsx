@@ -5,14 +5,18 @@ import Layout from '~/layouts/admin'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Form } from '~/components/atoms/form'
 import { Data } from '@generated/data'
-import { useTranslation } from 'react-i18next'
 import { Card } from '~/components/atoms/card'
 import { CanAccess } from '~/guards/can_access'
 import { Icon } from '~/components/atoms/icon'
 import { Heading } from '~/components/atoms/heading'
+import {NavLink} from "~/components/atoms/nav_link";
+import {Lang, useTranslation} from "~/hooks/use_translation";
+import {usePageContext} from "~/context/page_context";
+import {CmsPagesShowTranslations} from "#types/translations";
 
 interface Props {
   page: Data.Page
+  translations: CmsPagesShowTranslations
 }
 
 const statusesClass = {
@@ -31,8 +35,9 @@ const statusesClass = {
 } as const
 
 export default function PagesShowPage(props: Props) {
-  const { page } = props
-  const { t, i18n } = useTranslation('admin')
+  const { page, translations} = props
+  const {props: pageProps} = usePageContext()
+  const { t, format } = useTranslation<CmsPagesShowTranslations>(translations)
 
   const primaryTranslation =
     page.translations.find((t) => t.locale === page.defaultLocale) ?? page.translations[0]
@@ -40,7 +45,7 @@ export default function PagesShowPage(props: Props) {
   return (
     <>
       <AdminMain
-        title={t('pages.show.title', { title: primaryTranslation?.title ?? `Page #${page.id}` })}
+        title={t('title', { title: primaryTranslation?.title ?? `Page #${page.id}` })}
       >
         <Card
           header={
@@ -49,7 +54,7 @@ export default function PagesShowPage(props: Props) {
                 <Button
                   variant="icon"
                   route="admin.pages.render"
-                  title={t('pages.list.title')}
+                  title={t('actions.back')}
                   fitContent
                 >
                   <Icon name="ArrowLeft" />
@@ -61,7 +66,7 @@ export default function PagesShowPage(props: Props) {
                     variant="icon_warning"
                     route="admin.pages_update.render"
                     routeParams={{ id: page.id }}
-                    title={t('admin:pages.edit.title', {
+                    title={t('actions.edit', {
                       title: primaryTranslation?.title ?? `Page #${page.id}`,
                     })}
                     fitContent
@@ -72,14 +77,14 @@ export default function PagesShowPage(props: Props) {
                 <CanAccess permission="pages.delete">
                   <Form
                     onBefore={() => {
-                      return window.confirm(t('pages.delete.confirm'))
+                      return window.confirm(t('actions.delete.confirm'))
                     }}
                     route="admin.pages.destroy"
                     routeParams={{ id: page.id }}
                   >
                     <Button
                       variant="icon_danger"
-                      title={t('admin:pages.delete.title', {
+                      title={t('actions.delete.value', {
                         title: primaryTranslation?.title ?? `Page #${page.id}`,
                       })}
                       fitContent
@@ -95,7 +100,7 @@ export default function PagesShowPage(props: Props) {
           <div className="grid gap-3">
             <div className="grid gap-3">
               <Heading level={3}>
-                {t('admin:pages.show.translation', { count: page.translations.length })}
+                {t('translation', { count: page.translations.length })}
               </Heading>
               {page.translations.map((translation) => {
                 const isDefault = translation.locale === page.defaultLocale
@@ -115,7 +120,7 @@ export default function PagesShowPage(props: Props) {
                         </span>
                         {isDefault && (
                           <span className="text-xs text-ink-subtle">
-                            ({t('pages.show.default')})
+                            ({t('default')})
                           </span>
                         )}
                       </div>
@@ -128,20 +133,20 @@ export default function PagesShowPage(props: Props) {
                       <span
                         className={`px-4 py-1 border rounded ${statusesClass[translation.status].badge}`}
                       >
-                        {t(`admin:pages.status.${translation.status}`)}
+                        {t(`status.${translation.status}`)}
                       </span>
                       <div className="flex items-center gap-3 text-ink-subtle shrink-0">
                         {translation.metaTitle && (
                           <span
                             className="flex items-center gap-1"
-                            title={t('pages.show.meta.title')}
+                            title={t('meta.title')}
                           >
                             <Icon name="Tag" size={18} />
                             SEO
                           </span>
                         )}
-                        <span title={t('pages.show.last_update')}>
-                          {i18n.format(new Date(translation.updatedAt!), 'medium', i18n.language)}
+                        <span title={t('last_update')}>
+                          {format(new Date(translation.updatedAt!), 'medium', pageProps.locale as Lang)}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -151,7 +156,7 @@ export default function PagesShowPage(props: Props) {
                             target="_blank"
                             rel="noopener noreferrer"
                             className={`button ${variants['icon_info']}`}
-                            title={t('admin:pages.show.title', {
+                            title={t('actions.show', {
                               title: translation?.title ?? '—',
                             })}
                           >
@@ -162,7 +167,7 @@ export default function PagesShowPage(props: Props) {
                           variant="icon_warning"
                           route="admin.pages_update.render"
                           routeParams={{ id: page.id }}
-                          title={t('admin:pages.edit.title', {
+                          title={t('actions.edit', {
                             title: primaryTranslation?.title ?? `Page #${page.id}`,
                           })}
                           fitContent
@@ -176,46 +181,48 @@ export default function PagesShowPage(props: Props) {
               })}
             </div>
             <div className="grid gap-3">
-              <Heading level={3}>{t('admin:pages.show.meta.value')}</Heading>
+              <Heading level={3}>{t('meta.value')}</Heading>
               <div className="rounded-xl border border-edge bg-canvas divide-y divide-edge">
-                <MetaRow label={t('pages.show.meta.id')} value={String(page.id)} />
+                <MetaRow label={t('meta.id')} value={String(page.id)} />
                 <MetaRow
-                  label={t('pages.show.meta.locale')}
+                  label={t('meta.locale')}
                   value={page.defaultLocale.toUpperCase()}
                 />
                 <MetaRow
-                  label={t('pages.show.meta.translations')}
+                  label={t('meta.translations')}
                   value={`${page.translations.length}`}
                 />
                 <MetaRow
-                  label={t('pages.show.meta.created')}
-                  value={i18n.format(new Date(page.createdAt!), 'medium', i18n.language)}
+                  label={t('meta.created')}
+                  value={format(new Date(page.createdAt!), 'medium', pageProps.locale as Lang)}
                 />
                 <MetaRow
-                  label={t('pages.show.meta.updated')}
-                  value={i18n.format(new Date(page.updatedAt!), 'medium', i18n.language)}
+                  label={t('meta.updated')}
+                  value={format(new Date(page.updatedAt!), 'medium', pageProps.locale as Lang)}
                 />
               </div>
             </div>
             <div className="grid gap-3">
-              <Heading level={3}>{t('admin:pages.show.revision.value')}</Heading>
+              <Heading level={3}>{t('revision.value')}</Heading>
               {page.translations.map((translation) => (
-                <Link
+                <NavLink
+                  label=""
                   key={translation.id}
                   route="admin.page_revisions.index"
                   routeParams={{ id: page.id, translationId: translation.id }}
-                  className="flex items-center justify-between rounded-lg border border-edge bg-canvas px-4 py-2.5 hover:bg-sunken transition-colors group"
                 >
-                  <span className="text-ink">
-                    {translation.locale.toUpperCase()} — {translation.title}
-                  </span>
-                  <span className="text-ink-muted group-hover:text-primary transition-colors">
-                    {t('pages.show.revision.view')} →
-                  </span>
-                </Link>
+                  <div className="flex items-center justify-between rounded-lg border border-edge bg-canvas px-4 py-2.5 hover:bg-sunken transition-colors group">
+                    <span className="text-ink">
+                      {translation.locale.toUpperCase()} — {translation.title}
+                    </span>
+                    <span className="text-ink-muted group-hover:text-primary transition-colors">
+                      {t('revision.view')} →
+                    </span>
+                  </div>
+                </NavLink>
               ))}
             </div>
-            <HomepageSection page={page} />
+            <HomepageSection page={page} translations={translations} />
           </div>
         </Card>
       </AdminMain>
@@ -223,8 +230,8 @@ export default function PagesShowPage(props: Props) {
   )
 }
 
-function HomepageSection({ page }: { page: Data.Page }) {
-  const { t } = useTranslation('admin')
+function HomepageSection({ page, translations }: { page: Data.Page, translations: CmsPagesShowTranslations }) {
+  const { t } = useTranslation<CmsPagesShowTranslations>(translations)
   function handleSetHomepage() {
     if (page.isHomepage) return
     if (!confirm('Set this page as the homepage? The current homepage will be unset.')) return
@@ -234,28 +241,28 @@ function HomepageSection({ page }: { page: Data.Page }) {
   return (
     <div className="grid gap-3">
       <Heading level={3}>
-        {t('pages.show.homepage.value')}
+        {t('homepage.value')}
       </Heading>
       <div className="rounded-xl border border-edge bg-canvas px-4 py-4 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-ink flex items-center gap-2">
             {page.isHomepage && (
               <span className="inline-flex items-center gap-1 text-xs font-medium text-success bg-success-soft px-2 py-0.5 rounded-full border border-success/20">
-                ✓ {t('pages.show.homepage.help.title.set')}
+                ✓ {t('homepage.help.title.set')}
               </span>
             )}
-            {!page.isHomepage && t('pages.show.homepage.help.title.not_set')}
+            {!page.isHomepage && t('homepage.help.title.not_set')}
           </p>
           <p className="text-xs text-ink-muted mt-0.5">
             {page.isHomepage
-              ? t('pages.show.homepage.help.message.set')
-              : t('pages.show.homepage.help.message.not_set')}
+              ? t('homepage.help.message.set')
+              : t('homepage.help.message.not_set')}
           </p>
         </div>
         {!page.isHomepage && (
           <Form
             onBefore={() => {
-              return window.confirm(t('pages.show.homepage.confirm'))
+              return window.confirm(t('homepage.confirm'))
             }}
             route="admin.pages.set_homepage"
             routeParams={{ id: page.id }}
@@ -265,7 +272,7 @@ function HomepageSection({ page }: { page: Data.Page }) {
               onClick={handleSetHomepage}
               fitContent
             >
-              {t('pages.show.homepage.submit')}
+              {t('homepage.submit')}
             </Button>
           </Form>
         )}

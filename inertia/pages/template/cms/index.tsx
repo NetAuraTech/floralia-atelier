@@ -1,7 +1,6 @@
 import { ReactElement } from 'react'
 import { Button } from '~/components/atoms/button'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
-import { useTranslation } from 'react-i18next'
 import { Data } from '@generated/data'
 import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
@@ -13,6 +12,9 @@ import { Icon } from '~/components/atoms/icon'
 import { CanAccess } from '~/guards/can_access'
 import { useMenu } from '~/hooks/use_admin'
 import { Paragraph } from '~/components/atoms/paragraph'
+import {Lang, useTranslation} from "~/hooks/use_translation";
+import {CmsTemplatesTranslations} from "#types/translations";
+import {usePageContext} from "~/context/page_context";
 
 interface PageProps {
   templates: Data.Template[]
@@ -21,18 +23,20 @@ interface PageProps {
     block_type?: string
     search?: string
   }
+  translations: CmsTemplatesTranslations
 }
 
 export default function TemplatesIndexPage(props: PageProps) {
-  const { templates, filters } = props
-  const { t, i18n } = useTranslation()
+  const { templates, filters, translations } = props
+  const { props: pageProps } = usePageContext()
+  const { t, format } = useTranslation<CmsTemplatesTranslations>(translations)
 
   const { getEntryIcon } = useMenu()
 
   return (
     <>
       <AdminMain
-        title={t('admin:templates.list.title')}
+        title={t('title')}
         icon={getEntryIcon('admin.templates.render')}
       >
         <Card
@@ -44,32 +48,32 @@ export default function TemplatesIndexPage(props: PageProps) {
               <Field
                 type="text"
                 name="search"
-                label={t('admin:search.value')}
-                placeholder={t('admin:search.placeholder')}
+                label={t('search.value')}
+                placeholder={t('search.placeholder')}
                 defaultValue={filters.search}
                 sanitize
               />
               <Field
                 type="select"
                 name="type"
-                label={t('admin:templates.list.search.type.value')}
-                placeholder={t('admin:templates.list.search.type.placeholder')}
+                label={t('search.type.value')}
+                placeholder={t('search.type.placeholder')}
                 defaultValue={filters.type}
                 sanitize
               >
-                <SelectOption label={t('admin:templates.list.search.type.page')} value="page" />
-                <SelectOption label={t('admin:templates.list.search.type.block')} value="block" />
+                <SelectOption label={t('search.type.page')} value="page" />
+                <SelectOption label={t('search.type.block')} value="block" />
               </Field>
               <Button type="submit" fitContent>
-                {t('admin:search.filter')}
+                {t('search.filter')}
               </Button>
             </Form>
           }
         >
           {templates.length === 0 ? (
             <div className="text-center py-20 rounded-xl border border-dashed border-edge">
-              <Paragraph variant="muted">{t('admin:templates.list.empty.value')}</Paragraph>
-              <Paragraph variant="subtle">{t('admin:templates.list.empty.help')}</Paragraph>
+              <Paragraph variant="muted">{t('empty.value')}</Paragraph>
+              <Paragraph variant="subtle">{t('empty.help')}</Paragraph>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -81,11 +85,11 @@ export default function TemplatesIndexPage(props: PageProps) {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-ink truncate">
-                        {t(template.name, { defaultValue: template.name })}
+                        {t(template.name as any, { defaultValue: template.name })}
                       </p>
                       {template.description && (
                         <p className="text-ink-muted mt-0.5 line-clamp-2">
-                          {t(template.description, { defaultValue: template.description })}
+                          {t(template.description as any, { defaultValue: template.description })}
                         </p>
                       )}
                     </div>
@@ -97,25 +101,25 @@ export default function TemplatesIndexPage(props: PageProps) {
                       }`}
                     >
                       {template.type === 'block' && template.blockType
-                        ? t(template.blockType, { defaultValue: template.blockType })
-                        : t(template.type, { defaultValue: template.type })}
+                        ? t(template.blockType as any, { defaultValue: template.blockType })
+                        : t(template.type as any, { defaultValue: template.type })}
                     </span>
                   </div>
                   <div className="flex items-center justify-between pt-1 border-t border-edge">
                     <span className="text-ink-subtle">
-                      {i18n.format(new Date(template.createdAt!), 'medium', i18n.language)}
+                      {format(new Date(template.createdAt!), 'medium', pageProps.locale as Lang)}
                     </span>
                     <CanAccess permission="templates.manage">
                       <Form
                         onBefore={() => {
-                          return window.confirm(t('admin:templates.delete.confirm'))
+                          return window.confirm(t('delete.confirm'))
                         }}
                         route="admin.templates.destroy"
                         routeParams={{ id: template.id }}
                       >
                         <Button
                           variant="icon_danger"
-                          title={t('admin:templates.delete.title', {
+                          title={t('delete.value', {
                             name: template.name,
                           })}
                           fitContent

@@ -114,7 +114,7 @@ export default function UsersIndexPage(props: PageProps) {
                     </span>
                   </Table.Cell>
                   <Table.Cell data-label={t('status.value')}>
-                    <UserStatus status={user.status as StatusEnum} user={user.id} />
+                    <UserStatus status={user.status as StatusEnum} user={user.id} translations={translations} />
                   </Table.Cell>
                   <Table.Cell data-label={t('register_on')}>
                     {format(new Date(user.createdAt!), 'medium', pageProps.locale as Lang)}
