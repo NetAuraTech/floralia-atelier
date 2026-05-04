@@ -30,6 +30,15 @@ export default defineConfig({
     modulePreload: {
       polyfill: false,
       resolveDependencies: () => []
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('lucide-react/dynamic')) {
+            return 'lucide-dynamic'
+          }
+        }
+      }
     }
   }
 })
