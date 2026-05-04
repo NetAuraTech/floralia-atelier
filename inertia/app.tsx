@@ -2,8 +2,7 @@ import './css/app.css'
 import { hydrateRoot } from 'react-dom/client'
 import { HelmetProvider } from '@dr.pogodin/react-helmet'
 import { PageProvider } from '~/context/page_context'
-import Layout from '~/layouts/default'
-import AdminLayout from '~/layouts/admin'
+import { lazy, Suspense } from 'react'
 
 declare global {
   interface Window {
@@ -22,7 +21,10 @@ async function bootstrap() {
   const module = (await pages[`./pages/${component}.tsx`]()) as any
   const Page = module.default
 
-  const LayoutType = component.includes('admin') || component.includes('cms') ? AdminLayout : Layout
+  const LayoutModule = component.includes('admin') || component.includes('cms')
+    ? await import('~/layouts/admin')
+    : await import('~/layouts/default')
+  const LayoutType = LayoutModule.default
 
   const app = document.getElementById('app')
   if (!app) throw new Error('Root element #app not found')

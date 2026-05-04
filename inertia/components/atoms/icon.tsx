@@ -1,8 +1,10 @@
-import { icons } from 'lucide-react'
+//@ts-ignore
+import { DynamicIcon } from 'lucide-react/dynamic.mjs'
+import { LucideProps } from 'lucide-react'
 
-interface IconProps {
-  /** Name of the Lucide icon to render. Must be a valid key of the `icons` map. */
-  name: keyof typeof icons
+interface IconProps extends LucideProps {
+  /** Name of the Lucide icon to render. Supports PascalCase (e.g. ArrowLeft) or kebab-case (arrow-left). */
+  name: string
   /** Icon size in pixels. Forwarded directly to the Lucide component. */
   size?: number
   /** Additional Tailwind classes (e.g. `text-danger`, `shrink-0`). */
@@ -10,24 +12,36 @@ interface IconProps {
 }
 
 /**
- * Thin wrapper around the Lucide icon library.
+ * Converts PascalCase to kebab-case.
+ * Lucide's dynamic imports use kebab-case keys.
+ */
+function toKebabCase(str: string) {
+  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+/**
+ * Thin wrapper around the Lucide DynamicIcon component.
  *
- * Looks up `name` in the Lucide `icons` map and renders the matching SVG
- * component. Returns an empty fragment when the icon is not found, so
- * invalid names fail silently rather than throwing.
+ * Each icon is loaded as a separate chunk only when needed.
+ * Returns a placeholder while loading to prevent layout shifts.
  *
  * @example
- * <Icon name="Trash" size={18} className="text-danger" />
- * <Icon name="Check" size={16} />
+ * <Icon name="ArrowLeft" size={18} />
+ * <Icon name="trash" size={18} className="text-danger" />
  */
 export function Icon(props: IconProps) {
-  const { name, size, ...iconProps } = props
+  const { name, size, className, ...iconProps } = props
 
-  const Item = icons[name]
+  // DynamicIcon expects kebab-case names
+  const kebabName = toKebabCase(name)
 
-  if (Item) {
-    return <Item size={size} {...iconProps} />
-  }
-
-  return <></>
+  return (
+    <DynamicIcon
+      name={kebabName as any}
+      size={size}
+      className={className}
+      fallback={() => <div style={{ width: size, height: size }} className={className} />}
+      {...iconProps}
+    />
+  )
 }
