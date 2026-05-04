@@ -16,6 +16,7 @@ interface BlockRendererProps {
   block: ResolvedBlock
   pageId: number
   locale: string
+  isPriority?: boolean
 }
 
 /**
@@ -24,13 +25,13 @@ interface BlockRendererProps {
  * Container blocks (`section`, `grid`) receive their `children` rendered
  * recursively via this same component.
  */
-export default function BlockRenderer({ block, pageId, locale }: BlockRendererProps) {
+export default function BlockRenderer({ block, pageId, locale, isPriority = false }: BlockRendererProps) {
   switch (block.type) {
     case 'section':
       return (
         <SectionBlock block={block as ResolvedBlock<'section'>}>
           {block.children?.map((child) => (
-            <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+            <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} isPriority={isPriority} />
           ))}
         </SectionBlock>
       )
@@ -38,14 +39,14 @@ export default function BlockRenderer({ block, pageId, locale }: BlockRendererPr
       return (
         <GridBlock block={block as ResolvedBlock<'grid'>}>
           {block.children?.map((child) => (
-            <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+            <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} isPriority={isPriority} />
           ))}
         </GridBlock>
       )
     case 'flex':
       return (<FlexBlock block={block as ResolvedBlock<'flex'>}>
         {block.children?.map((child) => (
-          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} isPriority={isPriority} />
         ))}
       </FlexBlock>)
     case 'title':
@@ -61,7 +62,7 @@ export default function BlockRenderer({ block, pageId, locale }: BlockRendererPr
     case 'form':
       return <FormBlock block={block as ResolvedBlock<'form'>}>
         {block.children?.map((child) => (
-          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} />
+          <BlockRenderer key={child.id} block={child} pageId={pageId} locale={locale} isPriority={isPriority} />
         ))}
       </FormBlock>
     case 'field':
@@ -69,7 +70,7 @@ export default function BlockRenderer({ block, pageId, locale }: BlockRendererPr
     case 'htmltext':
       return <HtmlTextBlock block={block as ResolvedBlock<'htmltext'>} />
     case 'image':
-      return <ImageBlock block={block as ResolvedBlock<'image'>} />
+      return <ImageBlock block={block as ResolvedBlock<'image'>} isPriority={isPriority} />
     default:
       if (process.env.NODE_ENV === 'development') {
         console.warn(`[BlockRenderer] Unknown block type: ${(block as any).type}`)
