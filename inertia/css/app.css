@@ -1,5 +1,4 @@
 @import "tailwindcss";
-/* @import "./fonts.css"; */
 @source "../pages";
 @source "../components";
 @source "../layouts";
@@ -12,7 +11,7 @@
 @theme {
   --font-cormorant: "Cormorant Garamond", serif;
   --font-playfair: "Playfair Display", serif;
-  --font-jost: "Jost", sans-serif;
+  --font-jost: "Jost Variable", "Jost", sans-serif;
 
   --color-primary-deep:          oklch(0.3038 0.0392 162.91);
   --color-primary:               oklch(0.4049 0.0528 161.65);

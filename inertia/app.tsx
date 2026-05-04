@@ -1,4 +1,14 @@
 import './css/app.css'
+import "@fontsource/jost/400.css"
+import "@fontsource/jost/700.css"
+import "@fontsource/jost/400-italic.css"
+import "@fontsource/cormorant-garamond/400.css"
+import "@fontsource/cormorant-garamond/700.css"
+import "@fontsource/cormorant-garamond/400-italic.css"
+import "@fontsource/playfair-display/400.css"
+import "@fontsource/playfair-display/700.css"
+import "@fontsource/playfair-display/400-italic.css"
+
 import { hydrateRoot } from 'react-dom/client'
 import { HelmetProvider } from '@dr.pogodin/react-helmet'
 import { PageProvider } from '~/context/page_context'
