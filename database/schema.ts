@@ -7,62 +7,6 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
-export class CacheSchema extends BaseModel {
-  static $columns = ['expiration', 'key', 'value'] as const
-  $columns = CacheSchema.$columns
-  @column()
-  declare expiration: number
-  @column()
-  declare key: string
-  @column()
-  declare value: string
-}
-
-export class CacheLockSchema extends BaseModel {
-  static $columns = ['expiration', 'key', 'owner'] as const
-  $columns = CacheLockSchema.$columns
-  @column()
-  declare expiration: number
-  @column()
-  declare key: string
-  @column()
-  declare owner: string
-}
-
-export class DomainSchema extends BaseModel {
-  static $columns = ['createdAt', 'domain', 'id', 'tenantId', 'updatedAt'] as const
-  $columns = DomainSchema.$columns
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
-  @column()
-  declare domain: string
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare tenantId: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-}
-
-export class FailedJobSchema extends BaseModel {
-  static $columns = ['connection', 'exception', 'failedAt', 'id', 'payload', 'queue', 'uuid'] as const
-  $columns = FailedJobSchema.$columns
-  @column()
-  declare connection: string
-  @column()
-  declare exception: string
-  @column.dateTime()
-  declare failedAt: DateTime
-  @column({ isPrimary: true })
-  declare id: bigint | number
-  @column()
-  declare payload: string
-  @column()
-  declare queue: string
-  @column()
-  declare uuid: string
-}
-
 export class FileAltSchema extends BaseModel {
   static $columns = ['createdAt', 'fileId', 'id', 'key', 'locale', 'updatedAt', 'value'] as const
   $columns = FileAltSchema.$columns
@@ -124,61 +68,6 @@ export class FileSchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column()
   declare uploadedBy: number | null
-}
-
-export class JobBatchSchema extends BaseModel {
-  static $columns = ['cancelledAt', 'createdAt', 'failedJobIds', 'failedJobs', 'finishedAt', 'id', 'name', 'options', 'pendingJobs', 'totalJobs'] as const
-  $columns = JobBatchSchema.$columns
-  @column()
-  declare cancelledAt: number | null
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-  @column()
-  declare failedJobIds: string
-  @column()
-  declare failedJobs: number
-  @column()
-  declare finishedAt: number | null
-  @column({ isPrimary: true })
-  declare id: string
-  @column()
-  declare name: string
-  @column()
-  declare options: string | null
-  @column()
-  declare pendingJobs: number
-  @column()
-  declare totalJobs: number
-}
-
-export class JobSchema extends BaseModel {
-  static $columns = ['attempts', 'availableAt', 'createdAt', 'id', 'payload', 'queue', 'reservedAt'] as const
-  $columns = JobSchema.$columns
-  @column()
-  declare attempts: number
-  @column()
-  declare availableAt: number
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
-  @column({ isPrimary: true })
-  declare id: bigint | number
-  @column()
-  declare payload: string
-  @column()
-  declare queue: string
-  @column()
-  declare reservedAt: number | null
-}
-
-export class MigrationSchema extends BaseModel {
-  static $columns = ['batch', 'id', 'migration'] as const
-  $columns = MigrationSchema.$columns
-  @column()
-  declare batch: number
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare migration: string
 }
 
 export class PageRevisionSchema extends BaseModel {
@@ -316,23 +205,6 @@ export class RoleSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
-export class SessionSchema extends BaseModel {
-  static $columns = ['id', 'ipAddress', 'lastActivity', 'payload', 'userAgent', 'userId'] as const
-  $columns = SessionSchema.$columns
-  @column({ isPrimary: true })
-  declare id: string
-  @column()
-  declare ipAddress: string | null
-  @column()
-  declare lastActivity: number
-  @column()
-  declare payload: string
-  @column()
-  declare userAgent: string | null
-  @column()
-  declare userId: bigint | number | null
-}
-
 export class TemplateSchema extends BaseModel {
   static $columns = ['blockType', 'content', 'createdAt', 'createdBy', 'description', 'id', 'name', 'thumbnailId', 'type', 'updatedAt'] as const
   $columns = TemplateSchema.$columns
@@ -354,19 +226,6 @@ export class TemplateSchema extends BaseModel {
   declare thumbnailId: number | null
   @column()
   declare type: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-}
-
-export class TenantSchema extends BaseModel {
-  static $columns = ['createdAt', 'data', 'id', 'updatedAt'] as const
-  $columns = TenantSchema.$columns
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
-  @column()
-  declare data: any | null
-  @column({ isPrimary: true })
-  declare id: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }
