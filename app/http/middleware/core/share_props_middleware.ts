@@ -14,7 +14,6 @@ export default class SharePropsMiddleware {
 
   async handle(ctx: HttpContext, next: NextFn) {
     const { session, auth } = ctx as Partial<HttpContext>
-
     const user = auth?.user
 
     await user?.load((loader) => {
@@ -23,14 +22,16 @@ export default class SharePropsMiddleware {
       })
     })
 
-    const errorsBag = session?.flashMessages.get('errorsBag') ?? {}
+    const all = session?.flashMessages.all() ?? {}
+
+    const errorsBag = all.errorsBag ?? {}
     const errorFromBag: string | undefined = Object.keys(errorsBag)
       .filter((code) => code !== 'E_VALIDATION_ERROR')
       .map((code) => errorsBag[code])[0]
 
-    const success: string | undefined = session?.flashMessages.get('success')
-    const info: string | undefined = session?.flashMessages.get('info')
-    const error: string | undefined = session?.flashMessages.get('error') ?? errorFromBag
+    const success: string | undefined = all.success
+    const info: string | undefined = all.info
+    const error: string | undefined = all.error ?? errorFromBag
 
     const preferences = user ? await this.preferencesService.get(user) : DEFAULT_PREFERENCES
 

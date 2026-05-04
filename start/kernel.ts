@@ -35,7 +35,10 @@ server.use([
  */
 router.use([
   () => import('@adonisjs/core/bodyparser_middleware'),
+  () => import('@adonisjs/session/session_middleware'),
+  () => import('@adonisjs/shield/shield_middleware'),
   () => import('@adonisjs/auth/initialize_auth_middleware'),
+  () => import('#middleware/auth/silent_auth_middleware'),
   () => import('#middleware/core/detect_user_locale_middleware'),
   () => import('#middleware/core/share_props_middleware'),
 ])
@@ -49,7 +52,4 @@ export const middleware = router.named({
   permission: () => import('#middleware/auth/permission_middleware'),
   guest: () => import('#middleware/auth/guest_middleware'),
   auth: () => import('#middleware/auth/auth_middleware'),
-  session: () => import('@adonisjs/session/session_middleware'),
-  shield: () => import('@adonisjs/shield/shield_middleware'),
-  silent_auth: () => import('#middleware/auth/silent_auth_middleware'),
 })
