@@ -2,21 +2,21 @@ import { ReactElement } from 'react'
 import { Button } from '~/components/atoms/button'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Data } from '@generated/data'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { Card } from '~/components/atoms/card'
-import { Form } from '~/components/atoms/form'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import { Icon } from '~/components/atoms/icon'
 import { CanAccess } from '~/guards/can_access'
 import { useMenu } from '~/hooks/use_admin'
 import { Paragraph } from '~/components/atoms/paragraph'
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {CmsTemplatesTranslations} from "#types/translations";
-import {usePageContext} from "~/context/page_context";
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsTemplatesTranslations } from '#types/translations'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Form } from '@adonisjs/inertia/react'
 
-interface PageProps {
+interface TemplatesIndexPageProps {
   templates: Data.Template[]
   filters: {
     type?: string
@@ -26,19 +26,16 @@ interface PageProps {
   translations: CmsTemplatesTranslations
 }
 
-export default function TemplatesIndexPage(props: PageProps) {
+export default function TemplatesIndexPage(props: TemplatesIndexPageProps) {
   const { templates, filters, translations } = props
-  const { props: pageProps } = usePageContext()
-  const { t, format } = useTranslation<CmsTemplatesTranslations>(translations)
+  const pageProps = usePage<SharedProps>().props
+  const { t, format } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
   return (
     <>
-      <AdminMain
-        title={t('title')}
-        icon={getEntryIcon('admin.templates.render')}
-      >
+      <AdminMain title={t('title')} icon={getEntryIcon('admin.templates.render')}>
         <Card
           header={
             <Form

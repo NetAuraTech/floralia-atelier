@@ -4,26 +4,25 @@ import { InvitationService } from '#services/auth/invitation_service'
 import { acceptInvitationValidator, invitationValidator } from '#validators/auth'
 import { FullToken } from '#types/core'
 import UserTransformer from '#transformers/user_transformer'
-import {AcceptInvitationTranslations} from "#types/translations";
 
 @inject()
 export default class AcceptInvitationController {
   constructor(protected invitationService: InvitationService) {}
 
   async render(ctx: HttpContext) {
-    const { params, i18n } = ctx
+    const { inertia, params, i18n } = ctx
 
     const payload = await invitationValidator.validate(params)
     const user = await this.invitationService.get(payload.token as FullToken)
 
-    return ctx.reactSSR('auth/front/accept_invitation', {
+    return inertia.render('auth/front/accept_invitation', {
       token: payload.token,
-      user: await UserTransformer.transform(user).resolve(ctx.containerResolver, 0),
+      user: UserTransformer.transform(user),
       translations: {
         title: i18n.t('auth.invitation.title'),
         sub_title: i18n.t('auth.invitation.sub_title'),
         banner: {
-          title: i18n.t('auth.invitation.banner.title', {email: user.email}),
+          title: i18n.t('auth.invitation.banner.title', { email: user.email }),
           message: i18n.t('auth.invitation.banner.message'),
         },
         email: {
@@ -44,8 +43,8 @@ export default class AcceptInvitationController {
           help: i18n.t('auth.invitation.password.help'),
           value: i18n.t('auth.invitation.password.value'),
         },
-        submit: i18n.t('auth.invitation.submit')
-      } as AcceptInvitationTranslations
+        submit: i18n.t('auth.invitation.submit'),
+      },
     })
   }
 

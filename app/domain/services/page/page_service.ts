@@ -8,7 +8,7 @@ import type Page from '#models/page/page'
 import type PageTranslation from '#models/page/page_translation'
 import type { PageContent } from '#types/page'
 import type { PaginationFilters } from '#types/pagination'
-import {urlFor} from "@adonisjs/core/services/url_builder";
+import { urlFor } from '@adonisjs/core/services/url_builder'
 
 interface ListFilters {
   status?: 'draft' | 'published' | 'archived'
@@ -355,11 +355,11 @@ export class PageService {
   async getAvailablePagesForLink() {
     const pages = await this.pageRepository.listForLinks()
 
-    return pages.map(page => ({
+    return pages.map((page) => ({
       id: page.id,
       label: page.translations[0]?.title,
       default_locale: page.defaultLocale,
-      locales: page.translations.map(t => ({ locale: t.locale, slug: t.slug }))
+      locales: page.translations.map((t) => ({ locale: t.locale, slug: t.slug })),
     }))
   }
 
@@ -372,18 +372,17 @@ export class PageService {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`
     const appUrl = process.env.APP_URL
 
-    pages.forEach(page => {
-      page.translations.forEach(t => {
+    pages.forEach((page) => {
+      page.translations.forEach((t) => {
         let url: string
 
         if (page.isHomepage) {
-          url = t.locale === page.defaultLocale
-            ? `${appUrl}/`
-            : `${appUrl}/${t.locale}/`
+          url = t.locale === page.defaultLocale ? `${appUrl}/` : `${appUrl}/${t.locale}/`
         } else {
-          url = t.locale === page.defaultLocale
-            ? `${appUrl}${urlFor('page.render', {slug: t.slug})}`
-            : `${appUrl}${urlFor('page.localised.render', {locale: t.locale, slug: t.slug})}`
+          url =
+            t.locale === page.defaultLocale
+              ? `${appUrl}${urlFor('page.render', { slug: t.slug })}`
+              : `${appUrl}${urlFor('page.localised.render', { locale: t.locale, slug: t.slug })}`
         }
 
         xml += `\n  <url>
@@ -401,7 +400,7 @@ export class PageService {
    * Returns a basic robots.txt file content.
    */
   getRobotsTxt(): string {
-    const appUrl = process.env.APP_URL;
+    const appUrl = process.env.APP_URL
 
     return [
       'User-agent: *',
@@ -409,7 +408,7 @@ export class PageService {
       'Disallow: /admin/*',
       'Disallow: /settings/*',
       '',
-      `Sitemap: ${appUrl}${urlFor('page.sitemap')}`
-    ].join('\n');
+      `Sitemap: ${appUrl}${urlFor('page.sitemap')}`,
+    ].join('\n')
   }
 }

@@ -1,5 +1,5 @@
 import type { ResolvedBlock } from '#types/page'
-import {Icon} from "~/components/atoms/icon";
+import { Icon } from '~/components/atoms/icon'
 
 const backgroundMap: Record<string, string> = {
   'none': '',
@@ -49,7 +49,11 @@ interface IconBlockProps {
 export default function IconBlock({ block }: IconBlockProps) {
   const { name, size, color, background, className } = block.props
 
-  return <div className={[colorMap[color], backgroundMap[background], className].filter(Boolean).join(' ')}>
-    {name && <Icon name={name} size={size} />}
-  </div>
+  return (
+    <div
+      className={[colorMap[color], backgroundMap[background], className].filter(Boolean).join(' ')}
+    >
+      {name && <Icon name={name} size={size} />}
+    </div>
+  )
 }

@@ -9,13 +9,13 @@ import { urlFor } from '~/client'
 import PresenceBar from '~/components/organisms/builder/PresenceBar'
 import BlockTree from '~/components/organisms/builder/BlockTree'
 import PreviewIframe from '~/components/organisms/builder/PreviewIframe'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
-import type { SharedProps } from '~/types/shared_props'
+import { Head } from '@inertiajs/react'
 import { Icon } from '~/components/atoms/icon'
 import { Separator } from '~/components/atoms/separator'
 import { Heading } from '~/components/atoms/heading'
-import {Data} from "@generated/data";
-import {router, useForm} from "~/hooks/use_form";
+import { Data } from '@generated/data'
+import { router, useForm } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface Props {
   page: Data.Page
@@ -116,18 +116,21 @@ export default function PagesEditPage({ page }: Props) {
     router.post(
       urlFor('admin.pages_update.execute', { id: page.id }),
       {
-        locale:          activeLocale,
+        locale: activeLocale,
         title,
         slug,
-        content,
-        metaTitle:       metaTitle || null,
+        content: content as any,
+        metaTitle: metaTitle || null,
         metaDescription: metaDescription || null,
       },
       {
         preserveScroll: true,
-        onSuccess: () => { setSaveState('saved'); setTimeout(() => setSaveState('idle'), 2500) },
-        onError:   () => setSaveState('error'),
-        onFinish:  () => setSaving(false),
+        onSuccess: () => {
+          setSaveState('saved')
+          setTimeout(() => setSaveState('idle'), 2500)
+        },
+        onError: () => setSaveState('error'),
+        onFinish: () => setSaving(false),
       }
     )
   }, [saving, activeLocale, title, slug, content, metaTitle, metaDescription, page.id])
@@ -146,7 +149,7 @@ export default function PagesEditPage({ page }: Props) {
     router.post(
       urlFor('admin.pages_update.publish', { id: page.id }),
       {
-        locale: activeLocale
+        locale: activeLocale,
       },
       {
         preserveScroll: true,
@@ -157,7 +160,7 @@ export default function PagesEditPage({ page }: Props) {
     router.post(
       urlFor('admin.pages_update.unpublish', { id: page.id }),
       {
-        locale: activeLocale
+        locale: activeLocale,
       },
       {
         preserveScroll: true,
@@ -418,11 +421,15 @@ function AddTranslationButton({
             ))}
           </select>
           <Input
+            name="title"
+            type="text"
             defaultValue={form.data.title}
             onChange={(e) => form.setData('title', e.target.value)}
             placeholder="Title"
           />
           <Input
+            name="slug"
+            type="text"
             defaultValue={form.data.slug}
             onChange={(e) => form.setData('slug', e.target.value)}
             placeholder="slug"

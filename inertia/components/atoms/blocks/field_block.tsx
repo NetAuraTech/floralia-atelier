@@ -1,6 +1,6 @@
-import {Field} from "~/components/molecules/field";
-import type {ResolvedBlock} from "#types/page";
-import {SelectOption} from "~/components/atoms/select_option";
+import { Field } from '~/components/molecules/field'
+import type { ResolvedBlock } from '#types/page'
+import { SelectOption } from '~/components/atoms/select_option'
 
 interface FieldBlockProps {
   block: ResolvedBlock<'field'>
@@ -17,7 +17,10 @@ export default function FieldBlock({ block }: FieldBlockProps) {
       required={p.required}
       helpText={p.helpText}
     >
-      {p.options && p.options.map(option => <SelectOption key={option.value} value={option.value} label={option.label} />)}
+      {p.options &&
+        p.options.map((option) => (
+          <SelectOption key={option.value} value={option.value} label={option.label} />
+        ))}
     </Field>
   )
 }

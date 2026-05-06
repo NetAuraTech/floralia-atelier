@@ -4,7 +4,7 @@ import { inject } from '@adonisjs/core'
 import { createValidator } from '#validators/user'
 import { RoleService } from '#services/auth/role_service'
 import RoleTransformer from '#transformers/role_transformer'
-import {CmsUsersFormTranslations, TranslationNodes} from "#types/translations";
+import { TranslationNodes } from '#types/translations'
 
 @inject()
 export default class UsersCreateController {
@@ -14,16 +14,16 @@ export default class UsersCreateController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
     const roles = await this.roleService.findAll()
 
-    return ctx.reactSSR('auth/cms/form', {
-      roles: await RoleTransformer.transform(roles).resolve(ctx.containerResolver, 0),
+    return inertia.render('auth/cms/form', {
+      roles: RoleTransformer.transform(roles),
       translations: {
         title: {
           create: i18n.t('cms.users.create.title'),
-          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
+          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
         },
         email: {
           value: i18n.t('cms.users.form.email.value'),
@@ -42,13 +42,13 @@ export default class UsersCreateController {
               description: i18n.t(`cms.users.roles.${role.slug}.description`),
             }
             return acc
-          }, {} as TranslationNodes)
+          }, {} as TranslationNodes),
         },
         submit: i18n.t('cms.users.form.submit'),
         actions: {
-          list: i18n.t('cms.users.list.title')
-        }
-      } as CmsUsersFormTranslations
+          list: i18n.t('cms.users.list.title'),
+        },
+      },
     })
   }
 

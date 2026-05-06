@@ -1,6 +1,6 @@
 import { Button } from '~/components/atoms/button'
-import type {ResolvedBlock} from "#types/page";
-import {urlFor} from "~/client";
+import type { ResolvedBlock } from '#types/page'
+import { urlFor } from '~/client'
 
 interface ButtonBlockProps {
   block: ResolvedBlock<'button'>
@@ -12,7 +12,7 @@ export default function ButtonBlock(props: ButtonBlockProps) {
   let finalProps: any = {
     variant: p.variant,
     fitContent: p.fitContent,
-    children: p.children
+    children: p.children,
   }
 
   if (p.linkType === 'external') {

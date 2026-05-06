@@ -4,9 +4,7 @@ import { Paginated } from '~/types/paginated'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
 import { ReactElement, useState } from 'react'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
-import { Form } from '~/components/atoms/form'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import { Icon } from '~/components/atoms/icon'
@@ -19,9 +17,11 @@ import { NavLink } from '~/components/atoms/nav_link'
 import { FileAltEditor } from '~/components/organisms/files/file_alt_editor'
 import { FileUploadInput } from '~/components/atoms/file_upload_input'
 import { Modal } from '~/components/atoms/modal'
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {CmsFilesTranslations} from "#types/translations";
-import {usePageContext} from "~/context/page_context";
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsFilesTranslations } from '#types/translations'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Form } from '@adonisjs/inertia/react'
 
 interface Props {
   files: Paginated<Data.File>
@@ -36,8 +36,8 @@ interface Props {
 
 export default function FilesIndexPage(props: Props) {
   const { files, filters, folders, translations } = props
-  const {props: pageProps} = usePageContext()
-  const { t, format } = useTranslation<CmsFilesTranslations>(translations)
+  const pageProps = usePage<SharedProps>().props
+  const { t, format } = useTranslation(translations)
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -89,7 +89,12 @@ export default function FilesIndexPage(props: Props) {
           {folders
             .filter((f) => !f.parentId)
             .map((folder) => (
-              <FolderEntry key={`folder-${folder.id}`} folder={folder} depth={0} filters={filters} />
+              <FolderEntry
+                key={`folder-${folder.id}`}
+                folder={folder}
+                depth={0}
+                filters={filters}
+              />
             ))}
         </Card>
         <Card
@@ -126,10 +131,7 @@ export default function FilesIndexPage(props: Props) {
                   <SelectOption label={t('search.type.options.image')} value="image" />
                   <SelectOption label={t('search.type.options.video')} value="video" />
                   <SelectOption label={t('search.type.options.audio')} value="audio" />
-                  <SelectOption
-                    label={t('search.type.options.pdf')}
-                    value="application/pdf"
-                  />
+                  <SelectOption label={t('search.type.options.pdf')} value="application/pdf" />
                 </Field>
                 <Button type="submit" fitContent>
                   {t('search.filter')}
@@ -196,10 +198,7 @@ export default function FilesIndexPage(props: Props) {
                         key={`file-${file.id}`}
                         onClick={() => setSelectedId(selectedId === file.id ? null : file.id)}
                       >
-                        <Table.Cell
-                          className="flex flex-row"
-                          data-label={t('name')}
-                        >
+                        <Table.Cell className="flex flex-row" data-label={t('name')}>
                           {isImage(file.mimeType) ? (
                             <img
                               src={file.url}
@@ -215,12 +214,8 @@ export default function FilesIndexPage(props: Props) {
                             {file.originalName}
                           </span>
                         </Table.Cell>
-                        <Table.Cell data-label={t('type')}>
-                          {file.mimeType}
-                        </Table.Cell>
-                        <Table.Cell data-label={t('size')}>
-                          {humanSize(file.size)}
-                        </Table.Cell>
+                        <Table.Cell data-label={t('type')}>{file.mimeType}</Table.Cell>
+                        <Table.Cell data-label={t('size')}>{humanSize(file.size)}</Table.Cell>
                         <Table.Cell data-label={t('uploaded_at')}>
                           {format(new Date(file.createdAt!), 'medium', pageProps.locale as Lang)}
                         </Table.Cell>
@@ -339,7 +334,11 @@ export default function FilesIndexPage(props: Props) {
               </div>
             }
           >
-            <UploadFileForm filters={filters} callback={setShowUploadForm} translations={translations} />
+            <UploadFileForm
+              filters={filters}
+              callback={setShowUploadForm}
+              translations={translations}
+            />
           </Card>
         </Modal>
       )}
@@ -403,7 +402,7 @@ interface UploadFileProps {
 
 const UploadFileForm = (props: UploadFileProps) => {
   const { filters, callback, translations } = props
-  const { t } = useTranslation<CmsFilesTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   return (
     <Form

@@ -11,14 +11,13 @@ import {
 } from '#validators/template'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import TemplateTransformer from '#transformers/template_transformer'
-import {CmsTemplatesTranslations} from "#types/translations";
 
 @inject()
 export default class TemplatesController {
   constructor(protected templateService: TemplateService) {}
 
   async render(ctx: HttpContext) {
-    const { request, i18n } = ctx
+    const { inertia, request, i18n } = ctx
 
     const data = stripEmptyStrings(request.all())
     const payload = await listTemplateValidator.validate(data)
@@ -29,8 +28,8 @@ export default class TemplatesController {
       search: payload.search,
     })
 
-    return ctx.reactSSR('template/cms/index', {
-      templates: await TemplateTransformer.transform(templates).resolve(ctx.containerResolver, 0),
+    return inertia.render('template/cms/index', {
+      templates: TemplateTransformer.transform(templates),
       filters: payload,
       translations: {
         title: i18n.t('cms.templates.list.title'),
@@ -50,10 +49,10 @@ export default class TemplatesController {
           filter: i18n.t('cms.templates.search.filter'),
         },
         delete: {
-          value: i18n.t('cms.templates.delete.title', {name: '{name}'}),
-          confirm: i18n.t('cms.templates.delete.confirm')
-        }
-      } as CmsTemplatesTranslations
+          value: i18n.t('cms.templates.delete.title', { name: '{name}' }),
+          confirm: i18n.t('cms.templates.delete.confirm'),
+        },
+      },
     })
   }
 

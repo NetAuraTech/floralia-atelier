@@ -1,4 +1,6 @@
-import type { FileRef } from '#types/file'
+import type { FileRef, ResolvedFile } from '#types/file'
+import { type ParagraphSpacing, type ParagraphVariants } from '#types/paragraph'
+import { type FontSize } from '#types/font'
 
 export type PageStatus = 'draft' | 'published' | 'archived'
 
@@ -32,7 +34,24 @@ export interface ResponsiveValue<T> {
 }
 
 export interface SectionProps {
-  background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   paddingY: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   paddingX: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   className?: string
@@ -48,7 +67,24 @@ export interface GridProps {
 
 export interface FlexProps {
   as?: 'div' | 'article'
-  background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   direction: ResponsiveValue<'row' | 'col' | 'row-reverse' | 'col-reverse'>
   gap: ResponsiveValue<'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'>
   align: 'start' | 'center' | 'end' | 'baseline' | 'stretch'
@@ -60,8 +96,35 @@ export interface FlexProps {
 export interface TitleProps {
   text: string
   level: 1 | 2 | 3 | 4
-  color: 'default' | 'ink-inverted' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light'
-  highlightColor: 'default' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light'
+  color:
+    | 'default'
+    | 'ink-inverted'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+  highlightColor:
+    | 'default'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
 }
 
 export interface ParagraphProps {
@@ -74,14 +137,62 @@ export interface ParagraphProps {
 
 export interface SeparatorProps {
   spacing: 'none' | 'sm' | 'md' | 'lg' | 'xl'
-  color: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
+  color:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   className?: string
 }
 
 export interface IconProps {
   name?: string
-  color: 'default' | 'ink-inverted' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light'
-  background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
+  color:
+    | 'default'
+    | 'ink-inverted'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   size: number
   className?: string
 }
@@ -123,7 +234,14 @@ export interface ButtonProps {
   routeParams?: Record<string, any>
   anchor?: string
   url?: string
-  variant: 'primary' | 'secondary' | 'outline' | 'danger' | 'success' | 'link_muted' | 'link_secondary'
+  variant:
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'danger'
+    | 'success'
+    | 'link_muted'
+    | 'link_secondary'
   size: 'sm' | 'md' | 'lg'
   align: 'left' | 'center' | 'right'
   fitContent: boolean
@@ -192,12 +310,25 @@ export interface ContactFormSubmission {
 // They mirror Block/Props types but with FileRef replaced by ResolvedFile,
 // built server-side by PageResolverService before being passed to Inertia.
 
-import type { ResolvedFile } from '#types/file'
-import {type ParagraphSpacing, type ParagraphVariants} from "../../inertia/types/paragraph.js";
-import {FontSize} from "../../inertia/types/font.js";
-
 export interface ResolvedSectionProps {
-  background: 'none' | 'canvas' | 'surface' | 'sunken' | 'primary-deep' | 'primary' | 'primary-soft' | 'primary-light' |'secondary-deep' | 'secondary' | 'secondary-soft' | 'secondary-light' | 'tertiary-deep' | 'tertiary' | 'tertiary-soft' | 'tertiary-light' | 'transparent'
+  background:
+    | 'none'
+    | 'canvas'
+    | 'surface'
+    | 'sunken'
+    | 'primary-deep'
+    | 'primary'
+    | 'primary-soft'
+    | 'primary-light'
+    | 'secondary-deep'
+    | 'secondary'
+    | 'secondary-soft'
+    | 'secondary-light'
+    | 'tertiary-deep'
+    | 'tertiary'
+    | 'tertiary-soft'
+    | 'tertiary-light'
+    | 'transparent'
   paddingY: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   paddingX: ResponsiveValue<'none' | 'sm' | 'md' | 'lg' | 'xl'>
   className?: string

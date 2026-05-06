@@ -5,7 +5,7 @@ import { editValidator, updateValidator } from '#validators/user'
 import { RoleService } from '#services/auth/role_service'
 import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
-import {CmsUsersFormTranslations, TranslationNodes} from "#types/translations";
+import { TranslationNodes } from '#types/translations'
 
 @inject()
 export default class UsersUpdateController {
@@ -15,7 +15,7 @@ export default class UsersUpdateController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { params, i18n } = ctx
+    const { inertia, params, i18n } = ctx
 
     const payload = await editValidator.validate(params)
 
@@ -23,15 +23,13 @@ export default class UsersUpdateController {
 
     const roles = await this.roleService.findAll()
 
-    const userTransformer = new UserTransformer(user)
-
-    return ctx.reactSSR('auth/cms/form', {
-      user: userTransformer.toObject(),
-      roles: await RoleTransformer.transform(roles).resolve(ctx.containerResolver, 0),
+    return inertia.render('auth/cms/form', {
+      user: UserTransformer.transform(user),
+      roles: RoleTransformer.transform(roles),
       translations: {
         title: {
           create: i18n.t('cms.users.create.title'),
-          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
+          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
         },
         email: {
           value: i18n.t('cms.users.form.email.value'),
@@ -50,13 +48,13 @@ export default class UsersUpdateController {
               description: i18n.t(`cms.users.roles.${role.slug}.description`),
             }
             return acc
-          }, {} as TranslationNodes)
+          }, {} as TranslationNodes),
         },
         submit: i18n.t('cms.users.form.submit'),
         actions: {
-          list: i18n.t('cms.users.list.title')
-        }
-      } as CmsUsersFormTranslations
+          list: i18n.t('cms.users.list.title'),
+        },
+      },
     })
   }
 

@@ -2,16 +2,15 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { updateValidator } from '#validators/preference'
 import PreferencesService from '#services/preferences/preference_service'
-import {SettingsPreferencesTranslations} from "#types/translations";
 
 @inject()
 export default class PreferencesController {
   constructor(private preferencesService: PreferencesService) {}
 
   async render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
-    return ctx.reactSSR('settings/preferences/front/index', {
+    return inertia.render('settings/preferences/front/index', {
       translations: {
         header: {
           title: i18n.t('settings.title'),
@@ -21,8 +20,8 @@ export default class PreferencesController {
             account: i18n.t('settings.account.value'),
             preferences: i18n.t('settings.preferences.value'),
             admin: i18n.t('cms.value'),
-            logout: i18n.t('auth.session.logout.value')
-          }
+            logout: i18n.t('auth.session.logout.value'),
+          },
         },
         appearance: {
           title: i18n.t('settings.preferences.appearance.title'),
@@ -37,9 +36,9 @@ export default class PreferencesController {
             english: i18n.t('settings.preferences.interface.locale.english'),
             french: i18n.t('settings.preferences.interface.locale.french'),
             value: i18n.t('settings.preferences.interface.locale.value'),
-          }
-        }
-      } as SettingsPreferencesTranslations
+          },
+        },
+      },
     })
   }
 

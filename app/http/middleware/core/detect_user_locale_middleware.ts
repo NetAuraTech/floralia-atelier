@@ -79,6 +79,12 @@ export default class DetectUserLocaleMiddleware {
       ctx.view.share({ i18n: ctx.i18n })
     }
 
+    if ('inertia' in ctx) {
+      ctx.inertia.share({
+        locale: ctx.i18n?.locale || language || 'en',
+      })
+    }
+
     return next()
   }
 }

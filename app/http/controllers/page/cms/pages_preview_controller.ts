@@ -104,7 +104,7 @@ export default class PagesPreviewController {
    * Route: GET /admin/pages/preview/:pageId?locale=en&token=xxx
    */
   async render(ctx: HttpContext) {
-    const { params, request, response, auth } = ctx
+    const { inertia, params, request, response, auth } = ctx
 
     const user = auth.getUserOrFail()
 
@@ -136,8 +136,8 @@ export default class PagesPreviewController {
       payload.locale
     )
 
-    return ctx.reactSSR('page/front/preview', {
-      page: await PageTranslationTransformer.transform(translation).resolve(ctx.containerResolver, 0),
+    return inertia.render('page/front/preview', {
+      page: PageTranslationTransformer.transform(translation),
       editable: true,
     })
   }

@@ -1,7 +1,12 @@
 import { useState, useCallback } from 'react'
-import { validate, type LazyValidationRule, type ValidationResult } from '~/helpers/validation_rules'
-import { useTranslation } from "~/hooks/use_translation"
-import { usePageContext } from "~/context/page_context"
+import {
+  validate,
+  type LazyValidationRule,
+  type ValidationResult,
+} from '~/helpers/validation_rules'
+import { useTranslation } from '~/hooks/use_translation'
+import { type SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/react'
 
 /**
  * Field validation state
@@ -84,8 +89,8 @@ export interface UseFormValidationReturn {
  * Form validation hook
  */
 export function useFormValidation(config: FormValidationConfig): UseFormValidationReturn {
-  const { props: pageProps } = usePageContext()
-  const { t } = useTranslation(pageProps.translations)
+  const pageProps = usePage<SharedProps>().props
+  const { t } = useTranslation(pageProps.common_translations)
 
   const [fieldStates, setFieldStates] = useState<Record<string, FieldState>>(() => {
     const initial: Record<string, FieldState> = {}

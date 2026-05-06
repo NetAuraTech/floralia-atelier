@@ -1,8 +1,9 @@
-import { usePageContext } from '~/context/page_context'
+import { router, usePage } from '@inertiajs/react'
 import { ReactNode, MouseEvent, useState, useEffect } from 'react'
-import type { FontSize } from '~/types/font'
+import type { FontSize } from '#types/font'
 import { getFontSizeClass } from '~/utils/font'
-import { Link, type LinkProps } from '~/components/atoms/link'
+import { Link } from '@adonisjs/inertia/react'
+import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { urlFor } from '~/client'
 
 type NavLinkBaseProps = {
@@ -34,14 +35,29 @@ type NavLinkBaseProps = {
 
 type NavLinkRouteProps<R extends NonNullable<LinkProps['route']>> = NavLinkBaseProps & {
   route: R
-  routeParams?: any
+  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
   anchor?: string
-}
+  /**
+   * Query-string parameters merged into the URL. When provided the link uses
+   * a plain `href` instead of an Inertia route so the query string is
+   * preserved correctly
+   */
+  qs?: Record<string, any> | undefined
+} & (LinkParams<R>['routeParams'] extends undefined | never
+    ? { routeParams?: never }
+    : { routeParams: LinkParams<R>['routeParams'] })
 
 type NavLinkNoRouteProps = NavLinkBaseProps & {
   route?: never
   routeParams?: never
+  /** Optional URL fragment appended to the resolved href (e.g. `'section-1'`). */
   anchor?: string
+  /**
+   * Query-string parameters merged into the URL. When provided the link uses
+   * a plain `href` instead of an Inertia route so the query string is
+   * preserved correctly
+   */
+  qs?: Record<string, any> | undefined
 }
 
 type NavLinkProps<R extends NonNullable<LinkProps['route']>> =
@@ -57,7 +73,8 @@ export const variants = {
     'button font-normal hover:bg-primary hover:text-ink-inverted current:bg-primary current:text-ink-inverted px-2 py-1',
   admin_nav:
     'flex items-center gap-2 p-3 rounded hover:text-ink-inverted hover:bg-primary-deep current:text-ink-inverted current:bg-primary-deep',
-  external: 'text-secondary hover:text-secondary-light font-semibold font-cormorant tracking-wide italic text-lg',
+  external:
+    'text-secondary hover:text-secondary-light font-semibold font-cormorant tracking-wide italic text-lg',
   footer: 'text-ink-inverted hover:text-primary-light text-sm flex items-center',
 }
 
@@ -91,27 +108,34 @@ export const variants = {
  */
 export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLinkProps<R>) {
   const { label, title, children, onClick, fs = 'base', variant = 'link', disabled } = props
-  const { url } = usePageContext()
-
-  const resolvedHref = props.route
-    ? (urlFor as (route: string, params?: unknown) => string)(props.route, props.routeParams)
-    : ''
-
-  const [currentPath] = url.split('?')
-  const pathMatches = currentPath === resolvedHref
-
-  const [clientHash, setClientHash] = useState('')
+  const { url } = usePage()
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
-    setClientHash(window.location.hash.replace('#', ''))
-    const onHashChange = () => setClientHash(window.location.hash.replace('#', ''))
-    window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
-  }, [])
+    const determineActive = () => {
+      const currentPath = window.location.pathname
 
-  const anchorMatches = (props.anchor ?? '') === clientHash
+      const resolvedHref = props.route ? (urlFor as any)(props.route, props.routeParams) : ''
 
-  const isActive = (pathMatches && anchorMatches) || props.isActive
+      const pathMatches = currentPath === resolvedHref
+
+      const currentHash = window.location.hash.replace('#', '')
+      const targetAnchor = props.anchor ?? ''
+      const anchorMatches = targetAnchor === currentHash
+
+      setIsActive((pathMatches && anchorMatches) || (props.isActive ?? false))
+    }
+
+    determineActive()
+
+    const removeFinishEventListener = router.on('finish', () => {
+      determineActive()
+    })
+
+    return () => {
+      removeFinishEventListener()
+    }
+  }, [url, props.anchor, props.route, props.routeParams])
 
   const states = {
     active: '',
@@ -125,15 +149,15 @@ export function NavLink<R extends NonNullable<LinkProps['route']>>(props: NavLin
   let linkProps: any = { href: '#' }
 
   if (props.route) {
-    linkProps = {
-      route: props.route,
-      routeParams: (props as any).routeParams,
-      qs: (props as any).qs,
-      href: props.anchor ? `#${props.anchor}` : undefined
-    }
-  } else if ((props as any).href) {
-    linkProps.href = (props as any).href
-    if (props.anchor) linkProps.href += `#${props.anchor}`
+    linkProps =
+      props.anchor || props.qs
+        ? {
+            href: `${urlFor(props.route as any, props.routeParams as any, { qs: props.qs })}${props.anchor ? `#${props.anchor}` : ''}`,
+          }
+        : ({
+            route: props.route,
+            routeParams: props.routeParams,
+          } as unknown as LinkProps<R>)
   }
 
   return (

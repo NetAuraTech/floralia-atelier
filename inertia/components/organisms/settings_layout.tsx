@@ -1,12 +1,12 @@
 import { Section } from '~/components/atoms/section'
 import { ReactNode } from 'react'
-import { Helmet } from '@dr.pogodin/react-helmet'
 import { Heading } from '~/components/atoms/heading'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { CanAccess } from '~/guards/can_access'
-import {TranslationNodes} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { TranslationNodes } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Head } from '@inertiajs/react'
 
 const tabs = [
   { id: 'profile', label: 'header.tabs.profile', route: 'settings.profile.render' },
@@ -56,7 +56,7 @@ export function SettingsLayout(props: PageProps) {
 
   return (
     <>
-      <Helmet><title>{t('header.title')}</title></Helmet>
+      <Head title={t('header.title')} />
       <Section>
         <div className="container">
           <div className="text-center mb-8">

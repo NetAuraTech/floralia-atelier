@@ -3,7 +3,8 @@ import { inject } from '@adonisjs/core'
 import { PageService } from '#services/page/page_service'
 import { StorageService } from '#services/file/storage_service'
 import { PageResolverService } from '#services/page/page_resolver_service'
-import { CacheService } from "#services/cache/cache_service";
+import { CacheService } from '#services/cache/cache_service'
+import { ResolvedPageContent } from '#types/page'
 
 @inject()
 export default class PageController {
@@ -19,9 +20,9 @@ export default class PageController {
    * Called by `GET /`.
    */
   async home(ctx: HttpContext) {
-    const { request, response } = ctx
+    const { inertia, request, response } = ctx
 
-    const locale = request.input('locale', ctx.i18n?.locale ?? 'en')
+    const locale: string = request.input('locale', ctx.i18n?.locale ?? 'en')
 
     const page = await this.pageService.findHomepage()
 
@@ -37,19 +38,20 @@ export default class PageController {
 
     const cacheKey = `page_render:home:${page.id}:${translation.locale}:${translation.updatedAt!.toMillis()}`
 
-    const resolvedContent = await this.cache.remember(cacheKey, async () => {
-      return await this.resolverService.resolve(
-        translation.content,
-        translation.locale
-      )
-    }, 3600)
+    const resolvedContent = await this.cache.remember<ResolvedPageContent>(
+      cacheKey,
+      async () => {
+        return await this.resolverService.resolve(translation.content, translation.locale)
+      },
+      3600
+    )
 
     let metaImageUrl: string | null = null
     if (page.metaImage) {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return ctx.reactSSR('page/front/show', {
+    return (inertia.render as any)('page/front/show', {
       id: page.id,
       locale,
       title: translation.title,
@@ -68,7 +70,7 @@ export default class PageController {
    * is not in `published` status.
    */
   async render(ctx: HttpContext) {
-    const { params, request, response } = ctx
+    const { inertia, params, request, response } = ctx
 
     const page = await this.pageService.findBySlug(params.slug)
 
@@ -85,9 +87,13 @@ export default class PageController {
 
     const cacheKey = `page_render:${page.id}:${locale}:${translation.updatedAt!.toMillis()}`
 
-    const resolvedContent = await this.cache.remember(cacheKey, async () => {
-      return await this.resolverService.resolve(translation.content, locale)
-    }, 3600)
+    const resolvedContent = await this.cache.remember<ResolvedPageContent>(
+      cacheKey,
+      async () => {
+        return await this.resolverService.resolve(translation.content, locale)
+      },
+      3600
+    )
 
     // Resolve the og:image if set on the page
     let metaImageUrl: string | null = null
@@ -95,7 +101,7 @@ export default class PageController {
       metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk)
     }
 
-    return ctx.reactSSR('page/front/show', {
+    return (inertia.render as any)('page/front/show', {
       id: page.id,
       locale,
       title: translation.title,
@@ -124,8 +130,6 @@ export default class PageController {
   async robots({ response }: HttpContext) {
     const robotsTxt = this.pageService.getRobotsTxt()
 
-    return response
-      .header('Content-Type', 'text/plain')
-      .send(robotsTxt)
+    return response.header('Content-Type', 'text/plain').send(robotsTxt)
   }
 }

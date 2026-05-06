@@ -6,7 +6,6 @@ import { validateProvider } from '#helpers/auth/oauth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { definePasswordValidator } from '#validators/auth'
 import { UserRepository } from '#repositories/auth/user_repository'
-import {DefinePasswordTranslations} from "#types/translations";
 
 @inject()
 export default class SocialController {
@@ -96,22 +95,22 @@ export default class SocialController {
   }
 
   async render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
-    return ctx.reactSSR('auth/front/define_password', {
+    return inertia.render('auth/front/define_password', {
       translations: {
-        'title': i18n.t('auth.password.define.title'),
-        'sub_title': i18n.t('auth.password.define.sub_title'),
-        'password': {
-          'value': i18n.t('auth.password.define.password.value'),
-          'help': i18n.t('auth.password.define.password.help'),
-          'confirmation': {
-            'value': i18n.t('auth.password.define.password.confirmation.value'),
-            'help': i18n.t('auth.password.define.password.confirmation.help'),
+        title: i18n.t('auth.password.define.title'),
+        sub_title: i18n.t('auth.password.define.sub_title'),
+        password: {
+          value: i18n.t('auth.password.define.password.value'),
+          help: i18n.t('auth.password.define.password.help'),
+          confirmation: {
+            value: i18n.t('auth.password.define.password.confirmation.value'),
+            help: i18n.t('auth.password.define.password.confirmation.help'),
           },
         },
-        'submit': i18n.t('auth.password.define.submit'),
-      } as DefinePasswordTranslations
+        submit: i18n.t('auth.password.define.submit'),
+      },
     })
   }
 

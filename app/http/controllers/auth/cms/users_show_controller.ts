@@ -6,7 +6,7 @@ import UserTransformer from '#transformers/user_transformer'
 import { enabledProviders } from '#helpers/auth/oauth'
 import { PermissionService } from '#services/auth/permission_service'
 import PermissionTransformer from '#transformers/permission_transformer'
-import {CmsUsersShowTranslations, TranslationNodes} from "#types/translations";
+import { TranslationNodes } from '#types/translations'
 
 @inject()
 export default class UsersShowsController {
@@ -16,7 +16,7 @@ export default class UsersShowsController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { params, i18n } = ctx
+    const { inertia, params, i18n } = ctx
 
     const payload = await showValidator.validate(params)
 
@@ -26,15 +26,15 @@ export default class UsersShowsController {
 
     const permissions = await this.permissionService.findAll()
 
-    return ctx.reactSSR('auth/cms/show', {
-      user: await UserTransformer.transform(user).resolve(ctx.containerResolver, 0),
+    return inertia.render('auth/cms/show', {
+      user: UserTransformer.transform(user),
       providers: enabledProviders,
-      permissions: await PermissionTransformer.transform(permissions).resolve(ctx.containerResolver, 0),
+      permissions: PermissionTransformer.transform(permissions),
       translations: {
         title: i18n.t('cms.users.list.title'),
         actions: {
-          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
-          delete: i18n.t('cms.users.delete.title', {username: '{username}'})
+          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
+          delete: i18n.t('cms.users.delete.title', { username: '{username}' }),
         },
         info: {
           email: i18n.t('cms.users.show.info.email'),
@@ -55,37 +55,40 @@ export default class UsersShowsController {
         roles: {
           value: i18n.t('cms.users.show.role.value'),
           current: i18n.t('cms.users.show.role.current'),
-          ...[role].reduce((acc, role) => {
-            acc[role.slug] = {
-              value: i18n.t(`cms.users.roles.${role.slug}.value`),
-              description: i18n.t(`cms.users.roles.${role.slug}.description`),
+          ...[role].reduce((acc, r) => {
+            acc[r.slug] = {
+              value: i18n.t(`cms.users.roles.${r.slug}.value`),
+              description: i18n.t(`cms.users.roles.${r.slug}.description`),
             }
             return acc
-          }, {} as TranslationNodes)
+          }, {} as TranslationNodes),
         },
         permissions: {
-          value: i18n.t('cms.users.show.permission.value', {amount: '{amount}'}),
-          ...permissions.reduce((acc, permission) => {
-            const [section, action] = permission.slug.split(".");
+          value: i18n.t('cms.users.show.permission.value', { amount: '{amount}' }),
+          ...permissions.reduce(
+            (acc, permission) => {
+              const [section, action] = permission.slug.split('.')
 
-            if (!acc.category[section]) {
-              acc.category[section] = i18n.t(`cms.users.permissions.category.${section}`);
-            }
+              if (!acc.category[section]) {
+                acc.category[section] = i18n.t(`cms.users.permissions.category.${section}`)
+              }
 
-            if (!acc[section]) acc[section] = {};
-            acc[section][action] = {
-              value: i18n.t(`cms.users.permissions.${section}.${action}.value`),
-            };
+              if (!acc[section]) acc[section] = {}
+              acc[section][action] = {
+                value: i18n.t(`cms.users.permissions.${section}.${action}.value`),
+              }
 
-            return acc;
-          }, { category: {} } as Record<string, Record<string, string | { value: string; }>>)
+              return acc
+            },
+            { category: {} } as { category: Record<string, string>; [key: string]: any }
+          ),
         },
         status: {
           verified: i18n.t('cms.users.status.verified'),
           unverified: i18n.t('cms.users.status.unverified'),
           pending_invite: i18n.t('cms.users.status.pending_invite'),
         },
-      } as CmsUsersShowTranslations
+      },
     })
   }
 }

@@ -1,5 +1,10 @@
 {
   "value": "Administration",
+  "dashboard": "Tableau de bord",
+  "category": {
+    "access_control": "Contrôle d'accès",
+    "content": "Contenu"
+  },
   "users": {
     "created": "Un e-mail d'invitation a été envoyé à {email} afin que l'utilisateur {username} puisse créer son compte.",
     "updated_email": "Un e-mail de confirmation a été envoyé à l'utilisateur afin de confirmer le changement d'adresse e-mail.",
@@ -419,6 +424,7 @@
       "submit": "Envoyer"
     },
     "actions": "Actions",
+    "value_one": "Page",
     "value": "Pages"
   }
 }

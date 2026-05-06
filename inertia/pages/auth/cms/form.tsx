@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
@@ -11,10 +10,11 @@ import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
-import { Form } from '~/components/atoms/form'
 import { SelectOption } from '~/components/atoms/select_option'
-import {useTranslation} from "~/hooks/use_translation";
-import {CmsUsersFormTranslations} from "#types/translations";
+import { useTranslation } from '~/hooks/use_translation'
+import type { CmsUsersFormTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 type PageProps = {
   user?: Data.User
@@ -24,15 +24,15 @@ type PageProps = {
 
 export default function UsersFormPage(props: PageProps) {
   const { user, roles, translations } = props
-  const { t } = useTranslation<CmsUsersFormTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const isEditing = user !== undefined
 
   const { getEntryIcon } = useMenu()
 
   const validation = useFormValidation({
-    email: presets.email,
-    username: presets.username,
+    email: presets.email(t('email.value')),
+    username: presets.username(t('username.value')),
     role_id: [
       ...presets.selectWithOptions([...roles.map((r) => r.id)], 'role_id'),
       rules.required('role_id'),
@@ -41,11 +41,7 @@ export default function UsersFormPage(props: PageProps) {
 
   return (
     <AdminMain
-      title={
-        isEditing
-          ? t('title.edit', { username: user!.username })
-          : t('title.create')
-      }
+      title={isEditing ? t('title.edit', { username: user!.username }) : t('title.create')}
       icon={getEntryIcon('admin.users.render')}
     >
       <Card
@@ -124,7 +120,13 @@ export default function UsersFormPage(props: PageProps) {
                 sanitize
               >
                 {roles &&
-                  roles.map((role) => <SelectOption key={`role-${role.id}`} label={t(role.name as any)} value={role.id} />)}
+                  roles.map((role) => (
+                    <SelectOption
+                      key={`role-${role.id}`}
+                      label={t(role.name as any)}
+                      value={role.id}
+                    />
+                  ))}
               </Field>
               <Button loading={processing} type={'submit'} fitContent>
                 {t('submit')}

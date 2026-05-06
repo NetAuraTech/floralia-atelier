@@ -1,5 +1,3 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Field } from '~/components/molecules/field'
@@ -7,8 +5,10 @@ import { Button } from '~/components/atoms/button'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
-import {ForgotPasswordTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { ForgotPasswordTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
+import { Head } from '@inertiajs/react'
 
 interface ForgotPasswordPageProps {
   translations: ForgotPasswordTranslations
@@ -16,10 +16,10 @@ interface ForgotPasswordPageProps {
 
 export default function ForgotPasswordPage(props: ForgotPasswordPageProps) {
   const { translations } = props
-  const { t } = useTranslation<ForgotPasswordTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const validation = useFormValidation({
-    email: presets.email,
+    email: presets.email(t('email.value')),
   })
 
   return (

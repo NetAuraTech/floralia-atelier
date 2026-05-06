@@ -1,6 +1,6 @@
-import { EditorProps } from "~/types/builder"
-import { LFW } from "~/components/organisms/builder/editor/locked_file_wrapper"
-import {SelectOption} from "~/components/atoms/select_option";
+import { EditorProps } from '~/types/builder'
+import { LFW } from '~/components/organisms/builder/editor/locked_file_wrapper'
+import { SelectOption } from '~/components/atoms/select_option'
 export function FieldEditor(props: EditorProps) {
   const { block, onChange, lockProps } = props
   const p = block.props as any
@@ -62,7 +62,10 @@ export function FieldEditor(props: EditorProps) {
             helpText="Format: valeur:Label"
             defaultValue={p.optionsRaw ?? ''}
             onChange={(v) => {
-              const lines = v.toString().split('\n').filter((l: string) => l.includes(':'))
+              const lines = v
+                .toString()
+                .split('\n')
+                .filter((l: string) => l.includes(':'))
               const options = lines.map((l: string) => {
                 const [value, label] = l.split(':')
                 return { value: value.trim(), label: label.trim() }

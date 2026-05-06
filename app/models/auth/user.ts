@@ -26,7 +26,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
 
   @afterFind()
   static async loadPendingInvite(user: User) {
-    if(!user?.id) {
+    if (!user?.id) {
       return
     }
     user.hasPendingInvite = false

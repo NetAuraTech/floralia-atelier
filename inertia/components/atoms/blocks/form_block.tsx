@@ -1,6 +1,6 @@
 import type { ResolvedBlock } from '#types/page'
-import {ReactNode} from "react";
-import { Form } from '~/components/atoms/form'
+import { ReactNode } from 'react'
+import { Form } from '@adonisjs/inertia/react'
 
 interface FormBlockProps {
   block: ResolvedBlock<'form'>
@@ -18,12 +18,16 @@ export default function FormBlock(props: FormBlockProps) {
   const Component = route === null ? Div : Form
 
   return (
-    <Component className={['grid', 'gap-4', className].filter(Boolean).join(' ')} route={route as any} routeParams={routeParams}>
+    <Component
+      className={['grid', 'gap-4', className].filter(Boolean).join(' ')}
+      route={route as any}
+      routeParams={routeParams}
+    >
       {children}
     </Component>
   )
 }
 
-function Div({ children }: { children: ReactNode} ) {
+function Div({ children }: { children: ReactNode }) {
   return <div>{children}</div>
 }

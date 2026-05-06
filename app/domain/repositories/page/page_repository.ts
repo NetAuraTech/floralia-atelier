@@ -110,6 +110,6 @@ export class PageRepository {
       })
       .preload('translations', (query) => {
         query.where('status', 'published')
-      });
+      })
   }
 }

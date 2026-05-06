@@ -30,8 +30,8 @@ export type LazyValidationRule = (t: any) => ValidationRule
  * and an optional parameter builder.
  *
  * The resulting rule translates the field label via
- * `validation:fields.<fieldName>` and the error message via
- * `validation:<messageKey>`, injecting any extra params returned by
+ * `validation.fields.<fieldName>` and the error message via
+ * `validation.<messageKey>`, injecting any extra params returned by
  * `messageParams`.
  *
  * @param validator - Pure predicate that returns `true` when the value is valid.
@@ -51,18 +51,17 @@ function createRule(
     if (valid) {
       return { valid: true }
     }
-
     const translatedField = fieldName
-      ? t(`validation:fields.${fieldName}`, { defaultValue: fieldName })
-      : t('validation:required', { field: '' })
+      ? t(`validation.fields.${fieldName}`, { defaultValue: fieldName })
+      : t('validation.required', { field: '' })
 
     const params = messageParams ? messageParams(value, fieldName, t) : {}
 
     return {
       valid: false,
-      message: t(`validation:${messageKey}`, {
-        ...params,
+      message: t(`validation.${messageKey}`, {
         field: translatedField,
+        ...params,
       }),
     }
   }
@@ -133,12 +132,12 @@ export const rules = {
    * @param otherValue - The value to compare against.
    * @param otherFieldNameKey - i18n key for the other field's label.
    */
-  matches: (otherValue: any, otherFieldNameKey: string): LazyValidationRule =>
+  matches: (otherValue: any, otherFieldNameKey?: string): LazyValidationRule =>
     createRule(
       (value) => (!value && !otherValue) || value === otherValue,
       'matches',
       (_value, _fieldName, t) => ({
-        other: t(`validation:fields.${otherFieldNameKey}`, {
+        other: t(`validation.fields.${otherFieldNameKey}`, {
           defaultValue: otherFieldNameKey,
         }),
       })
@@ -200,20 +199,24 @@ export function validate(
  * Ready-made rule arrays for common form fields.
  */
 export const presets = {
-  email: [rules.required('email'), rules.email()],
-  password: [rules.required('password'), rules.minLength(8, 'password')],
-  passwordConfirmation: (passwordToMatch: string) => [
-    rules.required('password_confirmation'),
-    rules.matches(passwordToMatch, 'password'),
+  email: (fieldNameKey?: string) => [rules.required(fieldNameKey), rules.email()],
+  password: (fieldNameKey?: string) => [
+    rules.required(fieldNameKey),
+    rules.minLength(8, fieldNameKey),
   ],
-  username: [
-    rules.required('username'),
-    rules.minLength(2, 'username'),
-    rules.maxLength(255, 'username'),
+  passwordConfirmation: (
+    passwordToMatch: string,
+    fieldNameKeyRequired?: string,
+    fieldNameKeyMatch?: string
+  ) => [rules.required(fieldNameKeyRequired), rules.matches(passwordToMatch, fieldNameKeyMatch)],
+  username: (fieldNameKey?: string) => [
+    rules.required(fieldNameKey),
+    rules.minLength(2, fieldNameKey),
+    rules.maxLength(255, fieldNameKey),
   ],
-  search: [rules.maxLength(255, 'search')],
-  select: [rules.maxLength(255, 'select')],
-  selectWithOptions: (allowedValues: (string | number)[], fieldNameKey: string = 'select') => [
+  search: (fieldNameKey?: string) => [rules.maxLength(255, fieldNameKey)],
+  select: (fieldNameKey?: string) => [rules.maxLength(255, fieldNameKey)],
+  selectWithOptions: (allowedValues: (string | number)[], fieldNameKey?: string) => [
     rules.maxLength(255, fieldNameKey),
     rules.oneOf(allowedValues, fieldNameKey),
   ],

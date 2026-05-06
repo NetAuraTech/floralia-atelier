@@ -1,6 +1,5 @@
 import { SettingsLayout } from '~/components/organisms/settings_layout'
 import { Card } from '~/components/atoms/card'
-import { Form } from '~/components/atoms/form'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
@@ -8,33 +7,28 @@ import { Button } from '~/components/atoms/button'
 import { Avatar } from '~/components/atoms/avatar'
 import { Label } from '~/components/atoms/label'
 import { Data } from '@generated/data'
-import type {SettingsProfileTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { SettingsProfileTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
-  user: Data.User,
+  user: Data.User
   translations: SettingsProfileTranslations
 }
 
 export default function ProfilePage(props: PageProps) {
   const { user, translations } = props
 
-  const { t } = useTranslation<SettingsProfileTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const validation = useFormValidation({
-    username: presets.username,
+    username: presets.username(t('username.value')),
   })
 
   return (
     <main>
-      <SettingsLayout
-        tab='profile'
-        translations={translations}
-      >
-        <Card
-          title={t('title')}
-          subtitle={t('sub_title')}
-        >
+      <SettingsLayout tab="profile" translations={translations}>
+        <Card title={t('title')} subtitle={t('sub_title')}>
           <Form
             route="settings.profile.execute"
             className="grid gap-6"
@@ -46,16 +40,10 @@ export default function ProfilePage(props: PageProps) {
             {({ errors, processing }) => (
               <>
                 <div className="grid gap-2">
-                  <Label
-                    label={t('avatar.value')}
-                    htmlFor="avatar"
-                  />
+                  <Label label={t('avatar.value')} htmlFor="avatar" />
                   <div className="flex gap-4">
                     <Avatar />
-                    <Button
-                      variant="outline"
-                      fitContent
-                    >
+                    <Button variant="outline" fitContent>
                       {t('avatar.change')}
                     </Button>
                   </div>
@@ -76,11 +64,7 @@ export default function ProfilePage(props: PageProps) {
                   required
                   sanitize
                 />
-                <Button
-                  loading={processing}
-                  type={"submit"}
-                  fitContent
-                >
+                <Button loading={processing} type={'submit'} fitContent>
                   {t('submit')}
                 </Button>
               </>

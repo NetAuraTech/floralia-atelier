@@ -18,7 +18,7 @@ function toKebabCase(str: string) {
 /**
  * Icon component using Iconify for dynamic loading.
  *
-* - Usage: Pass a string (e.g. `<Icon name="ArrowLeft" />`).
+ * - Usage: Pass a string (e.g. `<Icon name="ArrowLeft" />`).
  *
  * Icons are fetched on-demand from Iconify's API without any local map/dictionary.
  */

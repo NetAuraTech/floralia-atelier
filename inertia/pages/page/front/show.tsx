@@ -1,8 +1,8 @@
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import type { ResolvedPageContent } from '#types/page'
 import PageRenderer from '~/components/molecules/renderer/page_renderer'
-import type { SharedProps } from '~/types/shared_props'
-import { usePageContext as usePage } from '~/context/page_context'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 type PageProps = {
   id: number
@@ -33,71 +33,72 @@ export default function PageShowPage(props: PageProps) {
         {metaDescription && <meta name="description" content={metaDescription} />}
         <meta property="og:title" content={seoTitle} />
         {metaDescription && <meta property="og:description" content={metaDescription} />}
-        {metaDescription &&<meta name="twitter:description" content={metaDescription} />}
+        {metaDescription && <meta name="twitter:description" content={metaDescription} />}
         <meta property="og:image" content={seoOgImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:type" content="website" />
         <meta name="twitter:image" content={seoOgImage} />
         <script type="application/ld+json">
-          {
-            JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "@id": `${app_url}/#business`,
-              "name": "Floralia Atelier",
-              "url": `${app_url}`,
-              "logo": `${app_url}/logo.png`,
-              "image": seoOgImage,
-              "description": "Artisan fleuriste spécialisé dans l'entretien et le fleurissement de sépultures, ainsi que les créations florales sur mesure pour mariages, baptêmes et événements.",
-              "telephone": "+336-58-02-95-39",
-              "email": email,
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "Samer",
-                "postalCode": "62830",
-                "addressCountry": "FR"
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'LocalBusiness',
+            '@id': `${app_url}/#business`,
+            'name': 'Floralia Atelier',
+            'url': `${app_url}`,
+            'logo': `${app_url}/logo.png`,
+            'image': seoOgImage,
+            'description':
+              "Artisan fleuriste spécialisé dans l'entretien et le fleurissement de sépultures, ainsi que les créations florales sur mesure pour mariages, baptêmes et événements.",
+            'telephone': '+336-58-02-95-39',
+            'email': email,
+            'address': {
+              '@type': 'PostalAddress',
+              'addressLocality': 'Samer',
+              'postalCode': '62830',
+              'addressCountry': 'FR',
+            },
+            'openingHoursSpecification': [
+              {
+                '@type': 'OpeningHoursSpecification',
+                'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                'opens': '09:00',
+                'closes': '18:00',
               },
-              "openingHoursSpecification": [
+            ],
+            'priceRange': '€€',
+            'hasOfferCatalog': {
+              '@type': 'OfferCatalog',
+              'name': 'Services floraux',
+              'itemListElement': [
                 {
-                  "@type": "OpeningHoursSpecification",
-                  "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-                  "opens": "09:00",
-                  "closes": "18:00"
-                }
+                  '@type': 'Offer',
+                  'itemOffered': {
+                    '@type': 'Service',
+                    'name': 'Entretien de sépultures',
+                    'description':
+                      'Fleurissement et entretien régulier des tombes et monuments funéraires',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  'itemOffered': {
+                    '@type': 'Service',
+                    'name': 'Créations florales pour mariages',
+                    'description':
+                      'Bouquets, compositions et décoration florale sur mesure pour mariages',
+                  },
+                },
+                {
+                  '@type': 'Offer',
+                  'itemOffered': {
+                    '@type': 'Service',
+                    'name': 'Créations florales pour baptêmes et événements',
+                  },
+                },
               ],
-              "priceRange": "€€",
-              "hasOfferCatalog": {
-                "@type": "OfferCatalog",
-                "name": "Services floraux",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Entretien de sépultures",
-                      "description": "Fleurissement et entretien régulier des tombes et monuments funéraires"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Créations florales pour mariages",
-                      "description": "Bouquets, compositions et décoration florale sur mesure pour mariages"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Créations florales pour baptêmes et événements"
-                    }
-                  }
-                ]
-              },
-            })
-          }
+            },
+          })}
         </script>
       </Head>
       <PageRenderer content={content} pageId={id} locale={locale} />

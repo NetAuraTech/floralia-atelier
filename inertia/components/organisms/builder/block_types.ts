@@ -25,7 +25,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       paddingY: { default: 'md' },
       paddingX: { default: 'md' },
       className: '',
-      id: ''
+      id: '',
     },
   },
   {
@@ -67,7 +67,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       text: 'New heading',
       level: 2,
       color: 'default',
-      highlightColor: 'default'
+      highlightColor: 'default',
     },
   },
   {
@@ -81,7 +81,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       variant: 'ink',
       fs: 'base',
       spacing: 'base',
-      className: ''
+      className: '',
     },
   },
   {
@@ -109,7 +109,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
     defaultProps: {
       spacing: 'none',
       color: 'default',
-      className: ''
+      className: '',
     } as any,
   },
   {
@@ -123,7 +123,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       color: 'default',
       background: 'none',
       size: 16,
-      className: ''
+      className: '',
     } as any,
   },
   {
@@ -135,7 +135,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
     defaultProps: {
       route: 'contact.execute',
       routeParams: {},
-      className: ''
+      className: '',
     },
   },
   {
@@ -151,7 +151,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
       placeholder: '',
       required: false,
       helpText: '',
-      options: []
+      options: [],
     },
   },
   {
@@ -172,7 +172,7 @@ export const BLOCK_CATALOG: BlockDescriptor[] = [
     isContainer: false,
     defaultProps: {
       file: null,
-      className: ''
+      className: '',
     },
   },
 ]

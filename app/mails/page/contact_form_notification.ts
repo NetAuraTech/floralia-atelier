@@ -1,10 +1,8 @@
 import { BaseMail } from '@adonisjs/mail'
-import type {MailPayload} from "#types/mail";
+import type { MailPayload } from '#types/mail'
 
 export default class ContactFormNotification extends BaseMail {
-  constructor(
-    private payload: MailPayload,
-  ) {
+  constructor(private payload: MailPayload) {
     super()
   }
 

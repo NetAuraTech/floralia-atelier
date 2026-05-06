@@ -42,6 +42,9 @@ export default function SeparatorBlock({ block }: SeparatorBlockProps) {
   const colorClass = colorMap[color ?? 'none']
 
   return (
-    <hr className={['h-px', spacingClass, colorClass, className].filter(Boolean).join(' ')} aria-hidden="true" />
+    <hr
+      className={['h-px', spacingClass, colorClass, className].filter(Boolean).join(' ')}
+      aria-hidden="true"
+    />
   )
 }

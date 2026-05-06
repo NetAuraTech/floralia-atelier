@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import { usePageContext } from '~/context/page_context'
 import { Transmit } from '@adonisjs/transmit-client'
 import { v4 as uuid } from 'uuid'
 import { applyOperation } from '~/utils/builder_reducer'
@@ -10,7 +9,8 @@ import type {
   ServerBroadcastEvent,
   UserSession,
 } from '#types/builder'
-import type { SharedProps } from '~/types/shared_props'
+import { usePage } from '@inertiajs/react'
+import { type SharedProps } from '@adonisjs/inertia/types'
 
 interface UseBuilderSyncOptions {
   pageId: number
@@ -51,7 +51,7 @@ export function useBuilderSync({
   content,
   onContentChange,
 }: UseBuilderSyncOptions): UseBuilderSyncReturn {
-  const { props: pageProps } = usePageContext<SharedProps>()
+  const pageProps = usePage<SharedProps>().props
   const currentUserId = pageProps?.currentUser?.id ?? 0
 
   const [presence, setPresence] = useState<UserSession[]>([])

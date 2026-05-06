@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { applyOperation } from '~/utils/builder_reducer'
 import type { ResolvedPageContent } from '#types/page'
 import type { BroadcastPayload } from '#types/builder'
@@ -53,8 +53,7 @@ export default function PreviewPage({ page, editable }: PreviewPageProps) {
 
   return (
     <>
-      <Head>
-        <title>{page.metaTitle ?? page.title}</title>
+      <Head title={page.metaTitle ?? page.title}>
         {page.metaDescription && <meta name="description" content={page.metaDescription} />}
         {editable && <meta name="x-builder-preview" content="true" />}
       </Head>

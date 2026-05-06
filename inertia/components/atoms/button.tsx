@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
-import { Link, type LinkProps } from '~/components/atoms/link'
 import { urlFor } from '~/client'
+import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
+import { Link } from '@adonisjs/inertia/react'
 
 interface ButtonBaseProps {
   /** Shows a spinning loader and disables the button while `true`. */
@@ -56,8 +57,9 @@ interface ButtonBaseProps {
 
 type ButtonRouteProps<R extends NonNullable<LinkProps['route']>> = ButtonBaseProps & {
   route: R
-  routeParams?: any
-}
+} & (LinkParams<R>['routeParams'] extends undefined | never
+    ? { routeParams?: never }
+    : { routeParams: LinkParams<R>['routeParams'] })
 
 type ButtonNoRouteProps = ButtonBaseProps & {
   route?: never
@@ -82,7 +84,7 @@ export const variants = {
   icon_warning: 'bg-warning-soft text-warning hover:bg-warning hover:text-ink-inverted p-2',
   icon_info: 'bg-info-soft text-info hover:bg-info hover:text-ink-inverted p-2',
   link_muted: 'text-ink-muted hover:text-primary p-0 font-normal',
-  link_secondary: 'text-secondary hover:text-secondary-light  p-0'
+  link_secondary: 'text-secondary hover:text-secondary-light  p-0',
 }
 
 /**
@@ -167,7 +169,9 @@ export function Button<R extends NonNullable<LinkProps['route']>>(props: ButtonP
     </>
   )
 
-  const classNames = ['button', variants[variant], states[state], sizes[size]].filter(Boolean).join(' ')
+  const classNames = ['button', variants[variant], states[state], sizes[size]]
+    .filter(Boolean)
+    .join(' ')
 
   if (route || props.href) {
     if (external) {

@@ -1,6 +1,6 @@
 export type TranslationNodes = {
-  [key: string]: string | TranslationNodes;
-};
+  [key: string]: string | TranslationNodes
+}
 
 export type LoginTranslations = {
   title: string
@@ -354,7 +354,6 @@ export type CmsFilesTranslations = {
     type: {
       value: string
       options: {
-        value: string
         placeholder: string
         image: string
         video: string
@@ -563,11 +562,11 @@ export type CmsPagesShowTranslations = {
     confirm: string
     submit: string
     help: {
-      title:  {
+      title: {
         not_set: string
         set: string
       }
-      message:  {
+      message: {
         not_set: string
         set: string
       }
@@ -601,4 +600,32 @@ export type CmsPagesRevisionTranslations = {
     help: string
   }
   latest: string
+}
+
+export type CommonTranslations = {
+  pagination: {
+    showing: string
+    previous: string
+    next: string
+  }
+  validation: {
+    required: string
+    email: string
+    min_length: string
+    max_length: string
+    matches: string
+    one_of: string
+  }
+}
+
+export type CmsTranslations = {
+  category: {
+    content: string
+    access_control: string
+  }
+  dashboard: string
+  pages: string
+  templates: string
+  files: string
+  users: string
 }

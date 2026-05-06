@@ -1,8 +1,8 @@
 import { test } from '@japa/runner'
 import { BuilderSessionService } from '#services/page/builder_session_service'
 import { LOCK_TTL_MS } from '#types/builder'
-import {CacheService} from "#services/cache/cache_service";
-import {RedisCacheDriver} from "#services/cache/drivers/redis_cache_driver";
+import { CacheService } from '#services/cache/cache_service'
+import { RedisCacheDriver } from '#services/cache/drivers/redis_cache_driver'
 
 /**
  * Unit tests for `BuilderSessionService`.

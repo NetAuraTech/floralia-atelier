@@ -1,9 +1,9 @@
 import { createPortal } from 'react-dom'
-import {useLayoutEffect, useState, ReactNode, RefObject, useCallback} from 'react'
+import { useLayoutEffect, useState, ReactNode, RefObject, useCallback } from 'react'
 
 interface FloatingPortalProps {
   children: ReactNode
-  anchorRef: RefObject<HTMLElement| null > | null
+  anchorRef: RefObject<HTMLElement | null> | null
 }
 
 export function FloatingPortal(props: FloatingPortalProps) {

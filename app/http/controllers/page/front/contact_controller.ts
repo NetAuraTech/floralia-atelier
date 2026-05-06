@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
-import {contactValidator} from "#validators/contact";
-import {events} from "#generated/events";
+import { contactValidator } from '#validators/contact'
+import { events } from '#generated/events'
 
 @inject()
 export default class ContactController {

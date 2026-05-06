@@ -4,8 +4,8 @@ import { Paragraph } from '~/components/atoms/paragraph'
 import { humanSize } from '~/utils/file'
 import { Label } from '~/components/atoms/label'
 import { Button } from '~/components/atoms/button'
-import {CmsFilesTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { CmsFilesTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
 
 interface FileUploadInputProps {
   /** Input name attribute, used when inside a native <form> */
@@ -61,7 +61,7 @@ export function FileUploadInput(props: FileUploadInputProps) {
     disabled = false,
     label,
     hint,
-    translations
+    translations,
   } = props
   const { t } = useTranslation<CmsFilesTranslations>(translations)
   const id = useId()

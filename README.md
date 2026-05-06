@@ -31,31 +31,31 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| **Backend** | AdonisJS v7, Lucid ORM, VineJS |
-| **Frontend** | React 19, Inertia.js, Tailwind CSS v4 |
-| **Language** | TypeScript 5.9 |
-| **Database** | PostgreSQL (primary), SQLite (dev alternative) |
-| **Cache / Session** | Redis |
-| **Auth** | Session-based (@adonisjs/auth), OAuth (@adonisjs/ally) |
-| **Authorization** | Custom role/permission system (models, services, frontend guards) |
-| **Email** | @adonisjs/mail (SMTP) with Edge templates |
-| **Routing** | Tuyau (type-safe client) |
-| **Icons** | Lucide React |
-| **Notifications** | Sonner (toast) |
-| **Monitoring** | Sentry (@rlanz/sentry) |
-| **Build** | Vite 7, @adonisjs/assembler |
-| **Testing** | Japa (unit, functional, browser) |
+| Category            | Technology                                                        |
+| ------------------- | ----------------------------------------------------------------- |
+| **Backend**         | AdonisJS v7, Lucid ORM, VineJS                                    |
+| **Frontend**        | React 19, Inertia.js, Tailwind CSS v4                             |
+| **Language**        | TypeScript 5.9                                                    |
+| **Database**        | PostgreSQL (primary), SQLite (dev alternative)                    |
+| **Cache / Session** | Redis                                                             |
+| **Auth**            | Session-based (@adonisjs/auth), OAuth (@adonisjs/ally)            |
+| **Authorization**   | Custom role/permission system (models, services, frontend guards) |
+| **Email**           | @adonisjs/mail (SMTP) with Edge templates                         |
+| **Routing**         | Tuyau (type-safe client)                                          |
+| **Icons**           | Lucide React                                                      |
+| **Notifications**   | Sonner (toast)                                                    |
+| **Monitoring**      | Sentry (@rlanz/sentry)                                            |
+| **Build**           | Vite 7, @adonisjs/assembler                                       |
+| **Testing**         | Japa (unit, functional, browser)                                  |
 
 ## Quick Start
 
 ### Requirements
 
-| Tool | Version                     |
-|---|---|
-| Node.js | \>= 24.x                    |
-| npm | \>= 11.x                    |
+| Tool     | Version                     |
+| -------- | --------------------------- |
+| Node.js  | \>= 24.x                    |
+| npm      | \>= 11.x                    |
 | Database | PostgreSQL / MySQL / SQLite |
 
 ### Installation
@@ -88,14 +88,14 @@ The app is available at `http://localhost:3333`.
 
 ### Available Scripts
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start the dev server with HMR |
-| `npm run build` | Build for production |
-| `npm start` | Start the production server |
-| `npm test` | Run tests (Japa) |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format code with Prettier |
+| Script              | Description                     |
+| ------------------- | ------------------------------- |
+| `npm run dev`       | Start the dev server with HMR   |
+| `npm run build`     | Build for production            |
+| `npm start`         | Start the production server     |
+| `npm test`          | Run tests (Japa)                |
+| `npm run lint`      | Run ESLint                      |
+| `npm run format`    | Format code with Prettier       |
 | `npm run typecheck` | Type-check backend and frontend |
 
 ## Configuration
@@ -190,17 +190,17 @@ Foundry ships with a complete authentication system covering every standard flow
 
 ### Flows
 
-| Flow | Description |
-|---|---|
-| Registration | Email + password, with automatic email verification |
-| Login | Email + password (session-based) |
-| Logout | Session invalidation + CSRF rotation |
-| Password Reset | Selector/validator token, 1 hour expiry, attempt tracking |
-| Email Verification | Token-based, sent on registration |
-| OAuth Login | GitHub, Google, Facebook |
-| OAuth Linking | Link/unlink providers from settings |
-| Define Password | Prompted after OAuth-only registration |
-| Invitation | Admin sends invite → user accepts via token link and sets password |
+| Flow               | Description                                                        |
+| ------------------ | ------------------------------------------------------------------ |
+| Registration       | Email + password, with automatic email verification                |
+| Login              | Email + password (session-based)                                   |
+| Logout             | Session invalidation + CSRF rotation                               |
+| Password Reset     | Selector/validator token, 1 hour expiry, attempt tracking          |
+| Email Verification | Token-based, sent on registration                                  |
+| OAuth Login        | GitHub, Google, Facebook                                           |
+| OAuth Linking      | Link/unlink providers from settings                                |
+| Define Password    | Prompted after OAuth-only registration                             |
+| Invitation         | Admin sends invite → user accepts via token link and sets password |
 
 ### Token Security
 
@@ -210,12 +210,12 @@ All token-based workflows use the **selector/validator pattern**:
 - **Validator** — hashed before storage, never exposed
 - **Full token** — `selector.validator` sent to the user via email
 
-| Token Type           | Expiry | Attempt Tracking |
-|----------------------|---|---|
-| `PASSWORD_RESET`     | 1 hour | Max 3 attempts |
-| `EMAIL_VERIFICATION` | 24 hours | — |
-| `EMAIL_CHANGE`       | 24 hours | — |
-| `PENDING_INVITE`     | 7 days | — |
+| Token Type           | Expiry   | Attempt Tracking |
+| -------------------- | -------- | ---------------- |
+| `PASSWORD_RESET`     | 1 hour   | Max 3 attempts   |
+| `EMAIL_VERIFICATION` | 24 hours | —                |
+| `EMAIL_CHANGE`       | 24 hours | —                |
+| `PENDING_INVITE`     | 7 days   | —                |
 
 ## Admin Panel (CMS)
 
@@ -223,14 +223,14 @@ Foundry includes a full admin panel accessible at `/admin`, protected by authent
 
 ### Features
 
-| Feature | Description |
-|---|---|
-| Dashboard | Overview page at `/admin` |
-| User List | Paginated user list with status indicators |
-| User Create | Invite new users via email |
-| User Show | View detailed user profile |
-| User Edit | Update user information, role, and status |
-| User Delete | Remove user accounts |
+| Feature     | Description                                |
+| ----------- | ------------------------------------------ |
+| Dashboard   | Overview page at `/admin`                  |
+| User List   | Paginated user list with status indicators |
+| User Create | Invite new users via email                 |
+| User Show   | View detailed user profile                 |
+| User Edit   | Update user information, role, and status  |
+| User Delete | Remove user accounts                       |
 
 ### Admin Layout
 
@@ -245,16 +245,19 @@ The admin panel uses a dedicated layout (`inertia/layouts/admin.tsx`) with:
 Settings are split into domains, each backed by a dedicated service, repository, and controller.
 
 ### Profile
+
 - Username (unique, auto-generated from email on registration)
 - Avatar
 
 ### Account
+
 - Email change (confirmation link to new address + security notification to old address)
 - Password change (requires current password verification)
 - OAuth provider linking/unlinking
 - Account deletion (requires password confirmation)
 
 ### Preferences
+
 - Theme selection (dark/light) with API-driven persistence
 - Accessible at `/settings/preferences`
 
@@ -264,14 +267,14 @@ Foundry implements a **custom role/permission system** without external authoriz
 
 ### Backend
 
-| Layer | Location | Responsibility |
-|---|---|---|
-| **Role model** | `app/models/auth/role.ts` | Roles with `hasPermission()`, `isAdmin`, system role protection |
-| **Permission model** | `app/models/auth/permission.ts` | Permissions with system permission protection |
-| **Pivot table** | `role_permission` | Many-to-many relationship between roles and permissions |
-| **Role service** | `app/domain/services/auth/role_service.ts` | Role business logic |
-| **Permission service** | `app/domain/services/auth/permission_service.ts` | Permission business logic |
-| **Seeders** | `database/seeders/` | `role_seeder.ts`, `permission_seeder.ts` for default data |
+| Layer                  | Location                                         | Responsibility                                                  |
+| ---------------------- | ------------------------------------------------ | --------------------------------------------------------------- |
+| **Role model**         | `app/models/auth/role.ts`                        | Roles with `hasPermission()`, `isAdmin`, system role protection |
+| **Permission model**   | `app/models/auth/permission.ts`                  | Permissions with system permission protection                   |
+| **Pivot table**        | `role_permission`                                | Many-to-many relationship between roles and permissions         |
+| **Role service**       | `app/domain/services/auth/role_service.ts`       | Role business logic                                             |
+| **Permission service** | `app/domain/services/auth/permission_service.ts` | Permission business logic                                       |
+| **Seeders**            | `database/seeders/`                              | `role_seeder.ts`, `permission_seeder.ts` for default data       |
 
 Permission checking is done via model methods: `role.hasPermission(slug)`, `role.assignPermission(id)`, `role.syncPermissions(ids)`.
 
@@ -279,11 +282,11 @@ Permission checking is done via model methods: `role.hasPermission(slug)`, `role
 
 React components to protect pages and UI elements:
 
-| Guard | File | Description |
-|---|---|---|
-| `Authenticated` | `inertia/guards/authenticated.tsx` | Restrict access to authenticated users |
-| `HasRole` | `inertia/guards/has_role.tsx` | Restrict access by role |
-| `CanAccess` | `inertia/guards/can_access.tsx` | Restrict access by permission (single, any, or all) |
+| Guard           | File                               | Description                                         |
+| --------------- | ---------------------------------- | --------------------------------------------------- |
+| `Authenticated` | `inertia/guards/authenticated.tsx` | Restrict access to authenticated users              |
+| `HasRole`       | `inertia/guards/has_role.tsx`      | Restrict access by role                             |
+| `CanAccess`     | `inertia/guards/can_access.tsx`    | Restrict access by permission (single, any, or all) |
 
 Guards read the user's permissions from Inertia shared props via the `useAuth` hook (`can`, `canAny`, `canAll`).
 
@@ -293,32 +296,32 @@ Foundry includes a full database backup system with automatic strategy selection
 
 ### Strategy
 
-| Day | Type | Description |
-|---|---|---|
-| Sunday (configurable) | **Full** | Complete `pg_dump` of the entire database |
-| Monday – Saturday | **Differential** | Only tables modified since the last full backup |
+| Day                   | Type             | Description                                     |
+| --------------------- | ---------------- | ----------------------------------------------- |
+| Sunday (configurable) | **Full**         | Complete `pg_dump` of the entire database       |
+| Monday – Saturday     | **Differential** | Only tables modified since the last full backup |
 
 If no full backup exists when a differential is requested, a full backup is performed automatically.
 
 ### Ace Commands
 
-| Command | Description |
-|---|---|
-| `node ace backup:run` | Run a backup (auto-detects type based on schedule) |
-| `node ace backup:run --type=full` | Force a full backup |
-| `node ace backup:run --type=differential` | Force a differential backup |
-| `node ace backup:list` | List all available backups (with `--limit` flag) |
-| `node ace backup:restore <filename>` | Restore a backup (with `--force` to skip confirmation) |
-| `node ace backup:cleanup` | Apply retention policy and delete old backups |
-| `node ace backup:health-check` | Check backup system health (storage availability, last backup age, disk space) |
+| Command                                   | Description                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------ |
+| `node ace backup:run`                     | Run a backup (auto-detects type based on schedule)                             |
+| `node ace backup:run --type=full`         | Force a full backup                                                            |
+| `node ace backup:run --type=differential` | Force a differential backup                                                    |
+| `node ace backup:list`                    | List all available backups (with `--limit` flag)                               |
+| `node ace backup:restore <filename>`      | Restore a backup (with `--force` to skip confirmation)                         |
+| `node ace backup:cleanup`                 | Apply retention policy and delete old backups                                  |
+| `node ace backup:health-check`            | Check backup system health (storage availability, last backup age, disk space) |
 
 ### Storage Providers
 
-| Provider | Description |
-|---|---|
-| **Local** | Always enabled, stores in `storage/backups` |
-| **S3** | S3/S3-compatible (MinIO, etc.), enabled via env vars |
-| **Nextcloud** | WebDAV-based, enabled via env vars |
+| Provider      | Description                                          |
+| ------------- | ---------------------------------------------------- |
+| **Local**     | Always enabled, stores in `storage/backups`          |
+| **S3**        | S3/S3-compatible (MinIO, etc.), enabled via env vars |
+| **Nextcloud** | WebDAV-based, enabled via env vars                   |
 
 All providers implement the `StorageAdapter` contract (`app/domain/contracts/backup/storage_adapter.ts`).
 
@@ -328,12 +331,12 @@ Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encrypt
 
 ### Retention Policy
 
-| Window | Default |
-|---|---|
-| Daily | 7 days |
-| Weekly | 4 weeks (Sunday backups) |
-| Monthly | 3 months (1st of month) |
-| Yearly | 1 per year (1st January) |
+| Window  | Default                  |
+| ------- | ------------------------ |
+| Daily   | 7 days                   |
+| Weekly  | 4 weeks (Sunday backups) |
+| Monthly | 3 months (1st of month)  |
+| Yearly  | 1 per year (1st January) |
 
 ### Backup Environment Variables
 
@@ -521,37 +524,37 @@ resources/
 
 ### Conventions
 
-| Layer | Responsibility |
-|---|---|
-| **Controllers** | Thin, delegate to services, handle HTTP concerns only |
-| **Services** | Business logic, throw typed exceptions, log significant events |
-| **Repositories** | All database access, no business logic |
-| **Transformers** | Shape data for the frontend (shared props) |
-| **Exceptions** | Typed, carry HTTP status and i18n-ready error codes |
-| **Events / Listeners** | Decouple side effects (emails, logging) from main flow |
-| **Guards (frontend)** | Permission / role checks via `useAuth` hook and guard components |
+| Layer                  | Responsibility                                                   |
+| ---------------------- | ---------------------------------------------------------------- |
+| **Controllers**        | Thin, delegate to services, handle HTTP concerns only            |
+| **Services**           | Business logic, throw typed exceptions, log significant events   |
+| **Repositories**       | All database access, no business logic                           |
+| **Transformers**       | Shape data for the frontend (shared props)                       |
+| **Exceptions**         | Typed, carry HTTP status and i18n-ready error codes              |
+| **Events / Listeners** | Decouple side effects (emails, logging) from main flow           |
+| **Guards (frontend)**  | Permission / role checks via `useAuth` hook and guard components |
 
 ### Path Aliases
 
 The project uses Node.js subpath imports for clean module resolution:
 
-| Alias | Path |
-|---|---|
-| `#controllers/*` | `app/http/controllers/*` |
-| `#services/*` | `app/domain/services/*` |
+| Alias             | Path                        |
+| ----------------- | --------------------------- |
+| `#controllers/*`  | `app/http/controllers/*`    |
+| `#services/*`     | `app/domain/services/*`     |
 | `#repositories/*` | `app/domain/repositories/*` |
-| `#contracts/*` | `app/domain/contracts/*` |
-| `#models/*` | `app/models/*` |
-| `#transformers/*` | `app/data/transformers/*` |
-| `#storage/*` | `app/data/storage/*` |
-| `#validators/*` | `app/validators/*` |
-| `#exceptions/*` | `app/exceptions/*` |
-| `#middleware/*` | `app/http/middleware/*` |
-| `#events/*` | `app/events/*` |
-| `#listeners/*` | `app/listeners/*` |
-| `#mails/*` | `app/mails/*` |
-| `#helpers/*` | `app/helpers/*` |
-| `#types/*` | `app/types/*` |
+| `#contracts/*`    | `app/domain/contracts/*`    |
+| `#models/*`       | `app/models/*`              |
+| `#transformers/*` | `app/data/transformers/*`   |
+| `#storage/*`      | `app/data/storage/*`        |
+| `#validators/*`   | `app/validators/*`          |
+| `#exceptions/*`   | `app/exceptions/*`          |
+| `#middleware/*`   | `app/http/middleware/*`     |
+| `#events/*`       | `app/events/*`              |
+| `#listeners/*`    | `app/listeners/*`           |
+| `#mails/*`        | `app/mails/*`               |
+| `#helpers/*`      | `app/helpers/*`             |
+| `#types/*`        | `app/types/*`               |
 
 | `#config/*` | `config/*` |
 | `#start/*` | `start/*` |
@@ -564,70 +567,70 @@ The project uses Node.js subpath imports for clean module resolution:
 
 ### Home
 
-| Method | Path | Handler |
-|---|---|---|
-| GET | `/` | Inertia render (`home`) |
+| Method | Path | Handler                 |
+| ------ | ---- | ----------------------- |
+| GET    | `/`  | Inertia render (`home`) |
 
 ### Guest Routes
 
-| Method | Path | Handler | Throttling |
-|---|---|---|---|
-| GET | `/login` | SessionController.render | — |
-| POST | `/login` | SessionController.execute | 5 req / 15m |
-| GET | `/register` | RegisterController.render | — |
-| POST | `/register` | RegisterController.execute | 3 req / 1h |
-| GET | `/forgot-password` | ForgotPasswordController.render | — |
-| POST | `/forgot-password` | ForgotPasswordController.execute | 3 req / 1h |
-| GET | `/reset-password/:token` | ResetPasswordController.render | — |
-| POST | `/reset-password` | ResetPasswordController.execute | 3 req / 15m |
-| GET | `/accept-invitation/:token` | AcceptInvitationController.render | — |
-| POST | `/accept-invitation` | AcceptInvitationController.execute | 3 req / 15m |
+| Method | Path                        | Handler                            | Throttling  |
+| ------ | --------------------------- | ---------------------------------- | ----------- |
+| GET    | `/login`                    | SessionController.render           | —           |
+| POST   | `/login`                    | SessionController.execute          | 5 req / 15m |
+| GET    | `/register`                 | RegisterController.render          | —           |
+| POST   | `/register`                 | RegisterController.execute         | 3 req / 1h  |
+| GET    | `/forgot-password`          | ForgotPasswordController.render    | —           |
+| POST   | `/forgot-password`          | ForgotPasswordController.execute   | 3 req / 1h  |
+| GET    | `/reset-password/:token`    | ResetPasswordController.render     | —           |
+| POST   | `/reset-password`           | ResetPasswordController.execute    | 3 req / 15m |
+| GET    | `/accept-invitation/:token` | AcceptInvitationController.render  | —           |
+| POST   | `/accept-invitation`        | AcceptInvitationController.execute | 3 req / 15m |
 
 ### OAuth Routes
 
-| Method | Path | Handler |
-|---|---|---|
-| GET | `/oauth/define-password` | SocialController.render |
-| POST | `/oauth/define-password` | SocialController.execute |
-| GET | `/oauth/:provider` | SocialController.redirect |
-| GET | `/oauth/:provider/callback` | SocialController.callback |
-| POST | `/oauth/:provider/unlink` | SocialController.unlink |
+| Method | Path                        | Handler                   |
+| ------ | --------------------------- | ------------------------- |
+| GET    | `/oauth/define-password`    | SocialController.render   |
+| POST   | `/oauth/define-password`    | SocialController.execute  |
+| GET    | `/oauth/:provider`          | SocialController.redirect |
+| GET    | `/oauth/:provider/callback` | SocialController.callback |
+| POST   | `/oauth/:provider/unlink`   | SocialController.unlink   |
 
 ### Authenticated Routes
 
-| Method | Path | Handler |
-|---|---|---|
-| GET | `/verify/:token` | EmailVerificationController.execute |
-| POST | `/logout` | SessionController.destroy |
-| GET | `/settings` | Redirect → `/settings/profile` |
-| GET | `/settings/profile` | ProfileController.render |
-| POST | `/settings/profile` | ProfileController.execute |
-| GET | `/settings/account` | AccountController.render |
-| POST | `/settings/account` | AccountController.execute |
-| DELETE | `/settings/account` | AccountController.destroy |
-| GET | `/settings/account/email_change/:token` | EmailChangeController.render |
-| POST | `/settings/account/email_change` | EmailChangeController.execute |
-| GET | `/settings/preferences` | PreferencesController.render |
-| POST | `/settings/preferences` | PreferencesController.execute |
+| Method | Path                                    | Handler                             |
+| ------ | --------------------------------------- | ----------------------------------- |
+| GET    | `/verify/:token`                        | EmailVerificationController.execute |
+| POST   | `/logout`                               | SessionController.destroy           |
+| GET    | `/settings`                             | Redirect → `/settings/profile`      |
+| GET    | `/settings/profile`                     | ProfileController.render            |
+| POST   | `/settings/profile`                     | ProfileController.execute           |
+| GET    | `/settings/account`                     | AccountController.render            |
+| POST   | `/settings/account`                     | AccountController.execute           |
+| DELETE | `/settings/account`                     | AccountController.destroy           |
+| GET    | `/settings/account/email_change/:token` | EmailChangeController.render        |
+| POST   | `/settings/account/email_change`        | EmailChangeController.execute       |
+| GET    | `/settings/preferences`                 | PreferencesController.render        |
+| POST   | `/settings/preferences`                 | PreferencesController.execute       |
 
 ### Admin Routes (CMS)
 
-| Method | Path | Handler | Permission |
-|---|---|---|---|
-| GET | `/admin` | DashboardController.render | `admin.access` |
-| GET | `/admin/users` | UsersController.render | `users.view` |
-| GET | `/admin/users/create` | UsersCreateController.render | `users.create` |
-| POST | `/admin/users/create` | UsersCreateController.execute | `users.create` |
-| GET | `/admin/users/:id` | UsersShowController.render | `users.view` |
-| GET | `/admin/users/:id/edit` | UsersUpdateController.render | `users.update` |
-| POST | `/admin/users/:id/edit` | UsersUpdateController.execute | `users.update` |
-| DELETE | `/admin/users/:id` | UsersController.destroy | `users.delete` |
+| Method | Path                    | Handler                       | Permission     |
+| ------ | ----------------------- | ----------------------------- | -------------- |
+| GET    | `/admin`                | DashboardController.render    | `admin.access` |
+| GET    | `/admin/users`          | UsersController.render        | `users.view`   |
+| GET    | `/admin/users/create`   | UsersCreateController.render  | `users.create` |
+| POST   | `/admin/users/create`   | UsersCreateController.execute | `users.create` |
+| GET    | `/admin/users/:id`      | UsersShowController.render    | `users.view`   |
+| GET    | `/admin/users/:id/edit` | UsersUpdateController.render  | `users.update` |
+| POST   | `/admin/users/:id/edit` | UsersUpdateController.execute | `users.update` |
+| DELETE | `/admin/users/:id`      | UsersController.destroy       | `users.delete` |
 
 ### API Routes
 
-| Method | Path | Handler |
-|---|---|---|
-| POST | `/api/settings/preferences/theme` | ThemeController.execute |
+| Method | Path                              | Handler                 |
+| ------ | --------------------------------- | ----------------------- |
+| POST   | `/api/settings/preferences/theme` | ThemeController.execute |
 
 ## Logging & Exception Handling
 
@@ -637,15 +640,15 @@ Foundry provides a centralised `LogService` (`app/domain/services/logging/log_se
 
 #### Log Categories
 
-| Category | Helper Method | Description |
-|---|---|---|
-| `AUTH` | `logAuth(action, context)` | Authentication events (login, registration, OAuth linking) |
-| `SECURITY` | `logSecurity(message, context, level?)` | Suspicious activity, access violations, audit trail |
-| `API` | `logApiRequest(ctx, duration?)` | Incoming HTTP requests (method, URL, IP, user agent, status, duration) |
-| `DATABASE` | `logQuery(query, duration, context?)` | Database queries — auto-elevated to `WARN` if > 1 000 ms |
-| `PERFORMANCE` | `logPerformance(operation, duration, context?)` | Operation duration — auto-elevated to `WARN` if > 5 000 ms |
-| `BUSINESS` | `logBusiness(event, context, metadata?)` | Domain events useful for analytics and auditing |
-| `SYSTEM` | — (default) | Fallback category for `log()` calls without an explicit category |
+| Category      | Helper Method                                   | Description                                                            |
+| ------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| `AUTH`        | `logAuth(action, context)`                      | Authentication events (login, registration, OAuth linking)             |
+| `SECURITY`    | `logSecurity(message, context, level?)`         | Suspicious activity, access violations, audit trail                    |
+| `API`         | `logApiRequest(ctx, duration?)`                 | Incoming HTTP requests (method, URL, IP, user agent, status, duration) |
+| `DATABASE`    | `logQuery(query, duration, context?)`           | Database queries — auto-elevated to `WARN` if > 1 000 ms               |
+| `PERFORMANCE` | `logPerformance(operation, duration, context?)` | Operation duration — auto-elevated to `WARN` if > 5 000 ms             |
+| `BUSINESS`    | `logBusiness(event, context, metadata?)`        | Domain events useful for analytics and auditing                        |
+| `SYSTEM`      | — (default)                                     | Fallback category for `log()` calls without an explicit category       |
 
 #### Log Levels
 
@@ -667,30 +670,30 @@ Each exception extends `@adonisjs/core/exceptions.Exception` and implements its 
 
 #### Account
 
-| Exception | Code | HTTP | Description |
-|---|---|---|---|
-| `EmailAlreadyExistsException` | `E_EMAIL_EXISTS` | 409 | Email already in use by another account |
+| Exception                     | Code             | HTTP | Description                             |
+| ----------------------------- | ---------------- | ---- | --------------------------------------- |
+| `EmailAlreadyExistsException` | `E_EMAIL_EXISTS` | 409  | Email already in use by another account |
 
 #### Auth
 
-| Exception | Code | HTTP | Description |
-|---|---|---|---|
-| `InvalidCredentialsException` | `E_INVALID_CREDENTIALS` | 401 | Wrong email or password |
-| `InvalidCurrentPasswordException` | `E_INVALID_CURRENT_PASSWORD` | 400 | Current password mismatch |
-| `ProviderAlreadyLinkedException` | `E_PROVIDER_ALREADY_LINKED` | 409 | OAuth account already linked to another user |
-| `ProviderNotConfiguredException` | `E_PROVIDER_NOT_CONFIGURED` | 501 | OAuth provider not configured |
-| `UnverifiedAccountException` | `E_UNVERIFIED_ACCOUNT` | 403 | Account not yet verified |
-| `UnauthorizedException` | `E_UNAUTHORIZED` | 401 | Not logged in |
-| `ForbiddenException` | `E_FORBIDDEN` | 403 | Missing role or permission |
+| Exception                         | Code                         | HTTP | Description                                  |
+| --------------------------------- | ---------------------------- | ---- | -------------------------------------------- |
+| `InvalidCredentialsException`     | `E_INVALID_CREDENTIALS`      | 401  | Wrong email or password                      |
+| `InvalidCurrentPasswordException` | `E_INVALID_CURRENT_PASSWORD` | 400  | Current password mismatch                    |
+| `ProviderAlreadyLinkedException`  | `E_PROVIDER_ALREADY_LINKED`  | 409  | OAuth account already linked to another user |
+| `ProviderNotConfiguredException`  | `E_PROVIDER_NOT_CONFIGURED`  | 501  | OAuth provider not configured                |
+| `UnverifiedAccountException`      | `E_UNVERIFIED_ACCOUNT`       | 403  | Account not yet verified                     |
+| `UnauthorizedException`           | `E_UNAUTHORIZED`             | 401  | Not logged in                                |
+| `ForbiddenException`              | `E_FORBIDDEN`                | 403  | Missing role or permission                   |
 
 #### Core
 
-| Exception | Code | HTTP | Description |
-|---|---|---|---|
-| `InvalidTokenException` | `E_INVALID_TOKEN` | 400 | Token invalid, expired, or not found |
-| `MaxAttemptsExceededException` | `E_MAX_ATTEMPTS_EXCEEDED` | 429 | Too many token validation attempts |
-| `RowNotFoundException` | `E_ROW_NOT_FOUND` | 404 | Requested resource not found |
-| `SlugExistsException` | `E_SLUG_EXISTS` | 409 | Slug already taken |
+| Exception                      | Code                      | HTTP | Description                          |
+| ------------------------------ | ------------------------- | ---- | ------------------------------------ |
+| `InvalidTokenException`        | `E_INVALID_TOKEN`         | 400  | Token invalid, expired, or not found |
+| `MaxAttemptsExceededException` | `E_MAX_ATTEMPTS_EXCEEDED` | 429  | Too many token validation attempts   |
+| `RowNotFoundException`         | `E_ROW_NOT_FOUND`         | 404  | Requested resource not found         |
+| `SlugExistsException`          | `E_SLUG_EXISTS`           | 409  | Slug already taken                   |
 
 ## Contributing
 
@@ -729,15 +732,15 @@ Optional body listing what was added, changed, or removed.
 
 **Types:**
 
-| Type | Usage |
-|---|---|
-| `feat` | New feature |
-| `fix` | Bug fix |
+| Type       | Usage                                                   |
+| ---------- | ------------------------------------------------------- |
+| `feat`     | New feature                                             |
+| `fix`      | Bug fix                                                 |
 | `refactor` | Code change that neither fixes a bug nor adds a feature |
-| `docs` | Documentation only |
-| `chore` | Tooling, config, dependencies |
-| `test` | Adding or updating tests |
-| `perf` | Performance improvement |
+| `docs`     | Documentation only                                      |
+| `chore`    | Tooling, config, dependencies                           |
+| `test`     | Adding or updating tests                                |
+| `perf`     | Performance improvement                                 |
 
 **Examples:**
 

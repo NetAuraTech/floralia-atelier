@@ -1,5 +1,4 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Paragraph } from '~/components/atoms/paragraph'
@@ -11,21 +10,22 @@ import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import type { OAuthProvider } from '#types/auth'
 import { AuthProviders } from '~/components/molecules/auth/auth_providers'
-import {useTranslation} from "~/hooks/use_translation";
-import type {LoginTranslations} from "#types/translations";
+import { useTranslation } from '~/hooks/use_translation'
+import type { LoginTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
-  providers: OAuthProvider[],
+  providers: OAuthProvider[]
   translations: LoginTranslations
 }
 
 export default function LoginPage(props: PageProps) {
   const { providers, translations } = props
-  const { t } = useTranslation<LoginTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const validation = useFormValidation({
-    email: presets.email,
-    password: presets.password,
+    email: presets.email(t('email.value')),
+    password: presets.password(t('password.value')),
   })
 
   return (
@@ -50,11 +50,7 @@ export default function LoginPage(props: PageProps) {
               <div className="text-center">
                 <Paragraph fs="sm">
                   {t('account.no')}{' '}
-                  <NavLink
-                    route={'auth.register.render'}
-                    label={t('account.create')}
-                    fs="sm"
-                  />
+                  <NavLink route={'auth.register.render'} label={t('account.create')} fs="sm" />
                 </Paragraph>
               </div>
             }
@@ -100,10 +96,7 @@ export default function LoginPage(props: PageProps) {
                   />
                   <div className="grid gap-2 md:flex md:items-center md:justify-between">
                     <Field label={t('remember_me')} name="remember_me" type="checkbox" />
-                    <NavLink
-                      route="auth.forgot_password.render"
-                      label={t('password.forgot')}
-                    />
+                    <NavLink route="auth.forgot_password.render" label={t('password.forgot')} />
                   </div>
                   <Button loading={processing} type={'submit'} fitContent>
                     {t('submit')}

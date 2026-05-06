@@ -1,5 +1,10 @@
 {
   "value": "Administration",
+  "dashboard": "Dashboard",
+  "category": {
+    "access_control": "Access control",
+    "content": "Content"
+  },
   "users": {
     "created": "An invitation email has been sent to {email} so that the user {username} can create an account.",
     "updated_email": "A confirmation email has been sent to the user to confirm the change of email address.",
@@ -419,6 +424,7 @@
       "submit": "Submit"
     },
     "actions": "Actions",
+    "value_one": "Page",
     "value": "Pages"
   }
 }

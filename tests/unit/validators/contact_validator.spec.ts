@@ -24,7 +24,7 @@ test.group('Contact validator', () => {
     await assert.rejects(() =>
       contactValidator.validate({
         ...validPayload,
-        message: 'a'.repeat(2001)
+        message: 'a'.repeat(2001),
       })
     )
   })
@@ -42,7 +42,7 @@ test.group('Contact validator', () => {
       ...validPayload,
       name: 'Alice',
       email: 'alice@example.com',
-      message: 'Hi there!'
+      message: 'Hi there!',
     })
     assert.lengthOf(result.fields, 3)
   })

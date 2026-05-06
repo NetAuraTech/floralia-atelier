@@ -3,26 +3,25 @@ import { inject } from '@adonisjs/core'
 import { forgotPasswordValidator } from '#validators/auth'
 import User from '#models/auth/user'
 import { PasswordService } from '#services/auth/password_service'
-import {ForgotPasswordTranslations} from "#types/translations";
 
 @inject()
 export default class ForgotPasswordController {
   constructor(protected passwordService: PasswordService) {}
 
   render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
-    return ctx.reactSSR('auth/front/forgot_password', {
+    return inertia.render('auth/front/forgot_password', {
       translations: {
-        'title': i18n.t('auth.password.forgot.title'),
-        'sub_title': i18n.t('auth.password.forgot.sub_title'),
-        'email': {
-          'value': i18n.t('auth.password.forgot.email.value'),
-          'placeholder': i18n.t('auth.password.forgot.email.placeholder'),
+        title: i18n.t('auth.password.forgot.title'),
+        sub_title: i18n.t('auth.password.forgot.sub_title'),
+        email: {
+          value: i18n.t('auth.password.forgot.email.value'),
+          placeholder: i18n.t('auth.password.forgot.email.placeholder'),
         },
-        'submit': i18n.t('auth.password.forgot.submit'),
-        'back_to_login': i18n.t('auth.password.forgot.back_to_login'),
-      } as ForgotPasswordTranslations
+        submit: i18n.t('auth.password.forgot.submit'),
+        back_to_login: i18n.t('auth.password.forgot.back_to_login'),
+      },
     })
   }
 

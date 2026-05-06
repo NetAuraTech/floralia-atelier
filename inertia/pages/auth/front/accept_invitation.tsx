@@ -1,5 +1,4 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Field } from '~/components/molecules/field'
@@ -10,8 +9,9 @@ import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
 import { Data } from '@generated/data'
 import { Banner } from '~/components/molecules/banner'
-import type {AcceptInvitationTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { AcceptInvitationTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   token: string
@@ -22,16 +22,16 @@ interface PageProps {
 export default function AcceptInvitationPage(props: PageProps) {
   const { token, user, translations } = props
 
-  const { t } = useTranslation<AcceptInvitationTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    email: presets.email,
-    username: presets.username,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    email: presets.email(t('email.value')),
+    username: presets.username(t('username.value')),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirmation.value')),
   })
 
   return (
@@ -52,11 +52,7 @@ export default function AcceptInvitationPage(props: PageProps) {
             }
           />
           <Card>
-            <Banner
-              title={t('banner.title')}
-              message={t('banner.message')}
-              type="info"
-            />
+            <Banner title={t('banner.title')} message={t('banner.message')} type="info" />
             <Form
               route="auth.accept_invitation.execute"
               className="grid gap-6 mt-6"

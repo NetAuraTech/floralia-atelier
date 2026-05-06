@@ -1,9 +1,10 @@
 import { useMemo, MouseEvent } from 'react'
 import { MetaData } from '~/types/paginated'
-import { type LinkProps } from '~/components/atoms/link'
+import type { LinkProps, LinkParams } from '@adonisjs/inertia/react'
 import { NavLink } from '~/components/atoms/nav_link'
-import {usePageContext} from "~/context/page_context";
-import {useTranslation} from "~/hooks/use_translation";
+import { useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import type { SharedProps } from '@adonisjs/inertia/types'
 
 interface PaginationBaseProps {
   /** Pagination metadata returned by the server (current page, last page, total, etc.). */
@@ -26,8 +27,9 @@ interface PaginationBaseProps {
 
 type PaginationRouteProps<R extends NonNullable<LinkProps['route']>> = PaginationBaseProps & {
   route: R
-  routeParams?: any
-}
+} & (LinkParams<R>['routeParams'] extends undefined | never
+    ? { routeParams?: never }
+    : { routeParams: LinkParams<R>['routeParams'] })
 
 type PaginationNoRouteProps = PaginationBaseProps & {
   route?: never
@@ -67,10 +69,10 @@ type PageItem = number | '...'
  */
 export function Pagination<R extends NonNullable<LinkProps['route']>>(props: PaginationProps<R>) {
   const { metadata, showPages = 5, filters, onClick, ...routeProps } = props
-  const { props: pageProps } = usePageContext()
+  const pageProps = usePage<SharedProps>().props
 
   const { lastPage, perPage, currentPage, total } = metadata
-  const { t } = useTranslation(pageProps.translations)
+  const { t } = useTranslation(pageProps.common_translations)
 
   const start = (currentPage - 1) * perPage + 1
   const end = Math.min(currentPage * perPage, total)
@@ -104,7 +106,9 @@ export function Pagination<R extends NonNullable<LinkProps['route']>>(props: Pag
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 px-1">
-      <p className="text-sm text-ink-muted tabular-nums">{t('pagination.showing', { start, end, total })}</p>
+      <p className="text-sm text-ink-muted tabular-nums">
+        {t('pagination.showing', { start, end, total })}
+      </p>
 
       <nav aria-label="Pagination" className="flex items-center gap-1">
         {currentPage > 1 ? (

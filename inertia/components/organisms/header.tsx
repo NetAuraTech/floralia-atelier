@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink } from '~/components/atoms/nav_link'
-import { Link } from '~/components/atoms/link'
+import { Link } from '@adonisjs/inertia/react'
+import { router } from '@inertiajs/react'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -16,12 +17,27 @@ export function Header() {
     }
   }
 
+  useEffect(() => {
+    const unregisterListener = router.on('success', () => {
+      setIsMenuOpen(false)
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur()
+      }
+    })
+
+    return () => unregisterListener()
+  }, [])
+
   const menuState = isMenuOpen ? 'opened' : 'closed'
   const isExpanded = isMenuOpen ? 'true' : 'false'
 
   return (
     <header className="header" data-state={menuState} aria-expanded={isExpanded}>
-      <Link route="page.home" className="header__logo font-semibold tracking-wide text-xl font-cormorant" onClick={closeMenu}>
+      <Link
+        route="page.home"
+        className="header__logo font-semibold tracking-wide text-xl font-cormorant"
+        onClick={closeMenu}
+      >
         Floralia <span className="text-secondary italic">Atelier</span>
       </Link>
 
@@ -31,10 +47,34 @@ export function Header() {
         data-state={menuState}
         aria-expanded={isExpanded}
       >
-        <NavLink route={'page.home'} anchor="services" label="Services" variant="nav" onClick={closeMenu} />
-        <NavLink route={'page.home'} anchor="about" label="Histoire" variant="nav" onClick={closeMenu} />
-        <NavLink route={'page.home'} anchor="creations" label="Créations" variant="nav" onClick={closeMenu} />
-        <NavLink route={'page.home'} anchor="contact" label="Contact" variant="nav" onClick={closeMenu} />
+        <NavLink
+          route={'page.home'}
+          anchor="services"
+          label="Services"
+          variant="nav"
+          onClick={closeMenu}
+        />
+        <NavLink
+          route={'page.home'}
+          anchor="about"
+          label="Histoire"
+          variant="nav"
+          onClick={closeMenu}
+        />
+        <NavLink
+          route={'page.home'}
+          anchor="creations"
+          label="Créations"
+          variant="nav"
+          onClick={closeMenu}
+        />
+        <NavLink
+          route={'page.home'}
+          anchor="contact"
+          label="Contact"
+          variant="nav"
+          onClick={closeMenu}
+        />
       </nav>
       <button
         className="header__burger md:display-hidden"

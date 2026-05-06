@@ -3,14 +3,14 @@ import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
 import { Paragraph } from '~/components/atoms/paragraph'
 import type { Data } from '@generated/data'
-import { Form } from '~/components/atoms/form'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
-import { usePageContext } from '~/context/page_context'
-import type { SharedProps } from '~/types/shared_props'
 import { toast } from 'sonner'
-import {CmsFilesTranslations} from "#types/translations";
-import {locales, useTranslation} from "~/hooks/use_translation";
+import type { CmsFilesTranslations } from '#types/translations'
+import { locales, useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Form } from '@adonisjs/inertia/react'
 
 interface FileAlt {
   locale: string
@@ -41,7 +41,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
   const [alts, setAlts] = useState<FileAlt[]>([])
   const { t } = useTranslation<CmsFilesTranslations>(translations)
 
-  const { props: pageProps } = usePageContext<SharedProps>()
+  const pageProps = usePage<SharedProps>().props
 
   function rowKey(locale: string, key: string) {
     return `${locale}:${key}`
@@ -161,7 +161,7 @@ export function FileAltEditor(props: FileAltEditorProps) {
                 required
                 sanitize
               >
-                {Object.keys(locales).map((l) => (
+                {locales.map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>

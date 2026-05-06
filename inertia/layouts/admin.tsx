@@ -1,11 +1,10 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { toast, Toaster } from 'sonner'
-import { Helmet } from '@dr.pogodin/react-helmet'
-import { usePageContext } from '~/context/page_context'
-import type { SharedProps } from '~/types/shared_props'
 import { useIsLarge } from '~/hooks/use_is_large'
 import { AdminSidebar } from '~/components/organisms/admin/admin_sidebar'
 import { AdminHeader } from '~/components/organisms/admin/admin_header'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Head, usePage } from '@inertiajs/react'
 
 interface LayoutProps {
   children: ReactElement<SharedProps>
@@ -40,7 +39,7 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
   const isLarge = useIsLarge()
-  const { props: pageProps, url } = usePageContext<SharedProps>()
+  const { props: pageProps, url } = usePage<SharedProps>()
   const { children } = props
 
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -69,23 +68,23 @@ export default function Layout(props: LayoutProps) {
     toast.dismiss()
   }, [url])
 
-  if (pageProps.flash?.error) {
-    toast.error(pageProps.flash.error)
+  if (children.props.flash?.error) {
+    toast.error(children.props.flash.error)
   }
 
-  if (pageProps.flash?.success) {
-    toast.success(pageProps.flash.success)
+  if (children.props.flash?.success) {
+    toast.success(children.props.flash.success)
   }
 
-  if (pageProps.flash?.info) {
-    toast.info(pageProps.flash.info)
+  if (children.props.flash?.info) {
+    toast.info(children.props.flash.info)
   }
 
   return (
     <>
-      <Helmet>
+      <Head>
         <meta name="csrf-token" content={pageProps.csrfToken} />
-      </Helmet>
+      </Head>
       <Toaster position="top-right" richColors />
       <div className="admin">
         <AdminSidebar sidebarOpen={sidebarOpen} setIsMenuOpen={setSidebarOpen} />

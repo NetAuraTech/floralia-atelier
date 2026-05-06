@@ -72,7 +72,10 @@ test.group('TemplateRepository', () => {
   })
 
   test('list() filters by blockType', async ({ assert }) => {
-    const heroTemplate = await TemplateFactory.merge({ type: 'block', blockType: 'section' }).create()
+    const heroTemplate = await TemplateFactory.merge({
+      type: 'block',
+      blockType: 'section',
+    }).create()
     const gridTemplate = await TemplateFactory.merge({ type: 'block', blockType: 'grid' }).create()
 
     const result = await repo.list({ blockType: 'section' })

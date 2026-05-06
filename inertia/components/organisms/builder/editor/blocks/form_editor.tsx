@@ -1,12 +1,12 @@
-import {LFW} from "~/components/organisms/builder/editor/locked_file_wrapper";
-import {EditorProps} from "~/types/builder";
-import { usePageContext as usePage } from '~/context/page_context'
+import { LFW } from '~/components/organisms/builder/editor/locked_file_wrapper'
+import { EditorProps } from '~/types/builder'
+import { usePage } from '@inertiajs/react'
 
 export function FormEditor(props: EditorProps) {
   const { block, onChange, lockProps } = props
 
   const { availablePostRoutes } = usePage<{
-    availablePostRoutes: any[],
+    availablePostRoutes: any[]
   }>().props
 
   const p = block.props as any
@@ -29,9 +29,20 @@ export function FormEditor(props: EditorProps) {
         onChange={(v) => updateNavigation({ route: v, routeParams: {} })}
       >
         <option value="">-- Sélectionner --</option>
-        {availablePostRoutes?.map(r => <option key={r.name} value={r.name}>{r.name}</option>)}
+        {availablePostRoutes?.map((r) => (
+          <option key={r.name} value={r.name}>
+            {r.name}
+          </option>
+        ))}
       </LFW>
-      <LFW {...lockProps} fieldKey="className" type="text" label="ClassName" defaultValue={p.className} onChange={(value) => u('className', value)} />
+      <LFW
+        {...lockProps}
+        fieldKey="className"
+        type="text"
+        label="ClassName"
+        defaultValue={p.className}
+        onChange={(value) => u('className', value)}
+      />
     </div>
   )
 }

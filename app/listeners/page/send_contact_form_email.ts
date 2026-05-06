@@ -4,8 +4,8 @@ import i18nManager from '@adonisjs/i18n/services/main'
 import ContactFormNotification from '#mails/page/contact_form_notification'
 import env from '#start/env'
 import { inject } from '@adonisjs/core'
-import PreferencesService from "#services/preferences/preference_service";
-import {UserRepository} from "#repositories/auth/user_repository";
+import PreferencesService from '#services/preferences/preference_service'
+import { UserRepository } from '#repositories/auth/user_repository'
 
 @inject()
 export default class SendContactFormEmail {
@@ -16,7 +16,7 @@ export default class SendContactFormEmail {
   ) {}
 
   async handle(event: ContactFormSubmitted) {
-    type SubmissionKeys = keyof typeof event.submission;
+    type SubmissionKeys = keyof typeof event.submission
     const admin = await this.userRepository.findByEmail(env.get('MAIL_FROM_ADDRESS'))
 
     let locale = 'en'
@@ -29,16 +29,19 @@ export default class SendContactFormEmail {
 
     const i18n = i18nManager.locale(locale)
 
-
     const payload = new ContactFormNotification({
       user: {
         email: env.get('MAIL_FROM_ADDRESS'),
-        locale: locale
+        locale: locale,
       },
       data: (Object.entries(event.submission) as [SubmissionKeys, any][]).reduce(
         (acc, [key, value]) => {
-          acc[key] = i18n.t(`page.contact_form.mail.${key as string}`, { value }, `${key}: ${value}`);
-          return acc;
+          acc[key] = i18n.t(
+            `page.contact_form.mail.${key as string}`,
+            { value },
+            `${key}: ${value}`
+          )
+          return acc
         },
         {} as Record<SubmissionKeys, string>
       ),

@@ -42,7 +42,9 @@ export function Heading(props: HeadingProps) {
   }
 
   return (
-    <Tag className={`${levels[level]} font-playfair leading-tight ${color}${flex ? ' flex gap-2 items-center' : ''}`}>
+    <Tag
+      className={`${levels[level]} font-playfair leading-tight ${color}${flex ? ' flex gap-2 items-center' : ''}`}
+    >
       {children}
     </Tag>
   )

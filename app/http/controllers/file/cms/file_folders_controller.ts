@@ -3,19 +3,18 @@ import { inject } from '@adonisjs/core'
 import { FileFolderService } from '#services/file/file_folder_service'
 import { createFolderValidator, updateFolderValidator, showFileValidator } from '#validators/file'
 import FileFolderTransformer from '#transformers/file_folder_transformer'
-import {CmsFileFoldersTranslations} from "#types/translations";
 
 @inject()
 export default class FileFoldersController {
   constructor(protected folderService: FileFolderService) {}
 
   async render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
     const roots = await this.folderService.listRoots()
 
-    return ctx.reactSSR('file/cms/folders', {
-      roots: await FileFolderTransformer.transform(roots).resolve(ctx.containerResolver, 0),
+    return inertia.render('file/cms/folders', {
+      roots: FileFolderTransformer.transform(roots),
       translations: {
         title: i18n.t('cms.folders.list.title'),
         action: i18n.t('cms.files.list.title'),
@@ -23,11 +22,11 @@ export default class FileFoldersController {
         help: i18n.t('cms.folders.form.help'),
         name: {
           root: i18n.t('cms.folders.form.name.root'),
-          sub: i18n.t('cms.folders.form.name.sub')
+          sub: i18n.t('cms.folders.form.name.sub'),
         },
         empty: {
           value: i18n.t('cms.folders.list.empty.value'),
-          help: i18n.t('cms.folders.list.empty.help')
+          help: i18n.t('cms.folders.list.empty.help'),
         },
         actions: {
           add: i18n.t('cms.folders.list.add'),
@@ -36,11 +35,11 @@ export default class FileFoldersController {
           cancel: i18n.t('cms.folders.form.cancel'),
           rename: i18n.t('cms.folders.list.rename'),
           delete: {
-            value: i18n.t('cms.folders.delete.title', {folder: '{folder}'}),
-            confirm: i18n.t('cms.folders.delete.confirm')
-          }
-        }
-      } as CmsFileFoldersTranslations
+            value: i18n.t('cms.folders.delete.title', { folder: '{folder}' }),
+            confirm: i18n.t('cms.folders.delete.confirm'),
+          },
+        },
+      },
     })
   }
 

@@ -1,6 +1,5 @@
 import { SettingsLayout } from '~/components/organisms/settings_layout'
 import { Card } from '~/components/atoms/card'
-import { Form } from '~/components/atoms/form'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
@@ -12,8 +11,9 @@ import { urlFor } from '~/client'
 import { useState } from 'react'
 import { Banner } from '~/components/molecules/banner'
 import { getIcon } from '~/helpers/oauth'
-import type {SettingsAccountTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { SettingsAccountTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   user: Data.User
@@ -24,33 +24,30 @@ interface PageProps {
 export default function AccountPage(props: PageProps) {
   const { user, providers, translations } = props
 
-  const { t } = useTranslation<SettingsAccountTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const validationEmailForm = useFormValidation({
-    email: presets.email,
+    email: presets.email(t('email.value')),
   })
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validationPasswordForm = useFormValidation({
-    current_password: presets.password,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    current_password: presets.password(t('password.current.value')),
+    password: presets.password(t('password.new.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirm.value')),
   })
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const validationDeleteForm = useFormValidation({
-    password: presets.password,
+    password: presets.password(t('delete.password')),
   })
 
   return (
     <main>
-      <SettingsLayout
-        tab="account"
-        translations={translations}
-      >
+      <SettingsLayout tab="account" translations={translations}>
         <Card title={t('email.title')} subtitle={t('email.sub_title')}>
           <Form
             route="settings.account.execute"
@@ -98,9 +95,7 @@ export default function AccountPage(props: PageProps) {
                     <div>
                       <p className="text-sm font-medium text-ink">{capitalize(provider)}</p>
                       <p className={`text-xs ${isConnected ? 'text-success' : 'text-ink-muted'}`}>
-                        {isConnected
-                          ? t('oauth.connected')
-                          : t('oauth.not_connected')}
+                        {isConnected ? t('oauth.connected') : t('oauth.not_connected')}
                       </p>
                     </div>
                   </div>
@@ -110,9 +105,7 @@ export default function AccountPage(props: PageProps) {
                       route="auth.social.unlink"
                       routeParams={{ provider: provider }}
                       onBefore={() =>
-                        confirm(
-                          t('oauth.unlink.confirm', { provider: capitalize(provider) })
-                        )
+                        confirm(t('oauth.unlink.confirm', { provider: capitalize(provider) }))
                       }
                     >
                       <button
@@ -216,11 +209,7 @@ export default function AccountPage(props: PageProps) {
             )}
           </Form>
         </Card>
-        <Card
-          title={t('delete.title')}
-          subtitle={t('delete.sub_title')}
-          border="danger"
-        >
+        <Card title={t('delete.title')} subtitle={t('delete.sub_title')} border="danger">
           {!showDeleteConfirm ? (
             <Button variant="danger" fitContent onClick={() => setShowDeleteConfirm(true)}>
               {t('delete.submit')}

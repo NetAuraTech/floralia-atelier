@@ -1,18 +1,18 @@
 import { ReactElement } from 'react'
 import { Button, variants } from '~/components/atoms/button'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
-import { Form } from '~/components/atoms/form'
 import { Data } from '@generated/data'
 import { Card } from '~/components/atoms/card'
 import { CanAccess } from '~/guards/can_access'
 import { Icon } from '~/components/atoms/icon'
 import { Heading } from '~/components/atoms/heading'
-import {NavLink} from "~/components/atoms/nav_link";
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {usePageContext} from "~/context/page_context";
-import {CmsPagesShowTranslations} from "#types/translations";
+import { NavLink } from '~/components/atoms/nav_link'
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsPagesShowTranslations } from '#types/translations'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/react'
+import { Form } from '@adonisjs/inertia/react'
 
 interface Props {
   page: Data.Page
@@ -35,18 +35,16 @@ const statusesClass = {
 } as const
 
 export default function PagesShowPage(props: Props) {
-  const { page, translations} = props
-  const {props: pageProps} = usePageContext()
-  const { t, format } = useTranslation<CmsPagesShowTranslations>(translations)
+  const { page, translations } = props
+  const pageProps = usePage<SharedProps>().props
+  const { t, format } = useTranslation(translations)
 
   const primaryTranslation =
     page.translations.find((t) => t.locale === page.defaultLocale) ?? page.translations[0]
 
   return (
     <>
-      <AdminMain
-        title={t('title', { title: primaryTranslation?.title ?? `Page #${page.id}` })}
-      >
+      <AdminMain title={t('title', { title: primaryTranslation?.title ?? `Page #${page.id}` })}>
         <Card
           header={
             <div className="flex items-center justify-between gap-3">
@@ -99,9 +97,7 @@ export default function PagesShowPage(props: Props) {
         >
           <div className="grid gap-3">
             <div className="grid gap-3">
-              <Heading level={3}>
-                {t('translation', { count: page.translations.length })}
-              </Heading>
+              <Heading level={3}>{t('translation', { count: page.translations.length })}</Heading>
               {page.translations.map((translation) => {
                 const isDefault = translation.locale === page.defaultLocale
 
@@ -119,9 +115,7 @@ export default function PagesShowPage(props: Props) {
                           {translation.locale}
                         </span>
                         {isDefault && (
-                          <span className="text-xs text-ink-subtle">
-                            ({t('default')})
-                          </span>
+                          <span className="text-xs text-ink-subtle">({t('default')})</span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -137,16 +131,17 @@ export default function PagesShowPage(props: Props) {
                       </span>
                       <div className="flex items-center gap-3 text-ink-subtle shrink-0">
                         {translation.metaTitle && (
-                          <span
-                            className="flex items-center gap-1"
-                            title={t('meta.title')}
-                          >
+                          <span className="flex items-center gap-1" title={t('meta.title')}>
                             <Icon name="Tag" size={18} />
                             SEO
                           </span>
                         )}
                         <span title={t('last_update')}>
-                          {format(new Date(translation.updatedAt!), 'medium', pageProps.locale as Lang)}
+                          {format(
+                            new Date(translation.updatedAt!),
+                            'medium',
+                            pageProps.locale as Lang
+                          )}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -184,14 +179,8 @@ export default function PagesShowPage(props: Props) {
               <Heading level={3}>{t('meta.value')}</Heading>
               <div className="rounded-xl border border-edge bg-canvas divide-y divide-edge">
                 <MetaRow label={t('meta.id')} value={String(page.id)} />
-                <MetaRow
-                  label={t('meta.locale')}
-                  value={page.defaultLocale.toUpperCase()}
-                />
-                <MetaRow
-                  label={t('meta.translations')}
-                  value={`${page.translations.length}`}
-                />
+                <MetaRow label={t('meta.locale')} value={page.defaultLocale.toUpperCase()} />
+                <MetaRow label={t('meta.translations')} value={`${page.translations.length}`} />
                 <MetaRow
                   label={t('meta.created')}
                   value={format(new Date(page.createdAt!), 'medium', pageProps.locale as Lang)}
@@ -230,19 +219,22 @@ export default function PagesShowPage(props: Props) {
   )
 }
 
-function HomepageSection({ page, translations }: { page: Data.Page, translations: CmsPagesShowTranslations }) {
-  const { t } = useTranslation<CmsPagesShowTranslations>(translations)
+function HomepageSection({
+  page,
+  translations,
+}: {
+  page: Data.Page
+  translations: CmsPagesShowTranslations
+}) {
+  const { t } = useTranslation(translations)
   function handleSetHomepage() {
     if (page.isHomepage) return
     if (!confirm('Set this page as the homepage? The current homepage will be unset.')) return
-
   }
 
   return (
     <div className="grid gap-3">
-      <Heading level={3}>
-        {t('homepage.value')}
-      </Heading>
+      <Heading level={3}>{t('homepage.value')}</Heading>
       <div className="rounded-xl border border-edge bg-canvas px-4 py-4 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-ink flex items-center gap-2">
@@ -254,9 +246,7 @@ function HomepageSection({ page, translations }: { page: Data.Page, translations
             {!page.isHomepage && t('homepage.help.title.not_set')}
           </p>
           <p className="text-xs text-ink-muted mt-0.5">
-            {page.isHomepage
-              ? t('homepage.help.message.set')
-              : t('homepage.help.message.not_set')}
+            {page.isHomepage ? t('homepage.help.message.set') : t('homepage.help.message.not_set')}
           </p>
         </div>
         {!page.isHomepage && (
@@ -267,11 +257,7 @@ function HomepageSection({ page, translations }: { page: Data.Page, translations
             route="admin.pages.set_homepage"
             routeParams={{ id: page.id }}
           >
-            <Button
-              variant="secondary"
-              onClick={handleSetHomepage}
-              fitContent
-            >
+            <Button variant="secondary" onClick={handleSetHomepage} fitContent>
               {t('homepage.submit')}
             </Button>
           </Form>

@@ -59,5 +59,5 @@ const classes = [
   'text-6xl',
   '-mt-1',
   '-mt-2',
-  'my-5'
+  'my-5',
 ]

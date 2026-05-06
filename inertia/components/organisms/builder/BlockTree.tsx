@@ -7,7 +7,7 @@ import type { BuilderOperation } from '#types/builder'
 import type { LockState } from '~/hooks/use_builder_sync'
 import { Button } from '~/components/atoms/button'
 import { Icon } from '~/components/atoms/icon'
-import { FloatingPortal } from "~/components/atoms/floating_portal"
+import { FloatingPortal } from '~/components/atoms/floating_portal'
 
 interface LockHelpers {
   getLock: (blockId: string, fieldKey: string) => LockState | null
@@ -27,14 +27,14 @@ interface BlockTreeProps {
 }
 
 export default function BlockTree({
-                                    content,
-                                    onChange,
-                                    onOperation,
-                                    getLock,
-                                    acquireLock,
-                                    releaseLock,
-                                    currentUserId = 0,
-                                  }: BlockTreeProps) {
+  content,
+  onChange,
+  onOperation,
+  getLock,
+  acquireLock,
+  releaseLock,
+  currentUserId = 0,
+}: BlockTreeProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [pickerParentId, setPickerParentId] = useState<string | 'root' | null>(null)
 
@@ -96,7 +96,9 @@ export default function BlockTree({
       {/* ── SECTION TREE (HAUT) ── */}
       <div className="flex-1 flex flex-col min-h-0 border-b border-edge">
         <div className="px-4 py-3 flex items-center justify-between shrink-0">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-ink-subtle">Structure</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-ink-subtle">
+            Structure
+          </span>
           <div className="relative">
             <Button
               type="button"
@@ -180,7 +182,9 @@ export default function BlockTree({
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center opacity-50">
             <Icon name="MousePointer2" size={20} className="text-ink-subtle mb-2" />
-            <p className="text-[11px] text-ink-subtle uppercase tracking-wider">Select a block to configure</p>
+            <p className="text-[11px] text-ink-subtle uppercase tracking-wider">
+              Select a block to configure
+            </p>
           </div>
         )}
       </div>
@@ -231,7 +235,9 @@ function BlockNode(props: {
   useEffect(() => {
     if (!showPicker || !anchorRef.current) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (!entry.isIntersecting) handleCloseBlockPicker() },
+      ([entry]) => {
+        if (!entry.isIntersecting) handleCloseBlockPicker()
+      },
       { threshold: 0 }
     )
     observer.observe(anchorRef.current)
@@ -274,7 +280,8 @@ function BlockNode(props: {
           {descriptor?.label ?? block.type}
           {preview && (
             <span className="text-ink-subtle font-normal opacity-60">
-              {preview.slice(0, 20)}{preview.length > 20 ? '...' : ''}
+              {preview.slice(0, 20)}
+              {preview.length > 20 ? '...' : ''}
             </span>
           )}
         </span>
@@ -282,7 +289,10 @@ function BlockNode(props: {
         <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onMove(block.id, 'up'); }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onMove(block.id, 'up')
+            }}
             disabled={index === 0}
             className="p-1 hover:text-ink disabled:opacity-0"
           >
@@ -290,7 +300,10 @@ function BlockNode(props: {
           </button>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onMove(block.id, 'down'); }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onMove(block.id, 'down')
+            }}
             disabled={index === total - 1}
             className="p-1 hover:text-ink disabled:opacity-0"
           >
@@ -298,7 +311,10 @@ function BlockNode(props: {
           </button>
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); onDelete(block.id); }}
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete(block.id)
+            }}
             className="p-1 hover:text-danger"
           >
             <Icon name="Trash2" size={12} />
@@ -368,7 +384,11 @@ function findById(blocks: Block[], id: string): Block | null {
   return null
 }
 
-function findParentInfo(blocks: Block[], id: string, parentId: string | 'root' = 'root'): { parentId: string | 'root'; index: number } {
+function findParentInfo(
+  blocks: Block[],
+  id: string,
+  parentId: string | 'root' = 'root'
+): { parentId: string | 'root'; index: number } {
   for (let i = 0; i < blocks.length; i++) {
     if (blocks[i].id === id) return { parentId, index: i }
     if (blocks[i].children) {
@@ -380,7 +400,9 @@ function findParentInfo(blocks: Block[], id: string, parentId: string | 'root' =
 }
 
 function removeById(blocks: Block[], id: string): Block[] {
-  return blocks.filter((b) => b.id !== id).map((b) => (b.children ? { ...b, children: removeById(b.children, id) } : b))
+  return blocks
+    .filter((b) => b.id !== id)
+    .map((b) => (b.children ? { ...b, children: removeById(b.children, id) } : b))
 }
 
 function insertChild(blocks: Block[], parentId: string, child: Block): Block[] {
@@ -405,7 +427,7 @@ function moveInTree(blocks: Block[], id: string, dir: 'up' | 'down'): Block[] {
     const next = [...blocks]
     const t = dir === 'up' ? idx - 1 : idx + 1
     if (t < 0 || t >= next.length) return blocks
-      ;[next[idx], next[t]] = [next[t], next[idx]]
+    ;[next[idx], next[t]] = [next[t], next[idx]]
     return next
   }
   return blocks.map((b) => (b.children ? { ...b, children: moveInTree(b.children, id, dir) } : b))

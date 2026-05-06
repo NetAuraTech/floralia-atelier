@@ -1,9 +1,7 @@
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
 import { Paginated } from '~/types/paginated'
-import { Form } from '~/components/atoms/form'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
@@ -15,9 +13,11 @@ import { Pagination } from '~/components/molecules/pagination'
 import Table from '~/components/atoms/table/table'
 import { StatusEnum, UserStatus } from '~/components/atoms/user_status'
 import { Icon } from '~/components/atoms/icon'
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {CmsUsersIndexTranslations} from "#types/translations";
-import {usePageContext} from "~/context/page_context";
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsUsersIndexTranslations } from '#types/translations'
+import { usePage } from '@inertiajs/react'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 type PageProps = {
   users: Paginated<Data.User>
@@ -31,8 +31,8 @@ type PageProps = {
 
 export default function UsersIndexPage(props: PageProps) {
   const { users, roles, filters, translations } = props
-  const {props: pageProps} = usePageContext()
-  const { t, format } = useTranslation<CmsUsersIndexTranslations>(translations)
+  const pageProps = usePage().props
+  const { t, format } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
@@ -70,7 +70,14 @@ export default function UsersIndexPage(props: PageProps) {
               defaultValue={filters.role}
               sanitize
             >
-              {roles && roles.map((role) => <SelectOption key={`role-${role.id}`} label={t(role.name as any)} value={role.id} />)}
+              {roles &&
+                roles.map((role) => (
+                  <SelectOption
+                    key={`role-${role.id}`}
+                    label={t(role.name as any)}
+                    value={role.id}
+                  />
+                ))}
             </Field>
             <Button type="submit" fitContent>
               {t('search.filter')}
@@ -101,10 +108,7 @@ export default function UsersIndexPage(props: PageProps) {
             ) : (
               users.data.map((user) => (
                 <Table.Row key={`user-${user.id}`}>
-                  <Table.Cell
-                    className="flex flex-row"
-                    data-label={t('value', { count: 1 })}
-                  >
+                  <Table.Cell className="flex flex-row" data-label={t('value', { count: 1 })}>
                     <span className="flex">{user.username}</span>
                     <span className="flex text-ink-muted">{user.email}</span>
                   </Table.Cell>
@@ -114,7 +118,11 @@ export default function UsersIndexPage(props: PageProps) {
                     </span>
                   </Table.Cell>
                   <Table.Cell data-label={t('status.value')}>
-                    <UserStatus status={user.status as StatusEnum} user={user.id} translations={translations} />
+                    <UserStatus
+                      status={user.status as StatusEnum}
+                      user={user.id}
+                      translations={translations}
+                    />
                   </Table.Cell>
                   <Table.Cell data-label={t('register_on')}>
                     {format(new Date(user.createdAt!), 'medium', pageProps.locale as Lang)}

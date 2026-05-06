@@ -1,8 +1,8 @@
 import type { ResolvedBlock } from '#types/page'
-import {Fragment} from "react";
-import ReactMarkdown from 'react-markdown';
+import { Fragment } from 'react'
+import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import {Paragraph} from "~/components/atoms/paragraph";
+import { Paragraph } from '~/components/atoms/paragraph'
 
 interface ParagraphBlockProps {
   block: ResolvedBlock<'paragraph'>
@@ -15,20 +15,18 @@ interface ParagraphBlockProps {
 export default function ParagraphBlock({ block }: ParagraphBlockProps) {
   const { text, fs, variant, spacing, className } = block.props
 
-  return <Paragraph variant={variant} fs={fs} className={className} spacing={spacing}>
-    <ReactMarkdown
-      rehypePlugins={[rehypeRaw]}
-      components={{
-        em: ({node, ...props}) => (
-          <em className="text-secondary" {...props} />
-        ),
-        strong: ({node, ...props}) => (
-          <strong {...props} />
-        ),
-        p: Fragment
-      }}
-    >
-      {text}
-    </ReactMarkdown>
-  </Paragraph>
+  return (
+    <Paragraph variant={variant} fs={fs} className={className} spacing={spacing}>
+      <ReactMarkdown
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          em: ({ node, ...props }) => <em className="text-secondary" {...props} />,
+          strong: ({ node, ...props }) => <strong {...props} />,
+          p: Fragment,
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    </Paragraph>
+  )
 }

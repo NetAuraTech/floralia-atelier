@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @source "../pages";
 @source "../components";
 @source "../layouts";
@@ -9,47 +9,47 @@
 @custom-variant focus (&:is(:focus-visible));
 
 @theme {
-  --font-cormorant: "Cormorant Garamond", serif;
-  --font-playfair: "Playfair Display", serif;
-  --font-jost: "Jost Variable", "Jost", sans-serif;
+  --font-cormorant: 'Cormorant Garamond', serif;
+  --font-playfair: 'Playfair Display', serif;
+  --font-jost: 'Jost Variable', 'Jost', sans-serif;
 
-  --color-primary-deep:          oklch(0.3038 0.0392 162.91);
-  --color-primary:               oklch(0.4049 0.0528 161.65);
-  --color-primary-soft:          oklch(0.5373 0.0669 159.37);
-  --color-primary-light:         oklch(0.7959 0.043 153.88);
+  --color-primary-deep: oklch(0.3038 0.0392 162.91);
+  --color-primary: oklch(0.4049 0.0528 161.65);
+  --color-primary-soft: oklch(0.5373 0.0669 159.37);
+  --color-primary-light: oklch(0.7959 0.043 153.88);
 
-  --color-secondary-deep:        oklch(0.7294 0.0887 81.25);
-  --color-secondary:             oklch(0.7294 0.0887 81.25);
-  --color-secondary-soft:        oklch(0.7294 0.0887 81.25);
-  --color-secondary-light:       oklch(0.8507 0.0623 82.99);
+  --color-secondary-deep: oklch(0.7294 0.0887 81.25);
+  --color-secondary: oklch(0.7294 0.0887 81.25);
+  --color-secondary-soft: oklch(0.7294 0.0887 81.25);
+  --color-secondary-light: oklch(0.8507 0.0623 82.99);
 
-  --color-tertiary:              oklch(0.7543 0.0621 18.63);
-  --color-tertiary-light:        oklch(0.9019 0.0267 17.66);
+  --color-tertiary: oklch(0.7543 0.0621 18.63);
+  --color-tertiary-light: oklch(0.9019 0.0267 17.66);
 
-  --color-ink:                   oklch(0.162 0.014 258.363);
-  --color-ink-muted:             oklch(0.400 0.018 263);
-  --color-ink-subtle:            oklch(0.600 0.012 263);
-  --color-ink-inverted:          oklch(0.970 0.005 263);
-  --color-ink-inverted-muted:    oklch(0.823 0.010 267.344);
-  --color-ink-inverted-subtle:   oklch(0.650 0.010 263);
+  --color-ink: oklch(0.162 0.014 258.363);
+  --color-ink-muted: oklch(0.4 0.018 263);
+  --color-ink-subtle: oklch(0.6 0.012 263);
+  --color-ink-inverted: oklch(0.97 0.005 263);
+  --color-ink-inverted-muted: oklch(0.823 0.01 267.344);
+  --color-ink-inverted-subtle: oklch(0.65 0.01 263);
 
-  --color-canvas:                oklch(0.974 0.0114 84.58);
-  --color-surface:               oklch(0.9322 0.0226 87.15);
-  --color-sunken:                oklch(0.940 0.007 263);
-  --color-overlay:               oklch(0.995 0.002 263);
-  --color-raised:                oklch(1.000 0 0);
+  --color-canvas: oklch(0.974 0.0114 84.58);
+  --color-surface: oklch(0.9322 0.0226 87.15);
+  --color-sunken: oklch(0.94 0.007 263);
+  --color-overlay: oklch(0.995 0.002 263);
+  --color-raised: oklch(1 0 0);
 
-  --color-edge:                  oklch(0.820 0.012 263);
-  --color-edge-strong:           oklch(0.650 0.018 263);
+  --color-edge: oklch(0.82 0.012 263);
+  --color-edge-strong: oklch(0.65 0.018 263);
 
-  --color-success:               oklch(0.550 0.150 145);
-  --color-success-soft:          oklch(0.920 0.040 145);
-  --color-warning:               oklch(0.620 0.150 75);
-  --color-warning-soft:          oklch(0.950 0.040 75);
-  --color-danger:                oklch(0.550 0.180 25);
-  --color-danger-soft:           oklch(0.930 0.040 25);
-  --color-info:                  oklch(0.550 0.120 240);
-  --color-info-soft:             oklch(0.930 0.030 240);
+  --color-success: oklch(0.55 0.15 145);
+  --color-success-soft: oklch(0.92 0.04 145);
+  --color-warning: oklch(0.62 0.15 75);
+  --color-warning-soft: oklch(0.95 0.04 75);
+  --color-danger: oklch(0.55 0.18 25);
+  --color-danger-soft: oklch(0.93 0.04 25);
+  --color-info: oklch(0.55 0.12 240);
+  --color-info-soft: oklch(0.93 0.03 240);
 }
 
 @layer base {
@@ -106,7 +106,7 @@
 
   #site {
     @apply opacity-0;
-    transition: opacity .6s ease;
+    transition: opacity 0.6s ease;
 
     &.visible {
       @apply opacity-100;
@@ -117,7 +117,7 @@
     clip-path: circle(150% at 50% 50%);
 
     &.exit {
-      animation: circOut 1.1s cubic-bezier(.76,0,.24,1) forwards;
+      animation: circOut 1.1s cubic-bezier(0.76, 0, 0.24, 1) forwards;
       @apply pointer-events-none;
     }
   }
@@ -154,9 +154,21 @@
     }
   }
 
-  .nameIn { opacity:0.0001; animation: nameReveal .9s ease forwards 2.2s; }
+  .nameIn {
+    opacity: 0.0001;
+    animation: nameReveal 0.9s ease forwards 2.2s;
+  }
 
-  @keyframes nameReveal { from{opacity:0.0001;transform:translateY(10px)} to{opacity:1;transform:none} }
+  @keyframes nameReveal {
+    from {
+      opacity: 0.0001;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 
   @keyframes draw {
     0% {
@@ -209,7 +221,7 @@
       top-16 -right-75 bottom-0 w-3xs h-max
       opacity-0 rounded-bl-lg items-center bg-surface;
 
-      &[aria-expanded=true] {
+      &[aria-expanded='true'] {
         @apply right-0 opacity-100;
       }
 
@@ -222,7 +234,7 @@
     .header__burger {
       @apply overflow-hidden bg-transparent cursor-pointer;
 
-      &[aria-expanded=true] svg {
+      &[aria-expanded='true'] svg {
         translate: 3px 0;
         rotate: 0.125turn;
 
@@ -233,7 +245,9 @@
       }
 
       svg {
-        transition: translate 1s, rotate 1s;
+        transition:
+          translate 1s,
+          rotate 1s;
 
         .line {
           transition: 1s;
@@ -276,7 +290,7 @@
     aspect-ratio: 1;
     @apply input cursor-pointer w-5 accent-secondary-deep rounded-lg;
 
-    &+label {
+    & + label {
       @apply cursor-pointer;
     }
   }
@@ -297,7 +311,7 @@
       w-(--sidebar-width) p-4 flex flex-col gap-3 mt-18
       -translate-x-full bg-surface border-r-2 border-edge;
 
-      &[aria-expanded="true"] {
+      &[aria-expanded='true'] {
         @apply translate-x-0;
       }
     }
@@ -310,7 +324,7 @@
       }
     }
 
-    &:has(.sidebar[aria-expanded="false"]) .main main {
+    &:has(.sidebar[aria-expanded='false']) .main main {
       @apply ml-0 w-full;
     }
   }
@@ -332,7 +346,7 @@
     box-shadow: 0 0 0 3px oklch(0.759 0.029 263 / 0.35);
 
     @variant dark {
-      box-shadow: 0 0 0 3px oklch(0.345 0.047 264 / 0.30);
+      box-shadow: 0 0 0 3px oklch(0.345 0.047 264 / 0.3);
     }
   }
 }

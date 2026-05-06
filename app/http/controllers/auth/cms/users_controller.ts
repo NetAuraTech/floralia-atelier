@@ -7,7 +7,7 @@ import UserTransformer from '#transformers/user_transformer'
 import RoleTransformer from '#transformers/role_transformer'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
-import {CmsUsersIndexTranslations, TranslationNodes} from "#types/translations";
+import { TranslationNodes } from '#types/translations'
 
 @inject()
 export default class UsersController {
@@ -17,7 +17,7 @@ export default class UsersController {
   ) {}
 
   async render(ctx: HttpContext) {
-    const { request, i18n } = ctx
+    const { inertia, request, i18n } = ctx
 
     const pagination = await extractPagination(request)
 
@@ -30,9 +30,9 @@ export default class UsersController {
 
     const users = await this.userService.list(payload, pagination)
 
-    return ctx.reactSSR('auth/cms/index', {
-      users: await UserTransformer.paginate(users.all(), users.getMeta()).resolve(ctx.containerResolver, 0),
-      roles: await RoleTransformer.transform(roles).resolve(ctx.containerResolver, 0),
+    return inertia.render('auth/cms/index', {
+      users: UserTransformer.paginate(users.all(), users.getMeta()),
+      roles: RoleTransformer.transform(roles),
       filters: payload,
       translations: {
         title: i18n.t('cms.users.list.title'),
@@ -51,13 +51,13 @@ export default class UsersController {
               description: i18n.t(`cms.users.roles.${role.slug}.description`),
             }
             return acc
-          }, {} as TranslationNodes)
+          }, {} as TranslationNodes),
         },
         status: {
           verified: i18n.t('cms.users.status.verified'),
           unverified: i18n.t('cms.users.status.unverified'),
           pending_invite: i18n.t('cms.users.status.pending_invite'),
-          value: i18n.t('cms.users.status.value')
+          value: i18n.t('cms.users.status.value'),
         },
         empty: i18n.t('cms.users.list.empty'),
         register_on: i18n.t('cms.users.list.register_on'),
@@ -65,11 +65,11 @@ export default class UsersController {
         value_one: i18n.t('cms.users.value_one'),
         actions: {
           value: i18n.t('cms.users.actions'),
-          show: i18n.t('cms.users.show.title', {username: '{username}'}),
-          edit: i18n.t('cms.users.edit.title', {username: '{username}'}),
-          delete: i18n.t('cms.users.delete.title', {username: '{username}'})
-        }
-      } as CmsUsersIndexTranslations
+          show: i18n.t('cms.users.show.title', { username: '{username}' }),
+          edit: i18n.t('cms.users.edit.title', { username: '{username}' }),
+          delete: i18n.t('cms.users.delete.title', { username: '{username}' }),
+        },
+      },
     })
   }
 

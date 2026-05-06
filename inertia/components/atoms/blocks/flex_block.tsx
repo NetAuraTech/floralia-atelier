@@ -1,12 +1,20 @@
 import { resolveResponsive } from '~/utils/responsive'
 import type { ResolvedBlock } from '#types/page'
-import {ReactNode} from "react";
+import { ReactNode } from 'react'
 
 const directionMap = {
   'row': { default: 'flex-row', md: 'md:flex-row', lg: 'lg:flex-row' },
   'col': { default: 'flex-col', md: 'md:flex-col', lg: 'lg:flex-col' },
-  'row-reverse': { default: 'flex-row-reverse', md: 'md:flex-row-reverse', lg: 'lg:flex-row-reverse' },
-  'col-reverse': { default: 'flex-col-reverse', md: 'md:flex-col-reverse', lg: 'lg:flex-col-reverse' },
+  'row-reverse': {
+    default: 'flex-row-reverse',
+    md: 'md:flex-row-reverse',
+    lg: 'lg:flex-row-reverse',
+  },
+  'col-reverse': {
+    default: 'flex-col-reverse',
+    md: 'md:flex-col-reverse',
+    lg: 'lg:flex-col-reverse',
+  },
 }
 
 const gapMap = {
@@ -54,7 +62,7 @@ const backgroundMap: Record<string, string> = {
 }
 
 interface FlexBlockProps {
-  block: ResolvedBlock<'flex'>,
+  block: ResolvedBlock<'flex'>
   children: ReactNode
 }
 
@@ -69,7 +77,7 @@ export default function FlexBlock(props: FlexBlockProps) {
     justify = 'start',
     wrap = false,
     background,
-    className
+    className,
   } = block.props
 
   const dirClasses = resolveResponsive(direction || { default: 'col' }, directionMap)
@@ -77,7 +85,18 @@ export default function FlexBlock(props: FlexBlockProps) {
 
   return (
     <Component
-      className={['flex', backgroundMap[background], dirClasses, gapClasses, alignMap[align], justifyMap[justify], wrap ? 'flex-wrap' : 'flex-nowrap', className].filter(Boolean).join(' ')}
+      className={[
+        'flex',
+        backgroundMap[background],
+        dirClasses,
+        gapClasses,
+        alignMap[align],
+        justifyMap[justify],
+        wrap ? 'flex-wrap' : 'flex-nowrap',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {children}
     </Component>

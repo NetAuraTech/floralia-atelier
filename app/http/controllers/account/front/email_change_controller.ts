@@ -4,16 +4,15 @@ import { AccountService } from '#services/account/account_service'
 import { changeEmailValidator } from '#validators/account'
 import { FullToken } from '#types/core'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
-import {EmailChangeTranslations} from "#types/translations";
 
 @inject()
 export default class EmailChangeController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { params, i18n } = ctx
+    const { inertia, params, i18n } = ctx
 
-    return ctx.reactSSR('settings/account/front/email_change', {
+    return inertia.render('settings/account/front/email_change', {
       token: params.token,
       translations: {
         title: i18n.t('settings.email.change.title'),
@@ -25,7 +24,7 @@ export default class EmailChangeController {
           title: i18n.t('settings.email.change.info.title'),
           message: i18n.t('settings.email.change.info.message'),
         },
-      } as EmailChangeTranslations
+      },
     })
   }
 

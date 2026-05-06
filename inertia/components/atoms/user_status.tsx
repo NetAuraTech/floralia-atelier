@@ -1,6 +1,6 @@
 import { Data } from '@generated/data'
-import {TranslationNodes} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { TranslationNodes } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
 
 export enum StatusEnum {
   VERIFIED = 'VERIFIED',

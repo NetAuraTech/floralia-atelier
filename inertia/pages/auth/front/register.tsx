@@ -1,5 +1,4 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Card } from '~/components/atoms/card'
@@ -10,24 +9,32 @@ import { presets } from '~/helpers/validation_rules'
 import { Field } from '~/components/molecules/field'
 import { Button } from '~/components/atoms/button'
 import { useState } from 'react'
-import {useTranslation} from "~/hooks/use_translation";
-import type {RegisterTranslations} from "#types/translations";
+import { useTranslation } from '~/hooks/use_translation'
+import type { RegisterTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import type { OAuthProvider } from '#types/auth'
+import { AuthProviders } from '~/components/molecules/auth/auth_providers'
 
 interface RegisterPageProps {
+  providers: OAuthProvider[]
   translations: RegisterTranslations
 }
 
 export default function RegisterPage(props: RegisterPageProps) {
-  const { translations } = props
-  const { t } = useTranslation<RegisterTranslations>(translations)
+  const { providers, translations } = props
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    email: presets.email,
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    email: presets.email(t('email.value')),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(
+      password,
+      t('password.confirmation.value'),
+      t('password.value')
+    ),
   })
 
   return (
@@ -129,6 +136,7 @@ export default function RegisterPage(props: RegisterPageProps) {
                 </>
               )}
             </Form>
+            <AuthProviders providers={providers} translations={translations} />
           </Card>
         </div>
       </Section>

@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import { type icons } from 'lucide-react'
-import { type LinkProps } from '~/components/atoms/link'
-import {useTranslation} from "~/hooks/use_translation";
-import {usePageContext} from "~/context/page_context";
+import { type LinkProps } from '@adonisjs/inertia/react'
+import { useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import { type SharedProps } from '@adonisjs/inertia/types'
 
 interface MenuEntryBase {
   label: string
-  icon?: keyof typeof icons
+  icon?: string
   permission: string | string[]
 }
 
@@ -52,13 +52,13 @@ interface Menu {
  * const icon = getEntryIcon('admin.dashboard.render')
  */
 export function useMenu(overrides: Menu = {}) {
-  const { props: pageProps } = usePageContext()
-  const { t } = useTranslation(pageProps.translations)
+  const pageProps = usePage<SharedProps>().props
+  const { t } = useTranslation(pageProps.cms_translations!)
 
   const defaultMenu: Menu = {
-    main: [
+    no_category: [
       {
-        label: t('admin.dashboard.value'),
+        label: t('dashboard'),
         icon: 'House',
         route: 'admin.dashboard.render',
         permission: 'admin.access',
@@ -66,19 +66,19 @@ export function useMenu(overrides: Menu = {}) {
     ],
     content: [
       {
-        label: t('admin.pages.value'),
+        label: t('pages'),
         icon: 'PanelsTopLeft',
         route: 'admin.pages.render',
         permission: 'pages.view',
       },
       {
-        label: t('admin.templates.value'),
+        label: t('templates'),
         icon: 'LayoutTemplate',
         route: 'admin.templates.render',
         permission: 'templates.manage',
       },
       {
-        label: t('admin.files.value'),
+        label: t('files'),
         icon: 'Folder',
         route: 'admin.files.render',
         permission: 'files.view',
@@ -86,7 +86,7 @@ export function useMenu(overrides: Menu = {}) {
     ],
     access_control: [
       {
-        label: t('admin.users.value'),
+        label: t('users'),
         icon: 'Users',
         route: 'admin.users.render',
         permission: 'users.view',
@@ -117,7 +117,7 @@ export function useMenu(overrides: Menu = {}) {
    * const icon = getEntryIcon('admin.dashboard.render')
    */
   const getEntryIcon = useCallback(
-    (route: NonNullable<LinkProps['route']>): keyof typeof icons | undefined => {
+    (route: NonNullable<LinkProps['route']>): string | undefined => {
       return Object.values(menu)
         .flat()
         .find((entry) => entry.route === route)?.icon

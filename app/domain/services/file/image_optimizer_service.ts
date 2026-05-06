@@ -1,6 +1,6 @@
 import drive from '@adonisjs/drive/services/main'
 import sharp from 'sharp'
-import File from '#models/file/file'
+import type File from '#models/file/file'
 import app from '@adonisjs/core/services/app'
 
 /**
@@ -38,9 +38,12 @@ export class ImageOptimizerService {
    * @param widths - Array of target widths to generate. Defaults to [400, 800, 1200].
    * @returns A promise resolving to the optimization results (dimensions + variants).
    */
-  public async optimize(file: File, widths: number[] = [400, 800, 1200]): Promise<OptimizedImageResult> {
+  public async optimize(
+    file: File,
+    widths: number[] = [400, 800, 1200]
+  ): Promise<OptimizedImageResult> {
     const result: OptimizedImageResult = {
-      variants: {}
+      variants: {},
     }
 
     // Skip non-image files or SVGs (which are already responsive by nature)
@@ -93,21 +96,24 @@ export class ImageOptimizerService {
               .resize({
                 width,
                 withoutEnlargement: true,
-                kernel: sharp.kernel.lanczos3 // High-quality downsampling
+                kernel: sharp.kernel.lanczos3, // High-quality downsampling
               })
               .webp({
                 quality: 100,
                 smartSubsample: true, // Preserves fine details and color accuracy
-                effort: 6 // Balanced compression effort
+                effort: 6, // Balanced compression effort
               })
               .toBuffer()
 
             await d.put(variantPath, resizedBuffer, {
               contentType: 'image/webp',
-              visibility: 'public'
+              visibility: 'public',
             })
           } catch (error) {
-            console.error(`[ImageOptimizerService] Sharp failed for ${file.filename} (width: ${width}):`, error.message)
+            console.error(
+              `[ImageOptimizerService] Sharp failed for ${file.filename} (width: ${width}):`,
+              error.message
+            )
             continue
           }
         }
@@ -116,7 +122,10 @@ export class ImageOptimizerService {
         result.variants[width] = await d.getUrl(variantPath)
       }
     } catch (globalError) {
-      console.error(`[ImageOptimizerService] Global error for ${file.filename}:`, globalError.message)
+      console.error(
+        `[ImageOptimizerService] Global error for ${file.filename}:`,
+        globalError.message
+      )
     }
 
     return result

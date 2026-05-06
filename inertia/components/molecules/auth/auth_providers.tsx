@@ -2,8 +2,8 @@ import { Button } from '~/components/atoms/button'
 import type { OAuthProvider } from '#types/auth'
 import { capitalize } from '~/lib/string'
 import { getIcon } from '~/helpers/oauth'
-import type {TranslationNodes} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { TranslationNodes } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
 
 interface AuthProviderProps {
   /**
@@ -39,8 +39,8 @@ export function AuthProviders(props: AuthProviderProps) {
   const { providers, translations } = props
   const { t } = useTranslation(translations)
 
-  return (
-    providers && providers.length > 0 ? <>
+  return providers && providers.length > 0 ? (
+    <>
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-solid border-edge" />
@@ -51,19 +51,21 @@ export function AuthProviders(props: AuthProviderProps) {
       </div>
       <div className="grid grid-auto-fit-[250px] gap-3">
         {providers.map((provider) => (
-            <Button
-              variant="social"
-              route="auth.social.redirect"
-              routeParams={{ provider: provider }}
-              key={`provider-${provider}`}
-              title={capitalize(provider)}
-              external
-            >
-              {getIcon(provider)}
-              {capitalize(provider)}
-            </Button>
-          ))}
+          <Button
+            variant="social"
+            route="auth.social.redirect"
+            routeParams={{ provider: provider }}
+            key={`provider-${provider}`}
+            title={capitalize(provider)}
+            external
+          >
+            {getIcon(provider)}
+            {capitalize(provider)}
+          </Button>
+        ))}
       </div>
-    </> : <></>
+    </>
+  ) : (
+    <></>
   )
 }

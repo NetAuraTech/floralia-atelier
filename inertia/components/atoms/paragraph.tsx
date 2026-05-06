@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
-import type { FontSize } from '~/types/font'
+import type { FontSize } from '#types/font'
 import { getFontSizeClass } from '~/utils/font'
-import {ParagraphSpacing, ParagraphVariants} from "~/types/paragraph";
+import type { ParagraphSpacing, ParagraphVariants } from '#types/paragraph'
 
 interface ParagraphProps {
   children: ReactNode
@@ -45,27 +45,33 @@ interface ParagraphProps {
  * <Paragraph variant="custom" color="text-secondary font-medium">Custom style.</Paragraph>
  */
 export function Paragraph(props: ParagraphProps) {
-  const { children, variant = 'ink', fs = 'base', spacing = 'base', className = "text-balance leading-7" } = props
+  const {
+    children,
+    variant = 'ink',
+    fs = 'base',
+    spacing = 'base',
+    className = 'text-balance leading-7',
+  } = props
 
   const fontSizeClass = getFontSizeClass(fs)
 
   const variants = {
-    ink: 'text-ink',
+    'ink': 'text-ink',
     'ink-inverted': 'text-ink-inverted',
-    muted: 'text-ink-muted',
-    subtle: 'text-ink-subtle',
-    error: 'text-danger',
+    'muted': 'text-ink-muted',
+    'subtle': 'text-ink-subtle',
+    'error': 'text-danger',
     'primary-light': 'text-primary-light',
     'primary-soft': 'text-primary-soft',
-    primary: 'text-primary',
+    'primary': 'text-primary',
     'primary-deep': 'text-primary-deep',
     'secondary-light': 'text-secondary-light',
     'secondary-soft': 'text-secondary-soft',
-    secondary: 'text-secondary',
+    'secondary': 'text-secondary',
     'secondary-deep': 'text-secondary-deep',
     'tertiary-light': 'text-tertiary-light',
     'tertiary-soft': 'text-tertiary-soft',
-    tertiary: 'text-tertiary',
+    'tertiary': 'text-tertiary',
     'tertiary-deep': 'text-tertiary-deep',
   }
 
@@ -78,7 +84,9 @@ export function Paragraph(props: ParagraphProps) {
 
   return (
     <p
-      className={[variants[variant], fontSizeClass, spacings[spacing], className].filter(Boolean).join(' ')}
+      className={[variants[variant], fontSizeClass, spacings[spacing], className]
+        .filter(Boolean)
+        .join(' ')}
     >
       {children}
     </p>

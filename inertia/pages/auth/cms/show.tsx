@@ -1,6 +1,5 @@
 import { ReactElement } from 'react'
 import Layout from '~/layouts/admin'
-import type { SharedProps } from '~/types/shared_props'
 import { Data } from '@generated/data'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
@@ -14,9 +13,10 @@ import type { OAuthProvider } from '#types/auth'
 import { getIcon } from '~/helpers/oauth'
 import { capitalize } from '~/lib/string'
 import { Separator } from '~/components/atoms/separator'
-import {CmsUsersShowTranslations} from "#types/translations";
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {usePageContext} from "~/context/page_context";
+import type { CmsUsersShowTranslations } from '#types/translations'
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 type PageProps = {
   user: Data.User
@@ -27,8 +27,8 @@ type PageProps = {
 
 export default function UsersShowPage(props: PageProps) {
   const { user, providers, permissions, translations } = props
-  const {props: pageProps} = usePageContext()
-  const { t, format } = useTranslation<CmsUsersShowTranslations>(translations)
+  const pageProps = usePage<SharedProps>().props
+  const { t, format } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
@@ -50,12 +50,7 @@ export default function UsersShowPage(props: PageProps) {
         header={
           <div className="flex items-center justify-between gap-3">
             <CanAccess permission="users.view">
-              <Button
-                variant="icon"
-                route="admin.users.render"
-                title={t('title')}
-                fitContent
-              >
+              <Button variant="icon" route="admin.users.render" title={t('title')} fitContent>
                 <Icon name="ArrowLeft" />
               </Button>
             </CanAccess>
@@ -94,7 +89,12 @@ export default function UsersShowPage(props: PageProps) {
               <div className="grid">
                 <span className="font-bold">{t('info.email')}</span>
                 <span className="flex gap-2 items-center text-ink-muted">
-                  {user.email} <UserStatus user={user.id} status={user.status as StatusEnum} translations={translations} />
+                  {user.email}{' '}
+                  <UserStatus
+                    user={user.id}
+                    status={user.status as StatusEnum}
+                    translations={translations}
+                  />
                 </span>
               </div>
               <div className="grid">
@@ -143,9 +143,7 @@ export default function UsersShowPage(props: PageProps) {
                       <div>
                         <p className="text-sm font-medium text-ink">{capitalize(provider)}</p>
                         <p className={`text-xs ${isConnected ? 'text-success' : 'text-ink-muted'}`}>
-                          {isConnected
-                            ? t('providers.connected')
-                            : t('providers.not_connected')}
+                          {isConnected ? t('providers.connected') : t('providers.not_connected')}
                         </p>
                       </div>
                     </div>

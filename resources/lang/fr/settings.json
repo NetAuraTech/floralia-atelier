@@ -34,14 +34,14 @@
     },
     "email": {
       "change": {
-        "cancel" : "Annuler",
+        "cancel": "Annuler",
         "info": {
           "title": "Information importante",
           "message": "Une fois confirmé, l'email de votre compte sera mis à jour et vous devrez utiliser le nouvel email pour vous connecter."
         },
-        "title" : "Confirmer le changement d'adresse e-mail",
-        "sub_title" : " Cliquez sur le bouton ci-dessous pour confirmer votre nouvelle adresse e-mail.",
-        "submit" : "Confirmer la nouvelle adresse e-mail"
+        "title": "Confirmer le changement d'adresse e-mail",
+        "sub_title": " Cliquez sur le bouton ci-dessous pour confirmer votre nouvelle adresse e-mail.",
+        "submit": "Confirmer la nouvelle adresse e-mail"
       },
       "title": "Adresse e-mail",
       "sub_title": "Un e-mail de confirmation sera envoyé à la nouvelle adresse.",

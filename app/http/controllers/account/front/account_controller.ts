@@ -10,21 +10,18 @@ import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { enabledProviders } from '#helpers/auth/oauth'
 import UserTransformer from '#transformers/user_transformer'
 import { AccountService } from '#services/account/account_service'
-import {SettingsAccountTranslations} from "#types/translations";
 
 @inject()
 export default class AccountController {
   constructor(protected accountService: AccountService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, i18n } = ctx
+    const { inertia, auth, i18n } = ctx
 
     const user = auth.user!
 
-    const transformer = new UserTransformer(user)
-
-    return ctx.reactSSR('settings/account/front/index', {
-      user: transformer.toObject(),
+    return inertia.render('settings/account/front/index', {
+      user: UserTransformer.transform(user),
       providers: enabledProviders,
       translations: {
         header: {
@@ -35,8 +32,8 @@ export default class AccountController {
             account: i18n.t('settings.account.value'),
             preferences: i18n.t('settings.preferences.value'),
             admin: i18n.t('cms.value'),
-            logout: i18n.t('auth.session.logout.value')
-          }
+            logout: i18n.t('auth.session.logout.value'),
+          },
         },
         email: {
           title: i18n.t('settings.account.email.title'),
@@ -52,8 +49,8 @@ export default class AccountController {
             info: {
               title: i18n.t('settings.account.email.change.info.title'),
               message: i18n.t('settings.account.email.change.info.message'),
-            }
-          }
+            },
+          },
         },
         oauth: {
           title: i18n.t('settings.account.oauth.title'),
@@ -62,16 +59,16 @@ export default class AccountController {
           not_connected: i18n.t('settings.account.oauth.not_connected'),
           link: i18n.t('settings.account.oauth.link'),
           unlink: {
-            confirm: i18n.t('settings.account.oauth.unlink.confirm', {provider: '{provider}'}),
-            value: i18n.t('settings.account.oauth.unlink.value')
-          }
+            confirm: i18n.t('settings.account.oauth.unlink.confirm', { provider: '{provider}' }),
+            value: i18n.t('settings.account.oauth.unlink.value'),
+          },
         },
         password: {
           title: i18n.t('settings.account.password.title'),
           sub_title: i18n.t('settings.account.password.sub_title'),
           submit: i18n.t('settings.account.password.submit'),
           current: {
-            value: i18n.t('settings.account.password.current.value')
+            value: i18n.t('settings.account.password.current.value'),
           },
           confirm: {
             help: i18n.t('settings.account.password.confirm.help'),
@@ -80,7 +77,7 @@ export default class AccountController {
           new: {
             help: i18n.t('settings.account.password.new.help'),
             value: i18n.t('settings.account.password.new.value'),
-          }
+          },
         },
         delete: {
           title: i18n.t('settings.account.delete.title'),
@@ -91,9 +88,9 @@ export default class AccountController {
           confirm: {
             title: i18n.t('settings.account.delete.confirm.title'),
             sub_title: i18n.t('settings.account.delete.confirm.sub_title'),
-          }
-        }
-      } as SettingsAccountTranslations
+          },
+        },
+      },
     })
   }
 

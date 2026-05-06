@@ -4,16 +4,16 @@ import { Card } from '~/components/atoms/card'
 import { Icon } from '~/components/atoms/icon'
 import { CanAccess } from '~/guards/can_access'
 import { ReactElement } from 'react'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { useMenu } from '~/hooks/use_admin'
 import { Paragraph } from '~/components/atoms/paragraph'
 import Table from '~/components/atoms/table/table'
-import { Form } from '~/components/atoms/form'
 import { Data } from '@generated/data'
-import {Lang, useTranslation} from "~/hooks/use_translation";
-import {CmsPagesRevisionTranslations} from "#types/translations";
-import {usePageContext} from "~/context/page_context";
+import { Lang, useTranslation } from '~/hooks/use_translation'
+import type { CmsPagesRevisionTranslations } from '#types/translations'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { usePage } from '@inertiajs/react'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   revisions: Data.PageRevision[]
@@ -24,17 +24,14 @@ interface PageProps {
 
 export default function PageRevisionsPage(props: PageProps) {
   const { revisions, translation_id, page_id, translations } = props
-  const { props: pageProps } = usePageContext()
+  const pageProps = usePage<SharedProps>().props
 
-  const { t, format } = useTranslation<CmsPagesRevisionTranslations>(translations)
+  const { t, format } = useTranslation(translations)
   const { getEntryIcon } = useMenu()
 
   return (
     <>
-      <AdminMain
-        title={t('title')}
-        icon={getEntryIcon('admin.pages.render')}
-      >
+      <AdminMain title={t('title')} icon={getEntryIcon('admin.pages.render')}>
         <Card
           header={
             <CanAccess permission="pages.update">
@@ -64,24 +61,23 @@ export default function PageRevisionsPage(props: PageProps) {
               {revisions.length === 0 ? (
                 <Table.Row>
                   <Table.Cell colSpan={5} className="text-center! p-12!">
-                    <Paragraph variant="muted">
-                      {t('empty.value')}
-                    </Paragraph>
-                    <Paragraph variant="subtle">
-                      {t('empty.help')}
-                    </Paragraph>
+                    <Paragraph variant="muted">{t('empty.value')}</Paragraph>
+                    <Paragraph variant="subtle">{t('empty.help')}</Paragraph>
                   </Table.Cell>
                 </Table.Row>
               ) : (
                 revisions.map((revision, index) => (
                   <Table.Row key={`revision-${revision.id}`}>
-                    <Table.Cell data-label={t('index')}>
-                      {revisions.length - index}
-                    </Table.Cell>
+                    <Table.Cell data-label={t('index')}>{revisions.length - index}</Table.Cell>
                     <Table.Cell data-label={t('created.at')}>
-                      {format(new Date(revision.createdAt!), 'medium', pageProps.locale as Lang, {
-                        withTime: true,
-                      } as any)}
+                      {format(
+                        new Date(revision.createdAt!),
+                        'medium',
+                        pageProps.locale as Lang,
+                        {
+                          withTime: true,
+                        } as any
+                      )}
                     </Table.Cell>
                     <Table.Cell data-label={t('created.by')}>
                       {revision.created_by && revision.created_by.username}
@@ -92,9 +88,7 @@ export default function PageRevisionsPage(props: PageProps) {
                           <CanAccess permission="pages.update">
                             <Form
                               onBefore={() => {
-                                return window.confirm(
-                                  t('actions.restore.confirm')
-                                )
+                                return window.confirm(t('actions.restore.confirm'))
                               }}
                               route="admin.page_revisions.restore"
                               routeParams={{
@@ -130,11 +124,7 @@ export default function PageRevisionsPage(props: PageProps) {
                           >
                             <Button
                               variant={revision.keep ? 'icon_danger' : 'icon_warning'}
-                              title={
-                                revision.keep
-                                  ? t('actions.unpin')
-                                  : t('actions.pin')
-                              }
+                              title={revision.keep ? t('actions.unpin') : t('actions.pin')}
                               fitContent
                             >
                               <Icon name={revision.keep ? 'PinOff' : 'Pin'} size={18} />

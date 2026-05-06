@@ -1,59 +1,44 @@
 import './css/app.css'
-import "@fontsource/jost/400.css"
-import "@fontsource/jost/700.css"
-import "@fontsource/jost/400-italic.css"
-import "@fontsource/cormorant-garamond/400.css"
-import "@fontsource/cormorant-garamond/700.css"
-import "@fontsource/cormorant-garamond/400-italic.css"
-import "@fontsource/playfair-display/400.css"
-import "@fontsource/playfair-display/700.css"
-import "@fontsource/playfair-display/400-italic.css"
+import '@fontsource/jost/400.css'
+import '@fontsource/jost/700.css'
+import '@fontsource/jost/400-italic.css'
+import '@fontsource/cormorant-garamond/400.css'
+import '@fontsource/cormorant-garamond/700.css'
+import '@fontsource/cormorant-garamond/400-italic.css'
+import '@fontsource/playfair-display/400.css'
+import '@fontsource/playfair-display/700.css'
+import '@fontsource/playfair-display/400-italic.css'
 
-import { hydrateRoot } from 'react-dom/client'
-import { HelmetProvider } from '@dr.pogodin/react-helmet'
-import { PageProvider } from '~/context/page_context'
+import { ReactElement } from 'react'
+import { client } from './client'
+import { Data } from '@generated/data'
+import { createRoot } from 'react-dom/client'
+import { createInertiaApp } from '@inertiajs/react'
+import { TuyauProvider } from '@adonisjs/inertia/react'
+import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import Layout from '~/layouts/default'
-import { lazy } from 'react'
 
-const AdminLayout = lazy(() => import('~/layouts/admin'))
+let appName = ''
 
-declare global {
-  interface Window {
-    __PAGE__: {
-      component: string
-      props: any
-    }
-  }
-}
+createInertiaApp({
+  title: (title) => (title ? `${title} - ${appName}` : appName),
+  resolve: (name) => {
+    return resolvePageComponent(
+      `./pages/${name}.tsx`,
+      import.meta.glob('./pages/**/*.tsx'),
+      (page: ReactElement<Data.SharedProps>) => <Layout children={page} />
+    )
+  },
+  setup({ el, App, props }) {
+    appName = props.initialPage.props.app_name as string
 
-const { component, props } = window.__PAGE__
-
-const pages = import.meta.glob('./pages/**/*.tsx')
-
-async function bootstrap() {
-  const module = (await pages[`./pages/${component}.tsx`]()) as any
-  const Page = module.default
-
-  const is_admin = component.includes('admin') || component.includes('cms')
-  const app = document.getElementById('app')
-  if (!app) throw new Error('Root element #app not found')
-
-  hydrateRoot(
-    app,
-    <HelmetProvider>
-      <PageProvider data={props} url={window.location.pathname}>
-        {is_admin ? (
-          <AdminLayout>
-            <Page {...props} />
-          </AdminLayout>
-        ) : (
-          <Layout>
-            <Page {...props} />
-          </Layout>
-        )}
-      </PageProvider>
-    </HelmetProvider>
-  )
-}
-
-bootstrap()
+    createRoot(el).render(
+      <TuyauProvider client={client}>
+        <App {...props} />
+      </TuyauProvider>
+    )
+  },
+  progress: {
+    color: '#4B5563',
+  },
+})

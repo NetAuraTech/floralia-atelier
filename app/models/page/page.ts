@@ -4,7 +4,7 @@ import { belongsTo, hasMany, scope } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/auth/user'
 import File from '#models/file/file'
-import {ModelQueryBuilderContract} from "@adonisjs/lucid/types/model";
+import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 
 export default class Page extends PageSchema {
   @hasMany(() => PageTranslation, { foreignKey: 'pageId' })

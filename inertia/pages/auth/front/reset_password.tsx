@@ -1,5 +1,4 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Field } from '~/components/molecules/field'
@@ -8,8 +7,9 @@ import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { useState } from 'react'
-import type {ResetPasswordTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { ResetPasswordTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
 
 interface ResetPasswordPageProps {
   token: string
@@ -18,14 +18,14 @@ interface ResetPasswordPageProps {
 
 export default function ResetPasswordPage(props: ResetPasswordPageProps) {
   const { token, translations } = props
-  const { t } = useTranslation<ResetPasswordTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const validation = useFormValidation({
-    password: presets.password,
-    password_confirmation: presets.passwordConfirmation(password),
+    password: presets.password(t('password.value')),
+    password_confirmation: presets.passwordConfirmation(password, t('password.confirmation.value')),
   })
 
   return (

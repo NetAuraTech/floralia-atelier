@@ -1,5 +1,4 @@
-import { Form } from '~/components/atoms/form'
-import { Helmet as Head } from '@dr.pogodin/react-helmet'
+import { Head } from '@inertiajs/react'
 import { Section } from '~/components/atoms/section'
 import { Card } from '~/components/atoms/card'
 import { Button } from '~/components/atoms/button'
@@ -8,8 +7,9 @@ import { rules } from '~/helpers/validation_rules'
 import { AuthIntro } from '~/components/molecules/auth/auth_intro'
 import { Field } from '~/components/molecules/field'
 import { Banner } from '~/components/molecules/banner'
-import {useTranslation} from "~/hooks/use_translation";
-import {EmailChangeTranslations} from "#types/translations";
+import { useTranslation } from '~/hooks/use_translation'
+import type { EmailChangeTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
 
 interface PageProps {
   token: string
@@ -18,7 +18,7 @@ interface PageProps {
 
 export default function EmailChangePage(props: PageProps) {
   const { token, translations } = props
-  const { t } = useTranslation<EmailChangeTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const validation = useFormValidation({
     token: [rules.required('token')],
@@ -52,11 +52,7 @@ export default function EmailChangePage(props: PageProps) {
             >
               {({ errors, processing }) => (
                 <>
-                  <Banner
-                    title={t('info.title')}
-                    message={t('info.message')}
-                    type="info"
-                  />
+                  <Banner title={t('info.title')} message={t('info.message')} type="info" />
                   <Field
                     label={t('token')}
                     name="token"

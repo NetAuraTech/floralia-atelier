@@ -1,5 +1,5 @@
-import type {LockState} from "~/hooks/use_builder_sync";
-import type {Block} from "#types/page";
+import type { LockState } from '~/hooks/use_builder_sync'
+import type { Block } from '#types/page'
 
 export interface LockProps {
   blockId: string

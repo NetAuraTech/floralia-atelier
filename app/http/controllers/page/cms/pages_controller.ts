@@ -5,14 +5,13 @@ import { listPageValidator, showPageValidator } from '#validators/page'
 import { stripEmptyStrings } from '#helpers/core/strip_empty_strings'
 import { extractPagination } from '#helpers/pagination/extract_pagination'
 import PageTransformer from '#transformers/page_transformer'
-import {CmsPagesIndexTranslations} from "#types/translations";
 
 @inject()
 export default class PagesController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { request, i18n } = ctx
+    const { inertia, request, i18n } = ctx
 
     const pagination = await extractPagination(request)
     const data = stripEmptyStrings(request.all())
@@ -20,8 +19,8 @@ export default class PagesController {
 
     const pages = await this.pageService.list(payload, pagination)
 
-    return ctx.reactSSR('page/cms/index', {
-      pages: await PageTransformer.paginate(pages.all(), pages.getMeta()).resolve(ctx.containerResolver, 0),
+    return inertia.render('page/cms/index', {
+      pages: PageTransformer.paginate(pages.all(), pages.getMeta()),
       filters: payload,
       translations: {
         title: i18n.t('cms.pages.list.title'),
@@ -36,26 +35,27 @@ export default class PagesController {
           draft: i18n.t('cms.pages.status.draft'),
           published: i18n.t('cms.pages.status.published'),
           archived: i18n.t('cms.pages.status.archived'),
-          value: i18n.t('cms.pages.status.value')
+          value: i18n.t('cms.pages.status.value'),
         },
         locale: {
-          value: i18n.t('cms.pages.status.value'),
-          all: i18n.t('cms.pages.status.all')
+          value: i18n.t('cms.pages.locale.value'),
+          all: i18n.t('cms.pages.locale.all'),
         },
         page_title: i18n.t('cms.pages.form.title.value'),
         slug: i18n.t('cms.pages.form.slug.value'),
         empty: i18n.t('cms.pages.list.empty'),
         value: i18n.t('cms.pages.value'),
+        value_one: i18n.t('cms.pages.value_one'),
         actions: {
           value: i18n.t('cms.pages.actions'),
-          show: i18n.t('cms.pages.show.title', {title: '{title}'}),
-          edit: i18n.t('cms.pages.edit.title',  {title: '{title}'}),
+          show: i18n.t('cms.pages.show.title', { title: '{title}' }),
+          edit: i18n.t('cms.pages.edit.title', { title: '{title}' }),
           delete: {
-            value: i18n.t('cms.pages.delete.title',  {title: '{title}'}),
+            value: i18n.t('cms.pages.delete.title', { title: '{title}' }),
             confirm: i18n.t('cms.pages.delete.confirm'),
-          }
-        }
-      } as CmsPagesIndexTranslations
+          },
+        },
+      },
     })
   }
 

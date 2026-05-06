@@ -10,7 +10,7 @@ export default class PagesUpdateController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { params } = ctx
+    const { inertia, params } = ctx
 
     const allRoutes = router.toJSON().root
     const availableRoutes = allRoutes
@@ -29,7 +29,7 @@ export default class PagesUpdateController {
       .map((r) => ({
         name: r.name,
         pattern: r.pattern,
-        params: r.pattern.match(/:(\w+)/g)?.map(p => p.replace(':', '')) || []
+        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
       }))
 
     const availablePostRoutes = allRoutes
@@ -50,7 +50,7 @@ export default class PagesUpdateController {
       .map((r) => ({
         name: r.name,
         pattern: r.pattern,
-        params: r.pattern.match(/:(\w+)/g)?.map(p => p.replace(':', '')) || []
+        params: r.pattern.match(/:(\w+)/g)?.map((p) => p.replace(':', '')) || [],
       }))
 
     const availablePages = await this.pageService.getAvailablePagesForLink()
@@ -58,11 +58,11 @@ export default class PagesUpdateController {
     const { id } = await showPageValidator.validate(params)
     const page = await this.pageService.detail(id)
 
-    return ctx.reactSSR('page/cms/edit', {
-      page: await PageTransformer.transform(page).resolve(ctx.containerResolver, 0),
+    return inertia.render('page/cms/edit', {
+      page: PageTransformer.transform(page),
       availableRoutes,
       availablePages,
-      availablePostRoutes
+      availablePostRoutes,
     })
   }
 

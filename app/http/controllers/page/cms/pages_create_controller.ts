@@ -2,16 +2,15 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { PageService } from '#services/page/page_service'
 import { createPageValidator } from '#validators/page'
-import {CmsPagesCreateTranslations} from "#types/translations";
 
 @inject()
 export default class PagesCreateController {
   constructor(protected pageService: PageService) {}
 
   async render(ctx: HttpContext) {
-    const { i18n } = ctx
+    const { inertia, i18n } = ctx
 
-    return ctx.reactSSR('page/cms/create', {
+    return inertia.render('page/cms/create', {
       translations: {
         title: i18n.t('cms.pages.create.title'),
         action: i18n.t('cms.pages.list.title'),
@@ -24,7 +23,7 @@ export default class PagesCreateController {
         },
         seo: {
           value: i18n.t('cms.pages.create.seo.value'),
-          help: i18n.t('cms.pages.create.seo.help', {title: '{title}'}),
+          help: i18n.t('cms.pages.create.seo.help', { title: '{title}' }),
         },
         meta: {
           title: {
@@ -34,10 +33,10 @@ export default class PagesCreateController {
           description: {
             value: i18n.t('cms.pages.form.meta.description.value'),
             placeholder: i18n.t('cms.pages.form.meta.description.placeholder'),
-          }
+          },
         },
         submit: i18n.t('cms.pages.form.submit'),
-      } as CmsPagesCreateTranslations
+      },
     })
   }
 

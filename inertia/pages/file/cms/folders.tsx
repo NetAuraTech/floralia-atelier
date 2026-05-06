@@ -2,27 +2,27 @@ import { ReactElement, useState } from 'react'
 import { Button } from '~/components/atoms/button'
 import { Input } from '~/components/atoms/input'
 import { Field } from '~/components/molecules/field'
-import { Form } from '~/components/atoms/form'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Card } from '~/components/atoms/card'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { Data } from '@generated/data'
 import { NavLink } from '~/components/atoms/nav_link'
 import { Icon } from '~/components/atoms/icon'
 import { CanAccess } from '~/guards/can_access'
-import type {CmsFileFoldersTranslations} from "#types/translations";
-import {useTranslation} from "~/hooks/use_translation";
+import type { CmsFileFoldersTranslations } from '#types/translations'
+import { useTranslation } from '~/hooks/use_translation'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface PageProps {
-  roots: Data.FileFolder[],
+  roots: Data.FileFolder[]
   translations: CmsFileFoldersTranslations
 }
 
 export default function FileFoldersPage(props: PageProps) {
   const { roots, translations } = props
-  const { t } = useTranslation<CmsFileFoldersTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   return (
     <>
@@ -59,13 +59,13 @@ export default function FileFoldersPage(props: PageProps) {
 }
 interface FolderNodeProps {
   folder: Data.FileFolder
-  depth: 0 | 1 | 2 | 3 | 4 | 5,
+  depth: 0 | 1 | 2 | 3 | 4 | 5
   translations: CmsFileFoldersTranslations
 }
 
 function FolderNode(props: FolderNodeProps) {
   const { folder, depth, translations } = props
-  const { t } = useTranslation<CmsFileFoldersTranslations>(translations)
+  const { t } = useTranslation(translations)
   const [expanded, setExpanded] = useState(false)
   const [renaming, setRenaming] = useState(false)
   const [addingChild, setAddingChild] = useState(false)
@@ -216,7 +216,7 @@ interface CreateFolderFormProps {
 
 function CreateFolderForm(props: CreateFolderFormProps) {
   const { parentId, label, onSuccess, translations } = props
-  const { t } = useTranslation<CmsFileFoldersTranslations>(translations)
+  const { t } = useTranslation(translations)
   return (
     <Card>
       <Form
@@ -237,9 +237,7 @@ function CreateFolderForm(props: CreateFolderFormProps) {
             <Button type="submit" variant="primary" disabled={processing} fitContent>
               {t('actions.create')}
             </Button>
-            {parentId !== null && (
-              <p className="text-xs text-ink-subtle mt-1.5">{t('help')}</p>
-            )}
+            {parentId !== null && <p className="text-xs text-ink-subtle mt-1.5">{t('help')}</p>}
           </>
         )}
       </Form>

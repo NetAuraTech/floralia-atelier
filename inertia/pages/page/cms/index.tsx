@@ -1,11 +1,9 @@
 import { ReactElement } from 'react'
 import { Button } from '~/components/atoms/button'
 import { Pagination } from '~/components/molecules/pagination'
-import { Form } from '~/components/atoms/form'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { Paginated } from '~/types/paginated'
 import { Data } from '@generated/data'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { useMenu } from '~/hooks/use_admin'
 import { CanAccess } from '~/guards/can_access'
@@ -15,8 +13,10 @@ import { Icon } from '~/components/atoms/icon'
 import { Field } from '~/components/molecules/field'
 import { SelectOption } from '~/components/atoms/select_option'
 import type { PageStatus } from '#types/page'
-import {locales, useTranslation} from "~/hooks/use_translation";
-import {CmsPagesIndexTranslations} from "#types/translations";
+import { locales, useTranslation } from '~/hooks/use_translation'
+import type { CmsPagesIndexTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface Props {
   pages: Paginated<Data.Page>
@@ -24,7 +24,7 @@ interface Props {
     status?: string
     locale?: string
     search?: string
-  },
+  }
   translations: CmsPagesIndexTranslations
 }
 
@@ -38,7 +38,7 @@ const statusesClass = {
 
 export default function PagesIndexPage(props: Props) {
   const { pages, filters, translations } = props
-  const { t } = useTranslation<CmsPagesIndexTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
@@ -77,7 +77,7 @@ export default function PagesIndexPage(props: Props) {
                 defaultValue={filters.locale}
                 sanitize
               >
-                {Object.keys(locales).map((l) => (
+                {locales.map((l) => (
                   <SelectOption key={l} value={l} label={l.toUpperCase()} />
                 ))}
               </Field>

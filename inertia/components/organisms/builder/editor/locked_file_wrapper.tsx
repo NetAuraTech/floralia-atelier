@@ -1,7 +1,7 @@
-import {ReactNode} from "react";
-import LockedFieldWrapper from "~/components/organisms/builder/LockedFieldWrapper";
-import {Field} from "~/components/molecules/field";
-import {LockProps} from "~/types/builder";
+import { ReactNode } from 'react'
+import LockedFieldWrapper from '~/components/organisms/builder/LockedFieldWrapper'
+import { Field } from '~/components/molecules/field'
+import { LockProps } from '~/types/builder'
 
 type LFWProps = {
   fieldKey: string
@@ -12,14 +12,12 @@ type LFWProps = {
   checked?: any
   rows?: number
   helpText?: string
-  onChange: (value: string|boolean) => void
+  onChange: (value: string | boolean) => void
   onBlur?: () => void
   children?: ReactNode
 } & LockProps
 
-export function LFW(
-  props: LFWProps
-) {
+export function LFW(props: LFWProps) {
   const {
     blockId,
     fieldKey,
@@ -62,7 +60,9 @@ export function LFW(
         checked={checked}
         rows={rows}
         helpText={helpText}
-        onChange={(e) => onChange(type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value)}
+        onChange={(e) =>
+          onChange(type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value)
+        }
         onBlur={onBlur}
       >
         {children}

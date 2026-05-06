@@ -3,21 +3,18 @@ import { inject } from '@adonisjs/core'
 import UserTransformer from '#transformers/user_transformer'
 import { profileValidator } from '#validators/profile'
 import { ProfileService } from '#services/profile/profile_service'
-import {SettingsProfileTranslations} from "#types/translations";
 
 @inject()
 export default class ProfileController {
   constructor(protected profileService: ProfileService) {}
 
   async render(ctx: HttpContext) {
-    const { auth, i18n } = ctx
+    const { inertia, auth, i18n } = ctx
 
     const user = auth.user!
 
-    const transformer = new UserTransformer(user)
-
-    return ctx.reactSSR('settings/profile/front/index', {
-      user: transformer.toObject(),
+    return inertia.render('settings/profile/front/index', {
+      user: UserTransformer.transform(user),
       translations: {
         header: {
           title: i18n.t('settings.title'),
@@ -27,8 +24,8 @@ export default class ProfileController {
             account: i18n.t('settings.account.value'),
             preferences: i18n.t('settings.preferences.value'),
             admin: i18n.t('cms.value'),
-            logout: i18n.t('auth.session.logout.value')
-          }
+            logout: i18n.t('auth.session.logout.value'),
+          },
         },
         avatar: {
           change: i18n.t('settings.profile.avatar.change'),
@@ -40,8 +37,8 @@ export default class ProfileController {
         },
         title: i18n.t('settings.profile.title'),
         sub_title: i18n.t('settings.profile.sub_title'),
-        submit: i18n.t('settings.profile.submit')
-      } as SettingsProfileTranslations
+        submit: i18n.t('settings.profile.submit'),
+      },
     })
   }
 

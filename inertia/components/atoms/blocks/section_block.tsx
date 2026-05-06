@@ -1,7 +1,7 @@
 import { resolveResponsive } from '~/utils/responsive'
 import type { ResolvedBlock } from '#types/page'
-import {Section} from "~/components/atoms/section";
-import {ReactNode} from "react";
+import { Section } from '~/components/atoms/section'
+import { ReactNode } from 'react'
 
 const paddingYMap = {
   none: { default: 'py-0', md: 'md:py-0', lg: 'lg:py-0' },
@@ -57,7 +57,10 @@ export default function SectionBlock(props: SectionBlockProps) {
   const bgClass = backgroundMap[background] ?? ''
 
   return (
-    <Section id={id} className={[bgClass, pyClasses, pxClasses, className].filter(Boolean).join(' ')}>
+    <Section
+      id={id}
+      className={[bgClass, pyClasses, pxClasses, className].filter(Boolean).join(' ')}
+    >
       {children}
     </Section>
   )

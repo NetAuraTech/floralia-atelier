@@ -4,33 +4,32 @@ import { PasswordService } from '#services/auth/password_service'
 import { resetPasswordValidator } from '#validators/auth'
 import { regenerateCsrfToken } from '#helpers/auth/crsf'
 import { FullToken } from '#types/core'
-import {ResetPasswordTranslations} from "#types/translations";
 
 @inject()
 export default class ResetPasswordController {
   constructor(protected passwordService: PasswordService) {}
 
   async render(ctx: HttpContext) {
-    const { params, i18n } = ctx
+    const { inertia, params, i18n } = ctx
 
     await this.passwordService.validate(params.token)
 
-    return ctx.reactSSR('auth/front/reset_password', {
+    return inertia.render('auth/front/reset_password', {
       token: params.token,
       translations: {
-        'title': i18n.t('auth.password.reset.title'),
-        'sub_title': i18n.t('auth.password.reset.sub_title'),
-        'password': {
-          'value': i18n.t('auth.password.reset.password.value'),
-          'help': i18n.t('auth.password.reset.password.help'),
-          'confirmation': {
-            'value': i18n.t('auth.password.reset.password.confirmation.value'),
-            'help': i18n.t('auth.password.reset.password.confirmation.help'),
+        title: i18n.t('auth.password.reset.title'),
+        sub_title: i18n.t('auth.password.reset.sub_title'),
+        password: {
+          value: i18n.t('auth.password.reset.password.value'),
+          help: i18n.t('auth.password.reset.password.help'),
+          confirmation: {
+            value: i18n.t('auth.password.reset.password.confirmation.value'),
+            help: i18n.t('auth.password.reset.password.confirmation.help'),
           },
         },
-        'submit': i18n.t('auth.password.reset.submit'),
-        'back_to_login': i18n.t('auth.password.reset.back_to_login'),
-      } as ResetPasswordTranslations
+        submit: i18n.t('auth.password.reset.submit'),
+        back_to_login: i18n.t('auth.password.reset.back_to_login'),
+      },
     })
   }
 

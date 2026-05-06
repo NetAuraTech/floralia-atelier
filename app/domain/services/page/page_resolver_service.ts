@@ -4,11 +4,7 @@ import { StorageService } from '#services/file/storage_service'
 import { ImageOptimizerService } from '#services/file/image_optimizer_service'
 import type CmsFile from '#models/file/file'
 import type { Block, PageContent, BlockType, ImageProps } from '#types/page'
-import type {
-  ResolvedBlock,
-  ResolvedPageContent,
-  ResolvedImageProps,
-} from '#types/page'
+import type { ResolvedBlock, ResolvedPageContent, ResolvedImageProps } from '#types/page'
 import type { FileRef, ResolvedFile } from '#types/file'
 
 @inject()

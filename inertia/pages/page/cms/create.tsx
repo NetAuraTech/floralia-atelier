@@ -4,10 +4,8 @@ import { Field } from '~/components/molecules/field'
 import { Card } from '~/components/atoms/card'
 import { AdminMain } from '~/components/organisms/admin/admin_main'
 import { useMenu } from '~/hooks/use_admin'
-import { Form } from '~/components/atoms/form'
 import { SelectOption } from '~/components/atoms/select_option'
 import { Heading } from '~/components/atoms/heading'
-import type { SharedProps } from '~/types/shared_props'
 import Layout from '~/layouts/admin'
 import { Paragraph } from '~/components/atoms/paragraph'
 import { Separator } from '~/components/atoms/separator'
@@ -15,8 +13,10 @@ import { CanAccess } from '~/guards/can_access'
 import { Icon } from '~/components/atoms/icon'
 import { useFormValidation } from '~/hooks/use_form_validation'
 import { presets, rules } from '~/helpers/validation_rules'
-import {locales, useTranslation} from "~/hooks/use_translation";
-import {CmsPagesCreateTranslations} from "#types/translations";
+import { locales, useTranslation } from '~/hooks/use_translation'
+import type { CmsPagesCreateTranslations } from '#types/translations'
+import { Form } from '@adonisjs/inertia/react'
+import { SharedProps } from '@adonisjs/inertia/types'
 
 interface PagesCreatePageProps {
   translations: CmsPagesCreateTranslations
@@ -24,16 +24,13 @@ interface PagesCreatePageProps {
 
 export default function PagesCreatePage(props: PagesCreatePageProps) {
   const { translations } = props
-  const { t } = useTranslation<CmsPagesCreateTranslations>(translations)
+  const { t } = useTranslation(translations)
 
   const { getEntryIcon } = useMenu()
 
   const validation = useFormValidation({
     locale: [
-      ...presets.selectWithOptions(
-        [...Object.keys(locales).map((locale) => locale)],
-        t('locale')
-      ),
+      ...presets.selectWithOptions([...locales.map((locale) => locale)], t('locale')),
       rules.required(t('locale')),
     ],
     title: presets.title(t('page_title.value')),
@@ -49,12 +46,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
           header={
             <div className="flex items-center justify-between gap-3">
               <CanAccess permission="pages.view">
-                <Button
-                  variant="icon"
-                  route="admin.pages.render"
-                  title={t('action')}
-                  fitContent
-                >
+                <Button variant="icon" route="admin.pages.render" title={t('action')} fitContent>
                   <Icon name="ArrowLeft" />
                 </Button>
               </CanAccess>
@@ -88,7 +80,7 @@ export default function PagesCreatePage(props: PagesCreatePageProps) {
                     required
                     sanitize
                   >
-                    {Object.keys(locales).map((l) => (
+                    {locales.map((l) => (
                       <SelectOption key={l} value={l} label={l.toUpperCase()} />
                     ))}
                   </Field>
