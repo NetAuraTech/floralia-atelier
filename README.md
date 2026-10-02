@@ -45,7 +45,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **Pagination** — Generic pagination service with frontend pagination component
 - **Dark/Light Theme** — Client-side theme toggle with server-side preference persistence
 - **Frontend Guards** — Authenticated, role-based, and permission-based route guards
-- **Docker Ready** — Dockerfile and docker-compose for development and production environments
+- **Docker Ready** — multi-stage Dockerfile for the production image and docker-compose for the local development infrastructure (PostgreSQL, Redis, MailHog, Typesense)
 - **Database Backup** — Full & differential backups with multi-storage (local, S3, R2), encryption, retention policy, and health checks
 
 ## Tech Stack
@@ -278,6 +278,27 @@ R2_KEY=
 R2_SECRET=
 R2_BUCKET=
 R2_ENDPOINT=
+# Optional CDN custom domain the public r2 disk serves assets through.
+R2_PUBLIC_URL=
+# Private R2 bucket for the backup system (no public custom domain).
+BACKUP_R2_BUCKET=
+
+# Backup (see the Backup section below)
+BACKUP_STORAGE_DISK=fs
+BACKUP_TIME=02:00
+BACKUP_ENCRYPTION_ENABLED=true
+BACKUP_RETENTION_DAILY=7
+BACKUP_RETENTION_WEEKLY=4
+BACKUP_RETENTION_MONTHLY=3
+BACKUP_RETENTION_YEARLY=1
+BACKUP_MAX_AGE_HOURS=25
+BACKUP_MAX_SIZE_MB=500
+BACKUP_MIN_FREE_SPACE_GB=5
+BACKUP_NOTIFICATION_EMAIL=
+BACKUP_NOTIFY_SUCCESS=false
+BACKUP_NOTIFY_FAILURE=true
+BACKUP_NOTIFY_HEALTH_CHECK=true
+BACKUP_EXCLUDED_TABLES=
 
 # File Upload
 MAX_UPLOAD_SIZE=10
@@ -324,7 +345,8 @@ http://localhost:3333/oauth/facebook/callback
 
 ### Docker
 
-The project includes Docker configurations for both development and production.
+The project includes a multi-stage Dockerfile for the production image and a
+docker-compose for the development infrastructure.
 
 **Development** — Spin up PostgreSQL, Redis, Typesense, and MailHog:
 
@@ -332,14 +354,17 @@ The project includes Docker configurations for both development and production.
 docker compose up -d
 ```
 
-**Production** — Multi-stage build with Nginx reverse proxy, 3 app replicas, and a queue worker:
+**Production** — Build the production image (Node runtime plus
+`postgresql-client` for the backup pipeline):
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+docker build -t floralia-atelier .
 ```
 
-The `worker` service runs `node ace queue:work -q default,auth,maintenance,webhook`
-(see `config/queue.ts`) and consumes the job queues — currently the
+The image serves the production build from `apps/web/build`
+(`node bin/server.js`, port 3333). Run a queue worker alongside the app:
+`node ace queue:work -q default,auth,maintenance,webhook`
+(see `config/queue.ts`), which consumes the job queues — currently the
 password-reset mail (sent asynchronously after the forgot-password response),
 the scheduled maintenance tasks (Log Entry pruning and backup retention
 enforcement, registered at boot by `start/scheduler.ts`), and the inbound
@@ -633,17 +658,18 @@ If no full backup exists when a differential is requested, a full backup is perf
 
 ### Storage
 
-Backups use the same Drive disks as the CMS file system (`fs`, `s3`, `r2`), configured via `BACKUP_STORAGE_DISK` (defaults to `fs`). All backup files are stored under the `backup/` prefix to avoid colliding with the `cms/` prefix used by file uploads.
+Backups use the Drive disks of the CMS file system (`fs`, `s3`, `r2`) plus a dedicated private disk (`r2-backup`), configured via `BACKUP_STORAGE_DISK` (defaults to `fs`). All backup files are stored under the `backup/` prefix to avoid colliding with the `cms/` prefix used by file uploads.
 
-| Disk | Description                          | Config                            |
-| ---- | ------------------------------------ | --------------------------------- |
-| `fs` | Local filesystem (`storage/backup/`) | Default, `BACKUP_STORAGE_DISK=fs` |
-| `s3` | Amazon S3 or S3-compatible           | `BACKUP_STORAGE_DISK=s3`          |
-| `r2` | Cloudflare R2                        | `BACKUP_STORAGE_DISK=r2`          |
+| Disk        | Description                                                 | Config                                               |
+| ----------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| `fs`        | Local filesystem (`storage/backup/`)                        | Default, `BACKUP_STORAGE_DISK=fs`                    |
+| `s3`        | Amazon S3 or S3-compatible                                  | `BACKUP_STORAGE_DISK=s3`                             |
+| `r2`        | Cloudflare R2                                               | `BACKUP_STORAGE_DISK=r2`                             |
+| `r2-backup` | Private R2 bucket (no CDN, no ACL) for S3/R2 backup targets | `BACKUP_STORAGE_DISK=r2-backup` + `BACKUP_R2_BUCKET` |
 
 ### Pipeline
 
-Each backup goes through: **pg_dump → gzip compression → AES-256-CBC encryption (optional) → upload to Drive → manifest written**.
+Each backup goes through: **pg_dump → gzip compression → AES-256-GCM encryption with an auth tag (optional) → upload to Drive → manifest written**.
 
 ### Retention Policy
 
@@ -729,7 +755,6 @@ floralia-atelier/
 ├── docs/                   # Agent docs, ADRs
 ├── .github/workflows/      # CI: tests, codegen drift check
 ├── docker-compose.yml      # Dev infrastructure (PostgreSQL, Redis, MailHog, Typesense)
-├── docker-compose.prod.yml # Production stack (Nginx + app replicas)
 └── Dockerfile              # Multi-stage production image
 ```
 

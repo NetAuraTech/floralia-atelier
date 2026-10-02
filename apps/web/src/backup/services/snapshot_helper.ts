@@ -61,7 +61,7 @@ export class SnapshotHelper {
 	}
 
 	/**
-	 * Encrypt a file using AES-256-CBC if encryption is enabled.
+	 * Encrypt a file using AES-256-GCM (auth-tagged) if encryption is enabled.
 	 * Deletes the unencrypted input after successful encryption.
 	 * Returns the path to the encrypted file (or original if disabled).
 	 */
