@@ -35,3 +35,25 @@ export const Default: Story = {
 		),
 	},
 };
+
+export const WithSections: Story = {
+	args: {
+		...Default.args,
+		sections: [
+			{
+				title: 'Services',
+				links: [
+					{ label: 'Service one', href: '/services/one' },
+					{ label: 'Service two', href: '/services/two' },
+				],
+			},
+			{
+				title: 'Infos',
+				links: [
+					{ label: 'Our story', href: '/#about' },
+					{ label: 'Legal notice', href: '/legal' },
+				],
+			},
+		],
+	},
+};

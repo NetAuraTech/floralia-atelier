@@ -30,6 +30,7 @@
     "./pagination": "./src/molecules/pagination/pagination.tsx",
     "./paragraph": "./src/atoms/paragraph/paragraph.tsx",
     "./section": "./src/atoms/section/section.tsx",
+    "./site-intro": "./src/molecules/site_intro/site_intro.tsx",
     "./select": "./src/atoms/select/select.tsx",
     "./separator": "./src/atoms/separator/separator.tsx",
     "./table": "./src/atoms/table/table.tsx",

@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { cn, tv } from 'tailwind-variants';
 import { NavLink } from '../../atoms/nav_link/nav_link';
+import type { ReactNode } from 'react';
 
 /**
  * A single primary-navigation entry for the {@link Header}.
@@ -26,8 +27,11 @@ const header = tv({
 });
 
 interface HeaderProps {
-	/** The application name, rendered as the logo link. */
-	appName: string;
+	/**
+	 * The application name, rendered as the logo link. Accepts a node so the
+	 * brand can carry styling (e.g. an italic accent word).
+	 */
+	appName: ReactNode;
 	/**
 	 * Primary navigation links, rendered in order inside the nav. Hrefs and
 	 * active states are computed by the caller. The first entry also drives the
