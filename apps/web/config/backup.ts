@@ -71,9 +71,10 @@ const backupConfig = {
 		key: env.get('APP_KEY'),
 
 		/**
-		 * Encryption algorithm
+		 * Encryption algorithm — AES-256-GCM with a 128-bit auth tag
+		 * (see `src/backup/services/encryption_helper.ts`).
 		 */
-		algorithm: 'aes-256-cbc',
+		algorithm: 'aes-256-gcm',
 	},
 
 	/**
