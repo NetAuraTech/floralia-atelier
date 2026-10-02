@@ -160,6 +160,7 @@ export default function Layout(props: LayoutProps) {
 			<div id="site" ref={siteRef}>
 				<Header
 					appName={brand}
+					homeHref={homeHref}
 					links={headerLinks}
 					isMenuOpen={isMenuOpen}
 					onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
