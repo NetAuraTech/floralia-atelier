@@ -123,6 +123,8 @@
 		}
 	}
 
+	/* Site intro animation (SiteIntro molecule) — keep in lockstep with the
+	package copy in packages/design-system/src/css/canonical.css. */
 	#intro {
 		clip-path: circle(150% at 50% 50%);
 

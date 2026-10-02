@@ -3,11 +3,11 @@ import { Footer } from '@foundry/design-system/footer';
 import { Header } from '@foundry/design-system/header';
 import { navLink } from '@foundry/design-system/nav-link';
 import { Paragraph } from '@foundry/design-system/paragraph';
+import { SiteIntro } from '@foundry/design-system/site-intro';
 import { Head, router, usePage } from '@inertiajs/react';
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import { urlFor } from '~/client';
-import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 
 interface LayoutProps {
 	children: ReactElement<SharedProps>;
@@ -15,6 +15,11 @@ interface LayoutProps {
 
 /**
  * Root layout for all public-facing pages.
+ *
+ * Owns the floralia identity around every rendered page: the one-page
+ * navigation header (anchor links into the homepage sections), the footer
+ * with the CMS page links and credits, the per-page SEO head, and the
+ * animated site intro on the first load.
  */
 export default function Layout(props: LayoutProps) {
 	const { children } = props;
@@ -22,7 +27,65 @@ export default function Layout(props: LayoutProps) {
 	const { app_name, app_url } = pageProps;
 
 	const homeHref = urlFor('core.home.render');
-	const homeActive = useNavLinkActive(homeHref);
+
+	// The brand wordmark: the name with its italic accent word.
+	const brand = (
+		<>
+			Floralia <span className="text-secondary italic">Atelier</span>
+		</>
+	);
+
+	const pageHref = (slug: string) => urlFor('cms.page.render', { slug });
+
+	// One-page site: the navigation anchors the homepage sections (the logo
+	// links to the homepage itself).
+	const headerLinks = [
+		{ label: 'Services', href: `${homeHref}#services` },
+		{ label: 'Histoire', href: `${homeHref}#about` },
+		{ label: 'Créations', href: `${homeHref}#creations` },
+		{ label: 'Contact', href: `${homeHref}#contact` },
+	];
+
+	const footerDescription = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			Art floral & entretien de sépultures. Nous prenons soin des lieux de mémoire avec respect et délicatesse.
+		</Paragraph>
+	);
+
+	const footerSections = [
+		{
+			title: 'Services',
+			links: [
+				{ label: 'Nettoyage de sépultures', href: pageHref('nettoyage-sepultures') },
+				{ label: 'Fleurissement de sépultures', href: pageHref('fleurissement-sepultures') },
+				{ label: 'Bouquets & compositions sur mesure', href: pageHref('bouquets-compositions-sur-mesure') },
+				{ label: "Décoration florales d'événements", href: pageHref('decoration-florale-evenements') },
+			],
+		},
+		{
+			title: 'Infos',
+			links: [
+				{ label: 'Notre histoire', href: `${homeHref}#about` },
+				{ label: 'Mentions légales', href: pageHref('mentions-legales') },
+				{ label: 'Politique de confidentialité', href: pageHref('politique-de-confidentialite') },
+			],
+		},
+	];
+
+	const footerCopyright = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			{`© 2026 ${app_name} — Tous droits réservés`}
+		</Paragraph>
+	);
+
+	const footerCredit = (
+		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
+			Fait avec ♥ par{' '}
+			<a href="https://www.netauratech.fr" className={navLink({ variant: 'external' })}>
+				NetAuraTech
+			</a>
+		</Paragraph>
+	);
 
 	// The header's mobile menu is a controlled presentational component — the
 	// layout owns its open/close state, including the close-on-navigation
@@ -43,27 +106,16 @@ export default function Layout(props: LayoutProps) {
 		return () => unregisterListener();
 	}, [closeMenu]);
 
-	const footerDescription = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aut culpa cupiditate dignissimos distinctio,
-			doloribus et harum id impedit ipsa laboriosam laudantium modi numquam obcaecati omnis, quisquam quod sint ullam!
-		</Paragraph>
-	);
+	// The animated site intro plays once, on the initial page load. The layout
+	// persists across Inertia visits, so the intro's state never restarts on
+	// navigation: the site starts hidden behind the intro and is revealed when
+	// the intro begins its exit (the intro unmounts itself once its clip
+	// animation has run).
+	const siteRef = useRef<HTMLDivElement | null>(null);
 
-	const footerCopyright = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
-			{`© 2026 ${app_name} — Tous droits réservés`}
-		</Paragraph>
-	);
-
-	const footerCredit = (
-		<Paragraph variant="ink-inverted" className="text-sm font-light leading-relaxed max-w-md flex items-center gap-2">
-			Fait avec ♥ par{' '}
-			<a href="https://www.netauratech.fr" className={navLink({ variant: 'external' })}>
-				NetAuraTech
-			</a>
-		</Paragraph>
-	);
+	const revealSite = useCallback(() => {
+		siteRef.current?.classList.add('visible');
+	}, []);
 
 	useEffect(() => {
 		toast.dismiss();
@@ -73,15 +125,14 @@ export default function Layout(props: LayoutProps) {
 		if (flash.info) toast.info(flash.info);
 	}, [url, flash]);
 
-	const image_alt = '';
-	const geo = {
-		region: '',
-		placename: '',
-	};
+	const imageAlt = 'Fleuriste artisan, compositions florales et entretien de sépultures';
 
 	return (
 		<>
 			<Head>
+				<noscript>
+					<style>{'#site{opacity:1}'}</style>
+				</noscript>
 				<link rel="canonical" href={`${app_url}${url}`} />
 				<link rel="preconnect" href="https://api.iconify.design" />
 				<link rel="dns-prefetch" href="https://api.iconify.design" />
@@ -97,18 +148,20 @@ export default function Layout(props: LayoutProps) {
 				<meta property="og:site_name" content={app_name} />
 				<meta property="og:type" content="website" />
 				<meta property="og:locale" content="fr_FR" />
-				<meta property="og:image:alt" content={`${app_name} - ${image_alt}`} />
-				<meta name="geo.region" content={geo.region} />
-				<meta name="geo.placename" content={geo.placename} />
+				<meta property="og:image:alt" content={`${app_name} - ${imageAlt}`} />
+				<meta name="geo.region" content="FR-62" />
+				<meta name="geo.placename" content="Samer" />
 				<meta name="author" content={app_name} />
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:title" content={app_name} />
-				<meta name="twitter:image:alt" content={`${app_name} - ${image_alt}`} />
+				<meta name="twitter:image:alt" content={`${app_name} - ${imageAlt}`} />
 			</Head>
-			<>
+			<SiteIntro title={brand} tagline="Art floral · Entretien de sépultures" onExit={revealSite} />
+			<div id="site" ref={siteRef}>
 				<Header
-					appName={app_name}
-					links={[{ label: 'Home', href: homeHref, isActive: homeActive }]}
+					appName={brand}
+					homeHref={homeHref}
+					links={headerLinks}
 					isMenuOpen={isMenuOpen}
 					onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
 					onMenuClose={closeMenu}
@@ -116,13 +169,14 @@ export default function Layout(props: LayoutProps) {
 				<Toaster position="top-right" richColors />
 				{children}
 				<Footer
-					appName={app_name}
+					appName={brand}
 					homeHref={homeHref}
 					description={footerDescription}
+					sections={footerSections}
 					copyright={footerCopyright}
 					credit={footerCredit}
 				/>
-			</>
+			</div>
 		</>
 	);
 }

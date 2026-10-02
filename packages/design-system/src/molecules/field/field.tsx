@@ -103,7 +103,11 @@ interface FieldProps {
 	 * `type="image"` falls back to the default `<Input>`.
 	 */
 	renderImage?: (inputProps: ImageFieldProps) => ReactNode;
-	/** `<SelectOption>` elements passed through to a `'select'` type field. */
+	/**
+	 * `<SelectOption>` elements rendered by a `'select'` type field. Ignored
+	 * by every other type — a non-select control is a void-ish element and
+	 * must never receive children (React SSR rejects it).
+	 */
 	children?: ReactNode;
 }
 
@@ -205,6 +209,7 @@ export function Field(props: FieldProps) {
 		onBlur,
 		sanitizeValue,
 		renderImage,
+		children,
 		...inputProps
 	} = props;
 
@@ -280,7 +285,9 @@ export function Field(props: FieldProps) {
 			) : (
 				<div className={cn(fieldLayout({ layout: isInline ? 'inline' : 'grid' }))}>
 					{!isInline && <Label label={label} htmlFor={name} required={props.required} />}
-					<Component {...inputProps} name={name} type={type} onChange={handleChange} onBlur={handleBlur} />
+					<Component {...inputProps} name={name} type={type} onChange={handleChange} onBlur={handleBlur}>
+						{type === 'select' ? children : undefined}
+					</Component>
 					{isInline && <Label label={label} htmlFor={name} required={props.required} />}
 				</div>
 			)}

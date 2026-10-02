@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { cn, tv } from 'tailwind-variants';
 import { NavLink } from '../../atoms/nav_link/nav_link';
+import type { ReactNode } from 'react';
 
 /**
  * A single primary-navigation entry for the {@link Header}.
@@ -26,12 +27,16 @@ const header = tv({
 });
 
 interface HeaderProps {
-	/** The application name, rendered as the logo link. */
-	appName: string;
+	/**
+	 * The application name, rendered as the logo link. Accepts a node so the
+	 * brand can carry styling (e.g. an italic accent word).
+	 */
+	appName: ReactNode;
+	/** Resolved URL the logo link navigates to (built by the caller). */
+	homeHref: string;
 	/**
 	 * Primary navigation links, rendered in order inside the nav. Hrefs and
-	 * active states are computed by the caller. The first entry also drives the
-	 * logo's href — put the home link first.
+	 * active states are computed by the caller.
 	 */
 	links: HeaderLink[];
 	/**
@@ -75,6 +80,7 @@ function HeaderNavLink(props: { link: HeaderLink; onClick?: () => void }) {
  * @example
  * <Header
  *   appName="Foundry"
+ *   homeHref={urlFor('core.home.render')}
  *   links={[{ label: 'Home', href: urlFor('core.home.render') }]}
  *   isMenuOpen={isMenuOpen}
  *   onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
@@ -82,11 +88,10 @@ function HeaderNavLink(props: { link: HeaderLink; onClick?: () => void }) {
  * />
  */
 export function Header(props: HeaderProps) {
-	const { appName, links, className, isMenuOpen, onToggleMenu, onMenuClose } = props;
+	const { appName, homeHref, links, className, isMenuOpen, onToggleMenu, onMenuClose } = props;
 
 	const menuState = isMenuOpen ? 'opened' : 'closed';
 	const isExpanded = isMenuOpen ? 'true' : 'false';
-	const homeHref = links[0]?.href ?? '/';
 
 	return (
 		<header className={cn(header(), className)} data-state={menuState} aria-expanded={isExpanded}>
