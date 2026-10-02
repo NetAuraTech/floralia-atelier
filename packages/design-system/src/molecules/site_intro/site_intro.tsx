@@ -31,7 +31,8 @@ interface SiteIntroProps {
  * brand reveal, then closes itself: after a fixed play time it triggers its
  * circular clip-path exit (`#intro.exit`) and unmounts once the clip
  * animation has run. All copy is injected by the caller; the timing is fixed
- * to the logo animation authored in the canonical CSS.
+ * to the logo animation authored in the package's canonical CSS
+ * (`src/css/canonical.css`), which the app's CSS keeps in lockstep.
  *
  * The caller renders it once on the initial load (it keeps its state across
  * Inertia visits, so it never replays on navigation).
