@@ -40,6 +40,7 @@
 					"message": "Une fois confirmé, l'email de votre compte sera mis à jour et vous devrez utiliser le nouvel email pour vous connecter."
 				},
 				"title": "Confirmer le changement d'adresse e-mail",
+				"token": "Token",
 				"sub_title": " Cliquez sur le bouton ci-dessous pour confirmer votre nouvelle adresse e-mail.",
 				"submit": "Confirmer la nouvelle adresse e-mail"
 			},
