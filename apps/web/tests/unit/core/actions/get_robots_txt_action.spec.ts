@@ -10,6 +10,8 @@ test.group('GetRobotsTxtAction', () => {
 
 		assert.include(result, 'User-agent: *');
 		assert.include(result, 'Allow: /');
+		assert.include(result, 'Disallow: /admin/*');
+		assert.include(result, 'Disallow: /settings/*');
 		assert.include(result, 'Sitemap: http://localhost:3000/sitemap.xml');
 	});
 

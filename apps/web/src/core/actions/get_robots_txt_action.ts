@@ -20,7 +20,14 @@ export class GetRobotsTxtAction {
 	 * Constructs the robots.txt content.
 	 */
 	buildRobotsTxt(appUrl: string): string {
-		const lines = ['User-agent: *', 'Allow: /', `Sitemap: ${appUrl}/sitemap.xml`];
+		const lines = [
+			'User-agent: *',
+			'Allow: /',
+			'Disallow: /admin/*',
+			'Disallow: /settings/*',
+			'',
+			`Sitemap: ${appUrl}/sitemap.xml`,
+		];
 		return lines.join('\n') + '\n';
 	}
 }
