@@ -45,7 +45,7 @@ AdonisJS Foundry is built on AdonisJS v7 and follows a domain-driven architectur
 - **Pagination** — Generic pagination service with frontend pagination component
 - **Dark/Light Theme** — Client-side theme toggle with server-side preference persistence
 - **Frontend Guards** — Authenticated, role-based, and permission-based route guards
-- **Docker Ready** — docker-compose for the local development infrastructure (PostgreSQL, Redis, MailHog, Typesense)
+- **Docker Ready** — multi-stage Dockerfile for the production image and docker-compose for the local development infrastructure (PostgreSQL, Redis, MailHog, Typesense)
 - **Database Backup** — Full & differential backups with multi-storage (local, S3, R2), encryption, retention policy, and health checks
 
 ## Tech Stack
@@ -345,16 +345,26 @@ http://localhost:3333/oauth/facebook/callback
 
 ### Docker
 
-The project includes a docker-compose for the development infrastructure.
-Spin up PostgreSQL, Redis, Typesense, and MailHog:
+The project includes a multi-stage Dockerfile for the production image and a
+docker-compose for the development infrastructure.
+
+**Development** — Spin up PostgreSQL, Redis, Typesense, and MailHog:
 
 ```bash
 docker compose up -d
 ```
 
-In production, run the app with `npm run build` + `npm start`, and a separate
-queue worker `node ace queue:work -q default,auth,maintenance,webhook`
-(see `config/queue.ts`) that consumes the job queues — currently the
+**Production** — Build the production image (Node runtime plus
+`postgresql-client` for the backup pipeline):
+
+```bash
+docker build -t floralia-atelier .
+```
+
+The image serves the production build from `apps/web/build`
+(`node bin/server.js`, port 3333). Run a queue worker alongside the app:
+`node ace queue:work -q default,auth,maintenance,webhook`
+(see `config/queue.ts`), which consumes the job queues — currently the
 password-reset mail (sent asynchronously after the forgot-password response),
 the scheduled maintenance tasks (Log Entry pruning and backup retention
 enforcement, registered at boot by `start/scheduler.ts`), and the inbound
@@ -744,7 +754,8 @@ floralia-atelier/
 │   └── design-system/      # Shared React design system (@foundry/design-system)
 ├── docs/                   # Agent docs, ADRs
 ├── .github/workflows/      # CI: tests, codegen drift check
-└── docker-compose.yml      # Dev infrastructure (PostgreSQL, Redis, MailHog, Typesense)
+├── docker-compose.yml      # Dev infrastructure (PostgreSQL, Redis, MailHog, Typesense)
+└── Dockerfile              # Multi-stage production image
 ```
 
 The `apps/web` workspace is split in two trees, organized **per domain** (`account`, `auth`, `cms`, `core`, `file`, `identity`, `log`, `webhook`):

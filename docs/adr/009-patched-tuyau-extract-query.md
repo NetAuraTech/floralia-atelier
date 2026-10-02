@@ -61,6 +61,6 @@ When `@tuyau/core` is upgraded:
 ## Consequences
 
 - `npm run typecheck` is green and acts as a reliable verification gate again; it runs in CI (see `.github/workflows/ci.yml`).
-- `npm install` / `npm ci` apply patches automatically via `postinstall`. `patch-package` is a regular (non-dev) dependency, so the patch is also applied by `npm ci --omit=dev`. Environments installed with `--ignore-scripts` skip the patch; it is type-only so runtime is unaffected, but `npm run typecheck` must never be run there.
+- `npm install` / `npm ci` apply patches automatically via `postinstall`. `patch-package` is a regular (non-dev) dependency and the Dockerfile copies `patches/` into both deps stages, so the patch is also applied by `npm ci --omit=dev` in the production image build. Environments installed with `--ignore-scripts` skip the patch; it is type-only so runtime is unaffected, but `npm run typecheck` must never be run there.
 - The `patches/` directory is committed and must be kept under review — any change to it is a dependency-level change.
 - ADR 006 is superseded: `.adonisjs/` typecheck errors are no longer expected noise. Any new generated-file error is a real signal and must be investigated.
