@@ -660,12 +660,12 @@ If no full backup exists when a differential is requested, a full backup is perf
 
 Backups use the Drive disks of the CMS file system (`fs`, `s3`, `r2`) plus a dedicated private disk (`r2-backup`), configured via `BACKUP_STORAGE_DISK` (defaults to `fs`). All backup files are stored under the `backup/` prefix to avoid colliding with the `cms/` prefix used by file uploads.
 
-| Disk         | Description                                                      | Config                                     |
-| ------------ | ---------------------------------------------------------------- | ------------------------------------------ |
-| `fs`         | Local filesystem (`storage/backup/`)                             | Default, `BACKUP_STORAGE_DISK=fs`          |
-| `s3`         | Amazon S3 or S3-compatible                                       | `BACKUP_STORAGE_DISK=s3`                   |
-| `r2`         | Cloudflare R2                                                    | `BACKUP_STORAGE_DISK=r2`                   |
-| `r2-backup`  | Private R2 bucket (no CDN, no ACL) for S3/R2 backup targets      | `BACKUP_STORAGE_DISK=r2-backup` + `BACKUP_R2_BUCKET` |
+| Disk        | Description                                                 | Config                                               |
+| ----------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| `fs`        | Local filesystem (`storage/backup/`)                        | Default, `BACKUP_STORAGE_DISK=fs`                    |
+| `s3`        | Amazon S3 or S3-compatible                                  | `BACKUP_STORAGE_DISK=s3`                             |
+| `r2`        | Cloudflare R2                                               | `BACKUP_STORAGE_DISK=r2`                             |
+| `r2-backup` | Private R2 bucket (no CDN, no ACL) for S3/R2 backup targets | `BACKUP_STORAGE_DISK=r2-backup` + `BACKUP_R2_BUCKET` |
 
 ### Pipeline
 
