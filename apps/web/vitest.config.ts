@@ -28,6 +28,7 @@ export default defineConfig({
 			'inertia/components/**/*.spec.tsx',
 			'inertia/helpers/**/*.spec.ts',
 			'inertia/hooks/**/*.spec.ts',
+			'inertia/layouts/**/*.spec.tsx',
 			'inertia/lib/**/*.spec.ts',
 			'inertia/pages/**/*.spec.tsx',
 		],
