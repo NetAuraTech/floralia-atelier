@@ -108,14 +108,8 @@ describe('Layout — public identity', () => {
 
 		const links = Array.from(container.querySelectorAll('#primary-navigation a'));
 
-		expect(links.map((a) => a.textContent)).toEqual(['Accueil', 'Services', 'Histoire', 'Créations', 'Contact']);
-		expect(links.map((a) => a.getAttribute('href'))).toEqual([
-			'/',
-			'/#services',
-			'/#about',
-			'/#creations',
-			'/#contact',
-		]);
+		expect(links.map((a) => a.textContent)).toEqual(['Services', 'Histoire', 'Créations', 'Contact']);
+		expect(links.map((a) => a.getAttribute('href'))).toEqual(['/#services', '/#about', '/#creations', '/#contact']);
 	});
 
 	it('renders the footer with the six CMS page links and the credits', async () => {

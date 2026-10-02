@@ -8,7 +8,6 @@ import { Head, router, usePage } from '@inertiajs/react';
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import { urlFor } from '~/client';
-import { useNavLinkActive } from '~/hooks/use_nav_link_active';
 
 interface LayoutProps {
 	children: ReactElement<SharedProps>;
@@ -28,7 +27,6 @@ export default function Layout(props: LayoutProps) {
 	const { app_name, app_url } = pageProps;
 
 	const homeHref = urlFor('core.home.render');
-	const homeActive = useNavLinkActive(homeHref);
 
 	// The brand wordmark: the name with its italic accent word.
 	const brand = (
@@ -39,8 +37,9 @@ export default function Layout(props: LayoutProps) {
 
 	const pageHref = (slug: string) => urlFor('cms.page.render', { slug });
 
+	// One-page site: the navigation anchors the homepage sections (the logo
+	// links to the homepage itself).
 	const headerLinks = [
-		{ label: 'Accueil', href: homeHref, isActive: homeActive },
 		{ label: 'Services', href: `${homeHref}#services` },
 		{ label: 'Histoire', href: `${homeHref}#about` },
 		{ label: 'Créations', href: `${homeHref}#creations` },
@@ -157,15 +156,7 @@ export default function Layout(props: LayoutProps) {
 				<meta name="twitter:title" content={app_name} />
 				<meta name="twitter:image:alt" content={`${app_name} - ${imageAlt}`} />
 			</Head>
-			<SiteIntro
-				title={
-					<>
-						Floralia <span className="text-secondary italic">Atelier</span>
-					</>
-				}
-				tagline="Art floral · Entretien de sépultures"
-				onExit={revealSite}
-			/>
+			<SiteIntro title={brand} tagline="Art floral · Entretien de sépultures" onExit={revealSite} />
 			<div id="site" ref={siteRef}>
 				<Header
 					appName={brand}
