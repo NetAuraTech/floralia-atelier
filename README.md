@@ -124,6 +124,9 @@ REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 REDIS_PASSWORD=
 REDIS_SOCKET=
+# Logical database index. Select a distinct value per site sharing one
+# Redis instance so their caches/queues don't collide.
+REDIS_DB=0
 
 # Queue — `redis` consumes jobs via a worker process (`node ace queue:work`);
 # `sync` runs them inline in the calling process (no worker, no Redis).
