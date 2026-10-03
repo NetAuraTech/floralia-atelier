@@ -1,4 +1,4 @@
-This is `floralia-atelier` — an AdonisJS v7 + Inertia/React application built on the Foundry 2.1 full flavor (headless CMS, admin panel), organized on a domain-driven architecture (controllers → actions → services/repositories → models).
+This is `floralia-atelier` — the website of Floral Atelier, a florist (art floral & entretien de sépultures) based in Samer, France, built on the Foundry 2.1 full flavor: an AdonisJS v7 + Inertia/React application with a headless CMS and admin panel, organized on a domain-driven architecture (controllers → actions → services/repositories → models).
 
 <critical>
 - Prefer `npm` for dependency management and scripts.
@@ -8,6 +8,17 @@ This is `floralia-atelier` — an AdonisJS v7 + Inertia/React application built 
 ## Module boundaries
 
 New code added outside the CMS module should not create hard couplings that drag the CMS along. **Rule of thumb: if it dies when the CMS dies, it lives in the CMS module** — `apps/web/src/cms/` (business: actions, services, repositories, models, exceptions) and `apps/web/app/cms/` (transport: controllers, routes, transformers, REST, validators) (see [ADR-0001](docs/adr/0001-cms-module-extraction.md)).
+
+## The floralia site
+
+The public site is **CMS-driven** — there are no hand-written public pages. The layout, brand, navigation and SEO chrome live in `apps/web/inertia/layouts/default.tsx` and the page content is stored as CMS Pages:
+
+- **Pages** — `GET /` renders the page flagged `is_homepage` (route name `core.home.render`); `GET /:slug` and `GET /:locale/:slug` render any published Page (route names `cms.page.render`, `cms.page.localised.render`). Both are served by `PageController` (`apps/web/app/cms/controllers/front/page_controller.ts`) through the Inertia page `cms/page/front/show`. The catch-alls register last (see `apps/web/start/routes.ts`) so they never shadow single-segment routes.
+- **One-page navigation** — the header links are anchors into the homepage sections (`#services`, `#about`, `#creations`, `#contact`); the footer links to the service Pages and the legal Pages by slug. See [DESIGN.md](DESIGN.md) for the visual system (palette, fonts, the intro animation).
+- **Contact form** — a `contact_form` block on the page submits to `POST /contact` (route name `cms.contact.execute`, throttled 5/hour) → `ContactController` → `ContactMailService`, which mails the submission to `MAIL_FROM_ADDRESS` (the florist's address, `contact@floralia-atelier.fr`).
+- **Media library** — the admin Files screen (`/admin/files`, `file` domain): upload, folder organization, per-locale named alt text, responsive image variants. CMS Pages reference Files through `FileRef` blocks.
+- **File & backup setup** — uploaded files live under the `cms/` prefix on the `DRIVE_DISK` disk; backup archives (pg_dump pipeline) live under the `backup/` prefix on the `BACKUP_STORAGE_DISK` disk — the two prefixes never mix. See the Drive/Backup env vars in the README and `src/backup/` (driven by the `backup:*` ace commands).
+- **Content** — the seeded pages (`apps/web/database/seeders/cms/page_seeder.ts`) are the baseline demo set; the production site Pages (service and legal pages) are authored in the CMS. The site copy is French; the identity (name, mail, geo tags) is set in `apps/web/.env.example` (`APP_NAME`, `MAIL_FROM_ADDRESS`).
 
 ## Stack
 
@@ -26,8 +37,9 @@ New code added outside the CMS module should not create hard couplings that drag
 ## Working Agreements
 
 - Keep root guidance small and broadly applicable. Add detailed conventions to focused docs in `docs/agents/` when they only apply to one architectural layer.
-- This is a two-workspace monorepo: the complete AdonisJS application lives in `apps/web/` (`@foundry/web`), and the repo root holds the workspaces manifest, the single lockfile, repo-wide lint/format configs, CI, Docker and docs. All conventions in this file and in `docs/agents/` apply to the whole repo unless stated otherwise.
-- `node ace` commands run from `apps/web/`; the npm scripts (`dev`, `build`, `test`, `lint`, `format`, `typecheck`, …) run from the repo root (they proxy to the workspace). All code paths in `docs/agents/` are relative to `apps/web/` unless stated otherwise.
+- This is a two-workspace monorepo: the complete AdonisJS application lives in `apps/web/` (`@foundry/web`), the shared React design system lives in `packages/design-system/` (`@foundry/design-system`), and the repo root holds the workspaces manifest, the single lockfile, repo-wide lint/format configs (oxlint/oxfmt), CI, Docker and docs. All conventions in this file and in `docs/agents/` apply to the whole repo unless stated otherwise.
+- `node ace` commands run from `apps/web/`; the npm scripts (`dev`, `build`, `test`, `lint`, `format`, `typecheck`, …) run from the repo root (they proxy to the workspace). All code paths in `docs/agents/` are relative to `apps/web/` unless stated otherwise. Node >= 24 is required (`engines` in the root `package.json`, `mise.toml`).
+- The app is a per-domain BFF: `app/{domain}/` is the transport layer, `src/{domain}/` is the business layer, and transport code is addressed through the single `#transport/*` alias with the domain as a path segment (`#transport/cms/validators/...`) — see `apps/web/AGENTS.md` for why per-domain transport aliases are not expressible. Route names follow `<domain>.<area>.<action>` (e.g. `core.home.render`, `cms.page.render`, `cms.contact.execute`).
 
 ## Repository Expectations
 
@@ -58,11 +70,11 @@ How code is structured in this codebase — read the relevant file before writin
 - Language: see `docs/agents/language.md`
 - TOCTOU Protection: see `docs/agents/toctou-protection.md`
 - CLI Commands (Ace): see `docs/agents/cli-commands.md`
-- Design System: see `docs/agents/design-system.md`
+- Design System: see `docs/agents/design-system.md` (the `@foundry/design-system` workspace: source-only package, the `exports` map as public API, tokens, canonical CSS, boundary rules)
 
 ### Issue tracker
 
-Issues are tracked in GitHub Issues for `NetAuraTech/adonisjs-foundry`; content is written in English. See `docs/agents/issue-tracker.md`.
+Issues are tracked in GitHub Issues for `NetAuraTech/floralia-atelier`; content is written in English. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

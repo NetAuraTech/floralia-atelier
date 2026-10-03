@@ -1,8 +1,28 @@
-# AdonisJS Foundry
+# Floral Atelier
 
-A production-ready boilerplate and headless CMS: authentication, an admin panel with a visual page builder, file management, and a template system, built on a domain-driven backend.
+The website of Floral Atelier, an artisan florist in Samer (France) specialized in floral art and care of burial sites. Built on the Foundry 2.1 full flavor: a CMS-driven public site, an admin panel with a visual page builder, file management, a template system, and the full authentication/access stack, on a domain-driven backend.
 
 ## Language
+
+### The floralia site
+
+> The terms below describe the business behind the public site.
+
+**Florist**:
+The business the site belongs to — Floral Atelier, an artisan florist based in Samer (62830, Pas-de-Calais) offering floral art and care of burial sites. The site's single LocalBusiness: its name, phone, address and opening hours are encoded in the `LocalBusiness` JSON-LD of the page SEO (`inertia/pages/cms/page/front/show.tsx`), and the contact form mails to `MAIL_FROM_ADDRESS`.
+_Avoid_: Client, customer (that is the contact-form submitter), business (use Florist)
+
+**Site Pages**:
+The set of CMS Pages that make up the public website: the one-page home (with the `#services`, `#about`, `#creations` and `#contact` sections), the service Pages (one per Service) and the legal Pages (`mentions-legales`, `politique-de-confidentialite`). Served by the CMS front routes — `core.home.render` for the home, `cms.page.render` by slug — with the header navigating by home anchors and the footer linking the service and legal Pages.
+_Avoid_: Website pages, landing pages, routes
+
+**Services**:
+The four service offerings that structure the public site: nettoyage de sépultures, fleurissement de sépultures, bouquets & compositions sur mesure, and décoration florale d'événements. Each Service is a Site Page (addressable by slug: `nettoyage-sepultures`, `fleurissement-sepultures`, `bouquets-compositions-sur-mesure`, `decoration-florale-evenements`), listed in the footer and in the LocalBusiness offer catalog.
+_Avoid_: Offerings, products, catalog (the catalog is the JSON-LD encoding of the Services)
+
+**Contact Form**:
+The `contact_form` block embedded in the home's contact section. A submission validates, mails the Florist (`MAIL_FROM_ADDRESS`) through `ContactMailService`, and keeps the visitor on the page with a flash message — the site's only channel to the Florist.
+_Avoid_: Newsletter, feedback form, inquiry
 
 ### Contexts & Modules
 
