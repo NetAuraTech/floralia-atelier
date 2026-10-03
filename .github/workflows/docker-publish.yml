@@ -1,0 +1,61 @@
+name: Docker image publish
+
+# Builds the production image (root Dockerfile, multi-stage: install, prune
+# to production deps, build, slim runtime) and pushes it to the GitHub
+# Container Registry as ghcr.io/<owner>/<repo> (owner lowercased, as GHCR
+# requires lowercase repository names).
+#
+# Every push to the default branch tags the image with the commit's short SHA
+# and moves `latest` to it. Manual dispatches rebuild the default branch's
+# current HEAD.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+# One publish per ref at a time; a newer push supersedes the in-flight build.
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      REGISTRY_IMAGE: ghcr.io/${{ toLower(github.repository) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to the GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve the short commit SHA
+        id: sha
+        run: echo "short=$(git rev-parse --short=7 ${{ github.sha }})" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push the production image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY_IMAGE }}:${{ steps.sha.outputs.short }}
+            ${{ env.REGISTRY_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
