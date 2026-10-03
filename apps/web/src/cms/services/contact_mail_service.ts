@@ -54,7 +54,7 @@ export class ContactMailService {
 				subject: i18n.t('cms.page.contact_form.mail.subject'),
 				greeting: i18n.t('cms.page.contact_form.mail.greeting'),
 				intro: i18n.t('cms.page.contact_form.mail.intro'),
-				...fields,
+				fields,
 			},
 		} satisfies MailClientMessage);
 	}
