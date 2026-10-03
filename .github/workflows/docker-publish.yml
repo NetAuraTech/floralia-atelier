@@ -2,8 +2,9 @@ name: Docker image publish
 
 # Builds the production image (root Dockerfile, multi-stage: install, prune
 # to production deps, build, slim runtime) and pushes it to the GitHub
-# Container Registry as ghcr.io/<owner>/<repo> (owner lowercased, as GHCR
-# requires lowercase repository names).
+# Container Registry as ghcr.io/netaura-tech/floralia-atelier (GHCR
+# repository names are lowercase and not changeable, so the image name is
+# fixed rather than derived from the repository).
 #
 # Every push to the default branch tags the image with the commit's short SHA
 # and moves `latest` to it. Manual dispatches rebuild the default branch's
@@ -26,9 +27,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    env:
-      REGISTRY_IMAGE: ghcr.io/${{ toLower(github.repository) }}
 
     steps:
       - name: Checkout repository
@@ -55,7 +53,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY_IMAGE }}:${{ steps.sha.outputs.short }}
-            ${{ env.REGISTRY_IMAGE }}:latest
+            ghcr.io/netaura-tech/floralia-atelier:${{ steps.sha.outputs.short }}
+            ghcr.io/netaura-tech/floralia-atelier:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
