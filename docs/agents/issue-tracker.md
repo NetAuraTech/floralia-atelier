@@ -1,6 +1,6 @@
 # Issue tracker: GitHub
 
-Issues and specs for this repo live as GitHub issues in `NetAuraTech/adonisjs-foundry`. Use the `gh` CLI for all operations.
+Issues and specs for this repo live as GitHub issues in `NetAuraTech/floralia-atelier`. Use the `gh` CLI for all operations.
 
 ## Language
 
