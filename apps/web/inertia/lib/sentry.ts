@@ -60,9 +60,10 @@ function scrubRecord(record: Record<string, unknown>): Record<string, unknown> {
  * Scrubs an event so the payload is PII-free before it leaves the browser.
  *
  * The user identity attached to the event is dropped outright (the client is
- * initialized with `sendDefaultPii: false` and no user is set), and the
- * well-known PII keys inside `extra`, `contexts`, breadcrumb `data` and the
- * request headers are replaced with `REDACTED`.
+ * initialized with `dataCollection` keeping the user, cookie and body
+ * categories off and no user is set), and the well-known PII keys inside
+ * `extra`, `contexts`, breadcrumb `data` and the request headers are replaced
+ * with `REDACTED`.
  *
  * @param event - The event about to be sent, mutated and returned.
  * @returns The scrubbed event.
@@ -92,10 +93,31 @@ export function scrubEvent<T extends Event>(event: T): T {
 }
 
 /**
+ * The `dataCollection` baseline that reproduces the v10 `sendDefaultPii:
+ * false` behaviour: the user, cookie and HTTP body categories are off, only
+ * headers and query params (PII-scrubbed) are collected, and GenAI /
+ * database / GraphQL payloads are not recorded.
+ */
+const PII_OFF_DATA_COLLECTION = {
+	userInfo: false,
+	cookies: false,
+	httpHeaders: {
+		request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+		response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+	},
+	httpBodies: [],
+	urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+	genAI: { inputs: false, outputs: false },
+	databaseQueryData: false,
+	graphQL: { document: false, variables: false },
+};
+
+/**
  * Builds the browser `@sentry/react` options for the given configuration.
  *
- * PII is kept out by default: `sendDefaultPii` is off, tracing is disabled,
- * and every event passes through {@link scrubEvent}.
+ * PII is kept out by default: `dataCollection` mirrors the v10
+ * `sendDefaultPii: false` baseline, tracing is disabled, and every event
+ * passes through {@link scrubEvent}.
  *
  * @param config - The DSN, release and environment for the client.
  * @returns The options to hand to `Sentry.init`.
@@ -105,7 +127,7 @@ export function buildSentryOptions(config: SentryWebConfig): BrowserOptions {
 		dsn: config.dsn,
 		release: config.release,
 		environment: config.environment,
-		sendDefaultPii: false,
+		dataCollection: PII_OFF_DATA_COLLECTION,
 		tracesSampleRate: 0,
 		beforeSend: (event) => scrubEvent(event),
 	};
