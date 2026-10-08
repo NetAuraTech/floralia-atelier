@@ -88,7 +88,9 @@ describe('buildSentryOptions', () => {
 		expect(options.dsn).toBe('https://public@o1.ingest.sentry.io/1');
 		expect(options.release).toBe('foundry-1.0.0');
 		expect(options.environment).toBe('production');
-		expect(options.sendDefaultPii).toBe(false);
+		expect(options.dataCollection?.userInfo).toBe(false);
+		expect(options.dataCollection?.cookies).toBe(false);
+		expect(options.dataCollection?.httpBodies).toEqual([]);
 		expect(options.tracesSampleRate).toBe(0);
 	});
 
@@ -130,7 +132,11 @@ describe('initSentry', () => {
 		expect(init.mock.calls[0]?.[0]).toMatchObject({
 			dsn: 'https://public@o1.ingest.sentry.io/1',
 			release: 'foundry-1.0.0',
-			sendDefaultPii: false,
+			dataCollection: {
+				userInfo: false,
+				cookies: false,
+				httpBodies: [],
+			},
 		});
 	});
 
