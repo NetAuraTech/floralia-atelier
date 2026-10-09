@@ -66,8 +66,9 @@ const shieldConfig = defineConfig({
 			// Frames this page may embed (video block players, allowlisted iframes)
 			frameSrc: ["'self'", ...getEmbedFrameSources(), ...iframeFrameSources],
 
-			// Frames: deny (xFrame also set to SAMEORIGIN)
-			frameAncestors: ["'none'"],
+			// Frames: same-origin only (the builder preview iframe loads the
+			// preview route on this origin). Matches XFO SAMEORIGIN.
+			frameAncestors: ["'self'"],
 
 			// Forms: self only
 			formAction: ["'self'"],
