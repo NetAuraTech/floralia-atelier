@@ -34,10 +34,13 @@ const shieldConfig = defineConfig({
 			// Default: only same-origin
 			defaultSrc: ["'self'"],
 
-			// Scripts: self + Vite HMR in dev/test
+			// Scripts: self + inline (the layout theme bootstrap and the Cloudflare
+			// challenge script are inline and cannot be nonced/hashed) + Vite HMR in
+			// dev/test
 			scriptSrc: [
 				"'self'",
-				...(app.inDev || app.inTest ? ["'unsafe-eval'", "'unsafe-inline'"] : []), // Vite HMR needs these in dev/test
+				"'unsafe-inline'",
+				...(app.inDev || app.inTest ? ["'unsafe-eval'"] : []), // Vite HMR needs this in dev/test
 			],
 
 			// Styles: self + Tailwind JIT inline styles
@@ -49,11 +52,15 @@ const shieldConfig = defineConfig({
 			// Fonts: self + data: (for inline fonts)
 			fontSrc: ["'self'", 'data:'],
 
-			// Connect: self + SSE + Vite HMR websocket + Sentry
+			// Connect: self + SSE + Vite HMR websocket + Sentry + Iconify (runtime icon
+			// loading by @iconify/react, including its API fallbacks)
 			connectSrc: [
 				"'self'",
 				...(app.inDev || app.inTest ? ['ws:', 'wss:'] : []), // Vite HMR websocket
 				'https://*.sentry.io', // Sentry error reporting
+				'https://api.iconify.design', // Iconify API
+				'https://api.simplesvg.com', // Iconify API fallback
+				'https://api.unisvg.com', // Iconify API fallback
 			],
 
 			// Frames this page may embed (video block players, allowlisted iframes)
