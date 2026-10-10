@@ -25,6 +25,7 @@ export class GetRobotsTxtAction {
 			'Allow: /',
 			'Disallow: /admin/*',
 			'Disallow: /settings/*',
+			'Disallow: /api/*',
 			'',
 			`Sitemap: ${appUrl}/sitemap.xml`,
 		];

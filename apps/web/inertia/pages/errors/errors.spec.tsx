@@ -4,18 +4,34 @@ import { TuyauProvider } from '@adonisjs/inertia/react';
 import { http, router, type HttpRequestConfig, type Page } from '@inertiajs/core';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { client } from '~/client';
 import NotFound from '~/pages/errors/not_found';
 import ServerError from '~/pages/errors/server_error';
 
 /**
  * Error page contract: 404 and 500 render the floralia identity (French copy,
- * the big numeral, a heading) and offer a link back to the homepage.
+ * the big numeral, a heading), offer a link back to the homepage, and supply a
+ * page title (the `noindex` robots meta is emitted by the wrapping layout, not
+ * the page itself).
  *
  * The real pages and real Tuyau registry run end to end; only the Inertia
- * core router is seeded so the `Link`s resolve.
+ * core router is seeded so the `Link`s resolve, and `Head` is stubbed so its
+ * title can be captured.
  */
+
+const { capturedHead } = vi.hoisted(() => ({ capturedHead: { title: undefined as string | undefined } }));
+
+vi.mock('@inertiajs/react', async (importOriginal) => {
+	const actual = await importOriginal<typeof import('@inertiajs/react')>();
+	return {
+		...actual,
+		Head: ({ title }: { title?: string }) => {
+			capturedHead.title = title;
+			return null;
+		},
+	};
+});
 
 (globalThis as Record<string, unknown>).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -49,6 +65,7 @@ let container: HTMLDivElement;
 let root: Root;
 
 beforeEach(() => {
+	capturedHead.title = undefined;
 	container = document.createElement('div');
 	document.body.appendChild(container);
 	root = createRoot(container);
@@ -71,6 +88,7 @@ describe('Error pages', () => {
 
 		expect(container.textContent).toContain('404');
 		expect(container.textContent).toContain('Page introuvable');
+		expect(capturedHead.title).toBe('Page introuvable');
 		expect(container.querySelector('a')?.getAttribute('href')).toBe('/');
 	});
 
@@ -79,6 +97,7 @@ describe('Error pages', () => {
 
 		expect(container.textContent).toContain('500');
 		expect(container.textContent).toContain('Erreur serveur');
+		expect(capturedHead.title).toBe('Erreur serveur');
 		expect(container.querySelector('a')?.getAttribute('href')).toBe('/');
 	});
 });

@@ -2,7 +2,7 @@ import { TuyauProvider } from '@adonisjs/inertia/react';
 // @vitest-environment jsdom
 // @vitest-environment-options { "url": "http://localhost/" }
 import { http, router, type HttpRequestConfig, type Page } from '@inertiajs/core';
-import { act } from 'react';
+import { act, isValidElement, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
 import { client } from '~/client';
@@ -21,9 +21,10 @@ import type { ReactElement } from 'react';
  * (the real one only exists inside an Inertia-managed app).
  */
 
-const { mockPage } = vi.hoisted(() => ({
+const { mockPage, capturedHead } = vi.hoisted(() => ({
 	mockPage: {
 		url: 'http://localhost/',
+		component: 'Layout',
 		props: {
 			email: 'contact@floralia-atelier.fr',
 			app_url: 'http://localhost:3333',
@@ -31,6 +32,7 @@ const { mockPage } = vi.hoisted(() => ({
 		},
 		flash: { error: undefined, success: undefined, info: undefined },
 	},
+	capturedHead: { children: undefined as ReactNode },
 }));
 
 vi.mock('@inertiajs/react', async (importOriginal) => {
@@ -38,7 +40,10 @@ vi.mock('@inertiajs/react', async (importOriginal) => {
 	return {
 		...actual,
 		usePage: () => mockPage,
-		Head: () => null,
+		Head: ({ children }: { children?: ReactNode }) => {
+			capturedHead.children = children;
+			return <>{children}</>;
+		},
 	};
 });
 
@@ -78,6 +83,7 @@ let container: HTMLDivElement;
 let root: Root;
 
 beforeEach(() => {
+	capturedHead.children = undefined;
 	vi.useFakeTimers();
 	container = document.createElement('div');
 	document.body.appendChild(container);
@@ -100,6 +106,27 @@ function renderLayout() {
 			</TuyauProvider>,
 		);
 	});
+}
+
+/**
+ * React 19 hoists `<meta>` tags out of the jsdom render tree, so the robots
+ * assertion reads the meta captured by the `Head` mock rather than the DOM.
+ * Returns the `content` of the first `<meta name="robots">` in the captured
+ * children, or `undefined` when absent.
+ */
+function robotsContent(node: ReactNode): string | undefined {
+	if (isValidElement(node)) {
+		const props = node.props as Record<string, unknown>;
+		if (node.type === 'meta' && props.name === 'robots') return props.content as string | undefined;
+		return robotsContent(props.children as ReactNode);
+	} else if (Array.isArray(node)) {
+		for (const child of node) {
+			const found = robotsContent(child);
+			if (found !== undefined) return found;
+		}
+	}
+
+	return undefined;
 }
 
 describe('Layout — public identity', () => {
@@ -155,5 +182,23 @@ describe('Layout — public identity', () => {
 			vi.advanceTimersByTime(1100);
 		});
 		expect(container.querySelector('#intro')).toBeNull();
+	});
+
+	it('marks error pages noindex and leaves every other page indexable', async () => {
+		mockPage.component = 'errors/not_found';
+		await renderLayout();
+		expect(robotsContent(capturedHead.children)).toBe('noindex, nofollow');
+
+		mockPage.component = 'errors/server_error';
+		await renderLayout();
+		expect(robotsContent(capturedHead.children)).toBe('noindex, nofollow');
+
+		mockPage.component = 'cms/page/front/show';
+		await renderLayout();
+		expect(robotsContent(capturedHead.children)).toBe(
+			'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+		);
+
+		mockPage.component = 'Layout';
 	});
 });

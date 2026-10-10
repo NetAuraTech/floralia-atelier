@@ -129,4 +129,74 @@ test.group('ImageOptimizerService', (group) => {
 
 		drive.restore('s3');
 	});
+
+	test('readDimensions returns empty dimensions for non-image files', async ({ assert }) => {
+		const file = {
+			mimeType: 'application/pdf',
+			disk: 'fs',
+			path: 'test.pdf',
+			filename: 'test.pdf',
+		} as any;
+		const result = await service.readDimensions(file);
+		assert.deepEqual(result, {});
+	});
+
+	test('readDimensions returns empty dimensions for SVG images', async ({ assert }) => {
+		const file = {
+			mimeType: 'image/svg+xml',
+			disk: 'fs',
+			path: 'test.svg',
+			filename: 'test.svg',
+		} as any;
+		const result = await service.readDimensions(file);
+		assert.deepEqual(result, {});
+	});
+
+	test('readDimensions returns empty dimensions when the original is missing', async ({ assert }) => {
+		drive.fake('s3');
+		const file = {
+			mimeType: 'image/jpeg',
+			disk: 's3',
+			path: 'missing.jpg',
+			filename: 'missing.jpg',
+		} as any;
+		const result = await service.readDimensions(file);
+		assert.deepEqual(result, {});
+		drive.restore('s3');
+	});
+
+	test('readDimensions extracts the original dimensions without generating variants', async ({ assert }) => {
+		drive.fake('s3');
+		const disk = drive.use('s3');
+
+		const originalBuffer = await sharp({
+			create: {
+				width: 640,
+				height: 480,
+				channels: 4,
+				background: { r: 0, g: 0, b: 255, alpha: 1 },
+			},
+		})
+			.png()
+			.toBuffer();
+
+		await disk.put('uploads/dims.png', originalBuffer);
+
+		const file = {
+			mimeType: 'image/png',
+			disk: 's3',
+			path: 'uploads/dims.png',
+			filename: 'dims.png',
+		} as any;
+
+		const result = await service.readDimensions(file);
+
+		assert.equal(result.width, 640);
+		assert.equal(result.height, 480);
+
+		// No variant is generated as a side effect of a dimensions read.
+		assert.isFalse(await disk.exists('uploads/dims-400.webp'));
+
+		drive.restore('s3');
+	});
 });

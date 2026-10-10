@@ -3,6 +3,7 @@ import { FindHomepageAction } from '#cms/actions/page/find_homepage_action';
 import { FindPageBySlugAction } from '#cms/actions/page/find_page_by_slug_action';
 import { PageResolverService } from '#cms/services/page/page_resolver_service';
 import { ResolvedPageContent } from '#cms/types/page';
+import { ImageOptimizerService } from '#file/services/image_optimizer_service';
 import { StorageService } from '#file/services/storage_service';
 import { CacheService } from '#shared/services/cache_service';
 import { renderNotFound } from '#transport/cms/helpers/not_found';
@@ -18,6 +19,7 @@ export default class PageController {
 		protected findPageBySlugAction: FindPageBySlugAction,
 		protected resolverService: PageResolverService,
 		protected storageService: StorageService,
+		protected imageOptimizer: ImageOptimizerService,
 		protected cache: CacheService,
 	) {}
 
@@ -53,8 +55,13 @@ export default class PageController {
 		);
 
 		let metaImageUrl: string | null = null;
+		let metaImageWidth: number | null = null;
+		let metaImageHeight: number | null = null;
 		if (page.metaImage) {
 			metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk);
+			const dimensions = await this.imageOptimizer.readDimensions(page.metaImage);
+			metaImageWidth = dimensions.width ?? null;
+			metaImageHeight = dimensions.height ?? null;
 		}
 
 		return renderInertiaPage(inertia, 'cms/page/front/show', {
@@ -64,6 +71,8 @@ export default class PageController {
 			metaTitle: translation.metaTitle,
 			metaDescription: translation.metaDescription,
 			metaImage: metaImageUrl,
+			metaImageWidth,
+			metaImageHeight,
 			content: resolvedContent,
 		});
 	}
@@ -103,8 +112,13 @@ export default class PageController {
 
 		// Resolve the og:image if set on the page
 		let metaImageUrl: string | null = null;
+		let metaImageWidth: number | null = null;
+		let metaImageHeight: number | null = null;
 		if (page.metaImage) {
 			metaImageUrl = await this.storageService.url(page.metaImage.path, page.metaImage.disk);
+			const dimensions = await this.imageOptimizer.readDimensions(page.metaImage);
+			metaImageWidth = dimensions.width ?? null;
+			metaImageHeight = dimensions.height ?? null;
 		}
 
 		return renderInertiaPage(inertia, 'cms/page/front/show', {
@@ -114,6 +128,8 @@ export default class PageController {
 			metaTitle: translation.metaTitle,
 			metaDescription: translation.metaDescription,
 			metaImage: metaImageUrl,
+			metaImageWidth,
+			metaImageHeight,
 			content: resolvedContent,
 		});
 	}
