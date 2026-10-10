@@ -134,7 +134,24 @@ describe('ShowPage — SEO', () => {
 		});
 		expect(ld.priceRange).toBe('€€');
 		expect(ld.hasOfferCatalog.name).toBe('Services floraux');
-		expect(ld.hasOfferCatalog.itemListElement).toHaveLength(3);
+		expect(ld.hasOfferCatalog.itemListElement).toHaveLength(4);
+
+		const serviceNames = (ld.hasOfferCatalog.itemListElement as { itemOffered: { name: string } }[]).map(
+			(offer) => offer.itemOffered.name,
+		);
+		expect(serviceNames).toEqual([
+			'Nettoyage de sépultures',
+			'Fleurissement de sépultures',
+			'Bouquets & compositions sur mesure',
+			"Décoration florale d'événements",
+		]);
+	});
+
+	it('emits the default og image dimensions when the page sets no custom image', async () => {
+		await render({ title: 'Accueil', metaTitle: null, metaDescription: null, metaImage: null });
+
+		expect(headMetaContent('property', 'og:image:width')).toBe('1200');
+		expect(headMetaContent('property', 'og:image:height')).toBe('630');
 	});
 
 	it('uses the page meta title and description when set, and the fallbacks otherwise', async () => {

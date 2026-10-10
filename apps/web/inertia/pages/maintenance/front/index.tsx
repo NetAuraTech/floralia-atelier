@@ -4,6 +4,7 @@ import { Heading } from '@foundry/design-system/heading';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { ReactElement } from 'react';
+import SeoHead from '~/components/atoms/seo_head';
 import { useInterval } from '~/hooks/use_interval';
 import { useTranslation } from '~/hooks/use_translation';
 import type { MaintenanceTranslations } from '#transport/core/helpers/i18n_payloads/maintenance_front';
@@ -46,6 +47,7 @@ export default function MaintenancePage(props: PageProps) {
 
 	return (
 		<>
+			<SeoHead title={t('title')} noIndex />
 			<Section className="min-h-screen flex items-center justify-center px-4 py-12">
 				<div className="w-full max-w-md text-center">
 					<div className="text-6xl mb-6" aria-hidden="true">

@@ -23,8 +23,14 @@ interface LayoutProps {
  */
 export default function Layout(props: LayoutProps) {
 	const { children } = props;
-	const { props: pageProps, url, flash } = usePage<SharedProps>();
+	const { props: pageProps, url, flash, component } = usePage<SharedProps>();
 	const { app_name, app_url } = pageProps;
+
+	// Error pages (`errors/*`) are wrapped by this layout too, so the layout
+	// owns their robots meta: noindex there, indexable everywhere else.
+	const robotsContent = component?.startsWith('errors/')
+		? 'noindex, nofollow'
+		: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
 
 	const homeHref = urlFor('core.home.render');
 
@@ -136,7 +142,7 @@ export default function Layout(props: LayoutProps) {
 				<link rel="canonical" href={`${app_url}${url}`} />
 				<link rel="preconnect" href="https://api.iconify.design" />
 				<link rel="dns-prefetch" href="https://api.iconify.design" />
-				<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+				<meta name="robots" content={robotsContent} />
 				<meta name="language" content="fr" />
 				<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />

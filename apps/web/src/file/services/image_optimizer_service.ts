@@ -22,6 +22,16 @@ export interface OptimizableFile {
 }
 
 /**
+ * The original image's dimensions, extracted from its metadata.
+ */
+export interface ImageDimensions {
+	/** Original image width in pixels */
+	width?: number;
+	/** Original image height in pixels */
+	height?: number;
+}
+
+/**
  * Result of the image optimization process.
  * Includes extracted dimensions and the map of generated variants.
  */
@@ -43,6 +53,27 @@ export interface OptimizedImageResult {
  */
 export class ImageOptimizerService {
 	/**
+	 * Reads only the original image's dimensions, without generating any variant.
+	 *
+	 * Used by the front to emit the real `og:image` dimensions for a page's meta
+	 * image. Returns empty dimensions for non-image files, SVGs, a missing
+	 * original, or any processing error.
+	 *
+	 * @param file - The storage-location surface of the original image.
+	 * @returns A promise resolving to the original dimensions (or an empty object).
+	 */
+	public async readDimensions(file: OptimizableFile): Promise<ImageDimensions> {
+		try {
+			const bootstrapped = await this.bootstrap(file);
+			if (!bootstrapped) return {};
+			return { width: bootstrapped.width, height: bootstrapped.height };
+		} catch (error) {
+			console.error(`[ImageOptimizerService] Dimensions error for ${file.filename}:`, error.message);
+			return {};
+		}
+	}
+
+	/**
 	 * Optimizes an image by extracting its dimensions and ensuring responsive variants exist.
 	 *
 	 * The process follows these steps:
@@ -61,34 +92,25 @@ export class ImageOptimizerService {
 			variants: {},
 		};
 
-		// Skip non-image files or SVGs (which are already responsive by nature)
-		if (!file.mimeType.startsWith('image/') || file.mimeType === 'image/svg+xml') {
+		let bootstrapped;
+		try {
+			bootstrapped = await this.bootstrap(file);
+		} catch (error) {
+			console.error(`[ImageOptimizerService] Global error for ${file.filename}:`, error.message);
 			return result;
 		}
 
+		if (!bootstrapped) {
+			return result;
+		}
+
+		result.width = bootstrapped.width;
+		result.height = bootstrapped.height;
+
 		try {
+			const sharpInstance = bootstrapped.sharpInstance;
 			const d = drive.use(file.disk);
 			const originalPath = file.path;
-
-			// Ensure the original file is still present on the storage disk
-			if (!(await d.exists(originalPath))) {
-				return result;
-			}
-
-			// Initialize Sharp. For local storage, we use the absolute path for better stability
-			// on certain Linux environments compared to Buffer-based processing.
-			let sharpInstance: Sharp;
-			if (file.disk === 'fs') {
-				sharpInstance = sharp(app.makePath('storage', originalPath), { failOn: 'none' });
-			} else {
-				const rawData = await d.getBytes(originalPath);
-				sharpInstance = sharp(Buffer.from(rawData), { failOn: 'none' });
-			}
-
-			// Extract original dimensions to provide to the front-end for CLS prevention
-			const metadata = await sharpInstance.metadata();
-			result.width = metadata.width;
-			result.height = metadata.height;
 
 			const dir = originalPath.substring(0, originalPath.lastIndexOf('/'));
 			const baseName = file.filename.substring(0, file.filename.lastIndexOf('.'));
@@ -141,5 +163,46 @@ export class ImageOptimizerService {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Shared bootstrap for the optimization and dimension-reading paths.
+	 *
+	 * Validates that the file is a compatible (non-SVG) image and still present
+	 * on its disk, then returns a ready-to-use Sharp instance alongside the
+	 * original dimensions. Returns `undefined` when there is nothing to process.
+	 *
+	 * @param file - The storage-location surface of the original image.
+	 */
+	private async bootstrap(
+		file: OptimizableFile,
+	): Promise<{ sharpInstance: Sharp; width?: number; height?: number } | undefined> {
+		// Skip non-image files or SVGs (which are already responsive by nature)
+		if (!file.mimeType.startsWith('image/') || file.mimeType === 'image/svg+xml') {
+			return undefined;
+		}
+
+		const d = drive.use(file.disk);
+		const originalPath = file.path;
+
+		// Ensure the original file is still present on the storage disk
+		if (!(await d.exists(originalPath))) {
+			return undefined;
+		}
+
+		// Initialize Sharp. For local storage, we use the absolute path for better stability
+		// on certain Linux environments compared to Buffer-based processing.
+		let sharpInstance: Sharp;
+		if (file.disk === 'fs') {
+			sharpInstance = sharp(app.makePath('storage', originalPath), { failOn: 'none' });
+		} else {
+			const rawData = await d.getBytes(originalPath);
+			sharpInstance = sharp(Buffer.from(rawData), { failOn: 'none' });
+		}
+
+		// Extract original dimensions to provide to the front-end for CLS prevention
+		const metadata = await sharpInstance.metadata();
+
+		return { sharpInstance, width: metadata.width, height: metadata.height };
 	}
 }
