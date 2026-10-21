@@ -33,7 +33,7 @@
     "test:front": "vitest run"
   },
   "dependencies": {
-    "@adonisjs/ally": "^6.3.1",
+    "@adonisjs/ally": "^6.3.2",
     "@adonisjs/auth": "^10.0.0",
     "@adonisjs/core": "^7.0.0",
     "@adonisjs/cors": "^3.0.0",
@@ -62,7 +62,7 @@
     "@lukeed/ms": "^2.0.2",
     "@scalar/api-reference": "^1.73.0",
     "@sentry/node": "^11.4.0",
-    "@sentry/react": "^11.4.0",
+    "@sentry/react": "^11.7.0",
     "@tailwindcss/vite": "^4.2.1",
     "@tuyau/core": "^1.0.0",
     "@vinejs/vine": "^4.3.0",
@@ -94,7 +94,7 @@
     "@japa/assert": "^4.2.0",
     "@japa/plugin-adonisjs": "^5.1.0",
     "@japa/runner": "^5.4.0",
-    "@poppinss/ts-exec": "^1.4.4",
+    "@poppinss/ts-exec": "^1.5.0",
     "@seriousme/openapi-schema-validator": "^2.10.0",
     "@types/dompurify": "^3.2.0",
     "@types/jsdom": "^30.0.0",
