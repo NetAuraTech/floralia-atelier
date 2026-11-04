@@ -1,6 +1,6 @@
 # Floral Atelier
 
-The website of **Floral Atelier**, a florist (art floral & entretien de sépultures) based in Samer, France. It is a CMS-driven public site built on the **Foundry 2.1** full flavor: an AdonisJS v7 + Inertia/React application with a headless CMS, a visual page builder, and a complete admin panel.
+The website of **Floral Atelier**, a florist (art floral & entretien de sépultures) based in Samer, France. It is a CMS-driven public site built on the **Foundry 1.0** full flavor: an AdonisJS v7 + Inertia/React application with a headless CMS, a visual page builder, and a complete admin panel.
 
 ## What's in the box
 
@@ -118,6 +118,8 @@ PG_PORT=5432
 PG_USER=user
 PG_PASSWORD=password
 PG_DB_NAME=app
+# Schemas included in pg_dump backups (comma-separated); empty = every schema
+BACKUP_PG_SCHEMAS=
 
 # Redis
 REDIS_HOST=127.0.0.1
@@ -214,6 +216,12 @@ TYPESENSE_SEARCH_LIMIT=20
 # Sitemap — comma-separated additions and exclusions
 SITEMAP_ADDITIONS=
 SITEMAP_EXCLUSIONS=
+
+# SEO — publisher identity for the public page structured data (all optional)
+LEGAL_NAME=Floralia Atelier
+LEGAL_SIRET=
+LEGAL_ADDRESS=62830, Samer, France
+LEGAL_PHONE=+33 6 58 02 95 39
 ```
 
 OAuth providers (GitHub, Google, Facebook) are **automatically enabled** when valid credentials are present; providers with empty or `dummy` credentials are silently disabled. Register the `http://localhost:3333/oauth/{provider}/callback` URLs in your provider dashboards.
@@ -312,4 +320,4 @@ Types: `feat`, `fix`, `refactor`, `docs`, `chore`, `test`, `perf`.
 
 ## License
 
-[MIT License](LICENSE).
+[AdonisJS Foundry Small Business License 1.0.0](LICENSE). Use is free for companies with fewer than 100 people and less than €100,000 in total annual revenue; businesses above that threshold need a commercial license ([contact@netauratech.fr](mailto:contact@netauratech.fr)).

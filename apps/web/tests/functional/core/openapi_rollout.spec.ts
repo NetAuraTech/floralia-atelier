@@ -1,17 +1,9 @@
 import router from '@adonisjs/core/services/router';
 import { test } from '@japa/runner';
 import { Validator } from '@seriousme/openapi-schema-validator';
-import { registerAccountApiDocs } from '#transport/account/api_docs';
-import { registerAuthApiDocs } from '#transport/auth/api_docs';
-import { registerCmsApiDocs } from '#transport/cms/api_docs';
-import { registerCoreApiDocs } from '#transport/core/api_docs';
 import { allApiDocs, getApiDoc } from '#transport/core/openapi/api_docs_registry';
 import { buildOpenApiSpec, type ApiRouteSummary } from '#transport/core/openapi/openapi_generator';
 import { paginationValidator } from '#transport/core/validators/pagination';
-import { registerFileApiDocs } from '#transport/file/api_docs';
-import { registerIdentityApiDocs } from '#transport/identity/api_docs';
-import { registerLogApiDocs } from '#transport/log/api_docs';
-import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
 
 /** HTTP methods that carry JSON payloads and are documented (mirrors the generator). */
 const JSON_METHODS: readonly string[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
@@ -66,22 +58,7 @@ function buildFullSpec() {
  * drift: a new API route added without its docs entry, or a doc that produces
  * an invalid document, fails the suite.
  */
-test.group('OpenAPI rollout', (group) => {
-	// The docs registry is a process-wide singleton populated at import time
-	// by the route modules, and a unit test in this same Japa process clears
-	// it; re-register every surface before each test so these assertions do
-	// not depend on test execution order.
-	group.each.setup(() => {
-		registerIdentityApiDocs();
-		registerAuthApiDocs();
-		registerAccountApiDocs();
-		registerCoreApiDocs();
-		registerFileApiDocs();
-		registerLogApiDocs();
-		registerCmsApiDocs();
-		registerWebhookApiDocs();
-	});
-
+test.group('OpenAPI rollout', () => {
 	test('documents every registered API route (drift guard)', ({ assert }) => {
 		const documentable = documentableSummaries(allRouteSummaries());
 

@@ -1,4 +1,4 @@
-This is `floralia-atelier` — the website of Floral Atelier, a florist (art floral & entretien de sépultures) based in Samer, France, built on the Foundry 2.1 full flavor: an AdonisJS v7 + Inertia/React application with a headless CMS and admin panel, organized on a domain-driven architecture (controllers → actions → services/repositories → models).
+This is `floralia-atelier` — the website of Floral Atelier, a florist (art floral & entretien de sépultures) based in Samer, France, built on the Foundry 1.0 full flavor: an AdonisJS v7 + Inertia/React application with a headless CMS and admin panel, organized on a domain-driven architecture (controllers → actions → services/repositories → models).
 
 <critical>
 - Prefer `npm` for dependency management and scripts.

@@ -1,6 +1,6 @@
 # Floral Atelier
 
-The website of Floral Atelier, an artisan florist in Samer (France) specialized in floral art and care of burial sites. Built on the Foundry 2.1 full flavor: a CMS-driven public site, an admin panel with a visual page builder, file management, a template system, and the full authentication/access stack, on a domain-driven backend.
+The website of Floral Atelier, an artisan florist in Samer (France) specialized in floral art and care of burial sites. Built on the Foundry 1.0 full flavor: a CMS-driven public site, an admin panel with a visual page builder, file management, a template system, and the full authentication/access stack, on a domain-driven backend.
 
 ## Language
 

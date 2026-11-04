@@ -1,8 +1,8 @@
 {
   "name": "floralia-atelier",
-  "version": "2.1.0",
+  "version": "1.0.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -26,19 +26,14 @@
     "postinstall": "patch-package"
   },
   "devDependencies": {
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.89.0",
     "pino-pretty": "^13.2.0",
     "typescript": "~5.9.3"
   },
   "overrides": {
     "@adonisjs/ally": {
       "@adonisjs/inertia": "^5.0.0"
-    },
-    "@ai-sdk/provider": "^3.0.12",
-    "@ai-sdk/provider-utils": "^4.0.33",
-    "@scalar/json-magic": {
-      "undici": "7.29.1"
     },
     "nodemailer": "^10.0.9"
   },
@@ -47,7 +42,7 @@
   },
   "allowScripts": {
     "vue-demi@0.14.10": true,
-    "@swc/core@1.15.47": true,
+    "@swc/core@1.16.18": true,
     "better-sqlite3@13.0.3": true,
     "esbuild@0.28.2": true
   }

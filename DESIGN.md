@@ -4,7 +4,7 @@ The public site of Floral Atelier carries a calm, editorial identity: a warm
 off-white canvas, deep botanical greens with an olive-gold accent, serif
 display type over a humanist sans body, French copy throughout, and an
 animated logo intro on the first load. This file documents the identity as
-shipped on the Foundry 2.1 baseline.
+shipped on the Foundry 1.0 baseline.
 
 The admin panel reuses the same tokens but is a separate surface; this file
 covers the public site. Component conventions (atoms/molecules/organisms, the

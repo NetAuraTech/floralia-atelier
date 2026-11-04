@@ -1,7 +1,7 @@
 name: Docker image
 
-# Builds the production image (the multi-stage Dockerfile at the repo
-# root) and pushes it to the GitHub Container Registry.
+# Builds the production image (the multi-stage Dockerfile at the repo root) and
+# pushes it to the GitHub Container Registry.
 #
 # Triggered manually from the Actions tab (workflow_dispatch); the optional
 # `ref` input selects the branch or tag to build (defaults to main).
@@ -25,7 +25,7 @@ permissions:
   contents: read
   packages: write
 
-# A second manual trigger while one is running is a mistake - cancel the
+# A second manual trigger while one is running is a mistake — cancel the
 # in-progress run rather than queueing it.
 concurrency:
   group: docker-image

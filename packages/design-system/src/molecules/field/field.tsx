@@ -105,8 +105,9 @@ interface FieldProps {
 	renderImage?: (inputProps: ImageFieldProps) => ReactNode;
 	/**
 	 * `<SelectOption>` elements rendered by a `'select'` type field. Ignored
-	 * by every other type — a non-select control is a void-ish element and
-	 * must never receive children (React SSR rejects it).
+	 * by every other type — a non-select control must never receive children:
+	 * React SSR throws on a void control such as `<input>`, and a `<textarea>`
+	 * would render them as stray text content.
 	 */
 	children?: ReactNode;
 }
@@ -117,7 +118,15 @@ interface FieldProps {
  */
 export type ImageFieldProps = Omit<
 	FieldProps,
-	'label' | 'errorMessage' | 'helpText' | 'helpClassName' | 'validation' | 'errors' | 'sanitizeValue' | 'renderImage'
+	| 'label'
+	| 'errorMessage'
+	| 'helpText'
+	| 'helpClassName'
+	| 'validation'
+	| 'errors'
+	| 'sanitizeValue'
+	| 'renderImage'
+	| 'children'
 >;
 
 const fieldLayout = tv({
