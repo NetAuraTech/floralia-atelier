@@ -5,14 +5,6 @@ import { Validator } from '@seriousme/openapi-schema-validator';
 import User from '#identity/models/user';
 import { createAdminUser } from '#tests/helpers/create_admin_user';
 import { createVerifiedUser } from '#tests/helpers/create_verified_user';
-import { registerAccountApiDocs } from '#transport/account/api_docs';
-import { registerAuthApiDocs } from '#transport/auth/api_docs';
-import { registerCmsApiDocs } from '#transport/cms/api_docs';
-import { registerCoreApiDocs } from '#transport/core/api_docs';
-import { registerFileApiDocs } from '#transport/file/api_docs';
-import { registerIdentityApiDocs } from '#transport/identity/api_docs';
-import { registerLogApiDocs } from '#transport/log/api_docs';
-import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
 
 /**
  * OpenAPI surface — the generated spec (`/api/v1/openapi.json`, served by the
@@ -21,21 +13,7 @@ import { registerWebhookApiDocs } from '#transport/webhook/api_docs';
  * logged-in session; the spec is scoped to the user's permissions.
  */
 test.group('OpenAPI surface', (group) => {
-	// The docs registry is a process-wide singleton populated at import time by
-	// the route modules, and a unit test in this same Japa process clears it;
-	// re-register the whole documented surface before each test so these
-	// assertions do not depend on test execution order.
 	group.each.setup(() => testUtils.db().truncate());
-	group.each.setup(() => {
-		registerAccountApiDocs();
-		registerAuthApiDocs();
-		registerCmsApiDocs();
-		registerCoreApiDocs();
-		registerFileApiDocs();
-		registerIdentityApiDocs();
-		registerLogApiDocs();
-		registerWebhookApiDocs();
-	});
 	group.each.setup(() => limiter.clear());
 	group.each.teardown(() => limiter.clear());
 

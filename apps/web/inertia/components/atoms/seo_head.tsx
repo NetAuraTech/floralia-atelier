@@ -1,18 +1,25 @@
-import { Head } from '@inertiajs/react';
+import { SharedProps } from '@adonisjs/inertia/types';
+import { Head, usePage } from '@inertiajs/react';
 import type { JsonLd } from '~/helpers/structured_data';
 
-interface SeoHeadProps {
-	/** The page title (transformed by the app's `title` option). */
+/**
+ * The document head of one public front page.
+ *
+ * Centralizes the per-page SEO tags — document title, meta description, the
+ * Open Graph / Twitter share image and the JSON-LD structured-data scripts —
+ * so every front page emits the same contract. The site-wide chrome
+ * (canonical, `og:url`, `og:site_name`, favicons, …) stays in the root
+ * layout; this component only emits the page-level tags, never the layout
+ * ones.
+ */
+export function SeoHead(props: {
+	/** The document title, e.g. `"Welcome - AdonisJS Foundry"`. */
 	title: string;
-	/** Meta description; omitted when absent. */
-	description?: string | null;
-	/** Absolute og:image URL; omitted when absent. */
-	image?: string | null;
-	/** og:image width in pixels; omitted when absent. */
-	imageWidth?: number | null;
-	/** og:image height in pixels; omitted when absent. */
-	imageHeight?: number | null;
-	/** JSON-LD nodes to emit as `application/ld+json` scripts. */
+	/** The meta description (~160 chars), also used as the share description. Omitted when unset. */
+	description?: string;
+	/** Absolute URL of the share image; defaults to the static `og-image.jpg`. */
+	image?: string;
+	/** Structured-data nodes appended as `application/ld+json` scripts. */
 	jsonLd?: JsonLd[];
 	/**
 	 * Emit a `noindex, nofollow` robots meta. For pages that bypass the app
@@ -20,33 +27,27 @@ interface SeoHeadProps {
 	 * maintenance screen.
 	 */
 	noIndex?: boolean;
-}
+}) {
+	const { props: sharedProps } = usePage<SharedProps>();
+	const { app_url } = sharedProps;
 
-/**
- * The shared per-page SEO head of the public front.
- *
- * Owns the page-level tags — title, description, the Open Graph / Twitter
- * cards, and any JSON-LD — leaving the site-wide chrome (canonical,
- * `og:url`, `og:site_name`, locale, favicons, robots) to the app layout. Every
- * public page composes its head through this single atom so the contract never
- * drifts between pages.
- *
- * @example
- * <SeoHead title={seoTitle} description={metaDescription} image={ogImage} jsonLd={[localBusiness]} />
- */
-export default function SeoHead({ title, description, image, imageWidth, imageHeight, jsonLd, noIndex }: SeoHeadProps) {
+	const image = props.image ?? `${app_url}/og-image.jpg`;
+
 	return (
-		<Head title={title}>
-			{noIndex && <meta name="robots" content="noindex, nofollow" />}
-			{description && <meta name="description" content={description} />}
-			<meta property="og:title" content={title} />
-			{description && <meta property="og:description" content={description} />}
-			{description && <meta name="twitter:description" content={description} />}
-			{image && <meta property="og:image" content={image} />}
-			{imageWidth != null && <meta property="og:image:width" content={String(imageWidth)} />}
-			{imageHeight != null && <meta property="og:image:height" content={String(imageHeight)} />}
-			{image && <meta name="twitter:image" content={image} />}
-			{jsonLd?.map((node, index) => (
+		<Head>
+			<title>{props.title}</title>
+			{props.noIndex ? <meta name="robots" content="noindex, nofollow" /> : null}
+			{props.description ? (
+				<>
+					<meta name="description" content={props.description} />
+					<meta property="og:description" content={props.description} />
+					<meta name="twitter:description" content={props.description} />
+				</>
+			) : null}
+			<meta property="og:title" content={props.title} />
+			<meta property="og:image" content={image} />
+			<meta name="twitter:image" content={image} />
+			{props.jsonLd?.map((node, index) => (
 				<script key={index} type="application/ld+json">
 					{JSON.stringify(node)}
 				</script>

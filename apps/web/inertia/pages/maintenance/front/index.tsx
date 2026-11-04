@@ -4,7 +4,7 @@ import { Heading } from '@foundry/design-system/heading';
 import { Paragraph } from '@foundry/design-system/paragraph';
 import { Section } from '@foundry/design-system/section';
 import { ReactElement } from 'react';
-import SeoHead from '~/components/atoms/seo_head';
+import { SeoHead } from '~/components/atoms/seo_head';
 import { useInterval } from '~/hooks/use_interval';
 import { useTranslation } from '~/hooks/use_translation';
 import type { MaintenanceTranslations } from '#transport/core/helpers/i18n_payloads/maintenance_front';

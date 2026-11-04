@@ -1,173 +1,179 @@
+import type { LegalIdentity } from '#types/seo';
+
 /**
  * The structured-data builders of the public front.
  *
  * Pure functions producing `schema.org` JSON-LD nodes for the document head.
  * They stay in the Inertia layer (no backend imports) and take plain values —
- * the page's shared props and the florist's identity — so a page composes its
- * own head without any further data access, and each builder is unit-testable
- * in isolation.
+ * the page shared props and the content payload — so each front page composes
+ * its own head without any further data access. Identity values that are not
+ * configured are omitted rather than emitted as empty values.
  */
 
 /** A JSON-LD node ready to be serialized into an `application/ld+json` script. */
 export type JsonLd = Record<string, unknown>;
 
-/** One entry in the florist's service catalogue. */
-export interface FloristService {
-	/** Display name of the service, e.g. `'Nettoyage de sépultures'`. */
+/** A single crumb of a `BreadcrumbList` trail; the current page omits `url`. */
+export type BreadcrumbCrumb = {
+	/** Crumb display name. */
 	name: string;
-	/** Short description of the service. */
-	description: string;
-}
-
-/**
- * The fixed identity of the florist, emitted in the `LocalBusiness` node.
- * The business name lives on the site's `app_name` shared prop, not here.
- */
-export interface FloristIdentity {
-	/** Human description of the business. */
-	description?: string;
-	/** Public telephone number. */
-	telephone?: string;
-	/** `schema.org` `PostalAddress` node. */
-	address?: JsonLd;
-	/** `schema.org` `OpeningHoursSpecification` nodes. */
-	openingHours?: JsonLd[];
-	/** Price range, e.g. `'€€'`. */
-	priceRange?: string;
-}
-
-/** The florist's public identity (Samer, France). */
-export const FLORIST_IDENTITY: FloristIdentity = {
-	description:
-		"Artisan fleuriste spécialisé dans l'entretien et le fleurissement de sépultures, ainsi que les créations florales sur mesure pour mariages, baptêmes et événements.",
-	telephone: '+336-58-02-95-39',
-	address: {
-		'@type': 'PostalAddress',
-		addressLocality: 'Samer',
-		postalCode: '62830',
-		addressCountry: 'FR',
-	},
-	openingHours: [
-		{
-			'@type': 'OpeningHoursSpecification',
-			dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-			opens: '09:00',
-			closes: '18:00',
-		},
-	],
-	priceRange: '€€',
+	/** Absolute crumb URL, omitted for the current page. */
+	url?: string;
 };
 
-/** The florist's services, in the order the site presents them. */
-export const FLORIST_SERVICES: FloristService[] = [
-	{
-		name: 'Nettoyage de sépultures',
-		description: 'Nettoyage en profondeur des tombes et monuments funéraires',
-	},
-	{
-		name: 'Fleurissement de sépultures',
-		description: 'Fleurissement et entretien régulier des sépultures',
-	},
-	{
-		name: 'Bouquets & compositions sur mesure',
-		description: 'Bouquets et compositions florales réalisés sur mesure',
-	},
-	{
-		name: "Décoration florale d'événements",
-		description: 'Décoration florale pour mariages, baptêmes et événements',
-	},
-];
-
-/** The sentinel rendered for an unset value; it must never leak into structured data. */
-const PLACEHOLDER = '<CHANGEME>';
+/** A service entry of a business `OfferCatalog`. */
+export type BusinessOffer = {
+	/** `schema.org` type of the offered item, e.g. `'Service'`. */
+	type: string;
+	/** Offer name. */
+	name: string;
+	/** Optional offer description. */
+	description?: string;
+};
 
 /**
- * Whether a value is still unset or a placeholder (empty or the `<CHANGEME>`
- * sentinel), so it must not be emitted into public structured data.
+ * Whether a value is unset (undefined, empty or whitespace-only), so it must
+ * not be emitted into public structured data.
  *
  * @param value - The value to check.
- * @returns `true` when the value is absent, blank, or the sentinel.
  */
-export function isPlaceholder(value: string | undefined): boolean {
-	return value === undefined || value.trim() === '' || value === PLACEHOLDER;
+function isUnset(value: string | undefined): value is undefined {
+	return value === undefined || value.trim() === '';
 }
 
 /**
- * Build the `hasOfferCatalog` `OfferCatalog` node for the service catalogue.
+ * Parse a free-form address line (e.g. `"8 avenue des Tilleuls, 75011, Paris,
+ * France"`) into a `schema.org` `PostalAddress`, taking whatever parts are
+ * present.
  *
- * @param appUrl - Absolute application URL (no trailing slash).
- * @param services - The ordered service catalogue.
- * @returns The `OfferCatalog` node, or `undefined` when the catalogue is empty.
+ * The 5-digit postal code is recognised by pattern; the last part is the
+ * country and the part before it the locality; everything left over becomes
+ * the `streetAddress`.
+ *
+ * @param address - The comma-separated address line.
+ * @returns A `PostalAddress` node, or `undefined` when the address is unset.
  */
-export function buildOfferCatalog(appUrl: string, services: FloristService[]): JsonLd | undefined {
-	if (services.length === 0) return undefined;
+export function parsePostalAddress(address: string | undefined): JsonLd | undefined {
+	if (isUnset(address)) return undefined;
 
-	return {
-		'@type': 'OfferCatalog',
-		name: 'Services floraux',
-		itemListElement: services.map((service) => ({
-			'@type': 'Offer',
-			itemOffered: {
-				'@type': 'Service',
-				name: service.name,
-				description: service.description,
-				provider: { '@id': `${appUrl}/#business` },
-			},
-		})),
-	};
+	const parts = address
+		.split(',')
+		.map((part) => part.trim())
+		.filter((part) => part !== '');
+	if (parts.length === 0) return undefined;
+
+	const postalIndex = parts.findIndex((part) => /^\d{5}$/.test(part));
+	const lastIndex = parts.length - 1;
+
+	const country = lastIndex !== postalIndex && parts.length >= 2 ? parts[lastIndex] : undefined;
+	const locality =
+		parts.length >= 3 && lastIndex - 1 !== postalIndex && parts[lastIndex - 1] !== country
+			? parts[lastIndex - 1]
+			: undefined;
+
+	const consumed = new Set<number>();
+	if (country !== undefined) consumed.add(lastIndex);
+	if (locality !== undefined) consumed.add(lastIndex - 1);
+	if (postalIndex !== -1) consumed.add(postalIndex);
+
+	const streetAddress = parts
+		.filter((_, index) => !consumed.has(index))
+		.join(', ')
+		.trim();
+
+	const node: JsonLd = { '@type': 'PostalAddress' };
+	if (streetAddress) node.streetAddress = streetAddress;
+	if (postalIndex !== -1) node.postalCode = parts[postalIndex];
+	if (locality) node.addressLocality = locality;
+	if (country) node.addressCountry = /france/i.test(country) ? 'FR' : country;
+
+	return node;
 }
 
 /**
- * Build the `LocalBusiness` JSON-LD node describing the florist.
+ * Build the `LocalBusiness` JSON-LD node describing the publisher.
  *
- * Fields that are empty or still placeholder are omitted, so a not-yet-configured
- * deployment never leaks a sentinel into structured data. The email is omitted
- * when it is a reserved example address, and the `hasOfferCatalog` is only
- * attached when the catalogue is non-empty.
+ * Identity values that are not configured are omitted, so a not-yet-configured
+ * deployment never emits empty or placeholder values into structured data.
+ * The `hasOfferCatalog` is only attached when the page carries offers.
  *
  * @param opts.appUrl - Absolute application URL (no trailing slash).
- * @param opts.appName - Public site name (used as the business name).
+ * @param opts.appName - Public site name.
  * @param opts.email - Contact email shared with every page.
- * @param opts.image - Absolute URL of the business image (the page's og image).
- * @param opts.identity - The florist's identity (defaults to {@link FLORIST_IDENTITY}).
- * @param opts.services - The service catalogue (defaults to {@link FLORIST_SERVICES}).
+ * @param opts.identity - Publisher identity resolved from the `LEGAL_*` env.
+ * @param opts.image - Absolute image URL (e.g. the page og:image).
+ * @param opts.offers - The offer catalog, when the page carries one.
  * @returns The `LocalBusiness` node.
  *
  * @example
- * const jsonLd = buildLocalBusiness({ appUrl, appName, email, image })
+ * const jsonLd = businessJsonLd({ appUrl, appName, email, identity, image })
  */
-export function buildLocalBusiness(opts: {
+export function businessJsonLd(opts: {
 	appUrl: string;
 	appName: string;
 	email?: string;
+	identity: LegalIdentity;
 	image?: string;
-	identity?: FloristIdentity;
-	services?: FloristService[];
+	offers?: { name?: string; items: BusinessOffer[] };
 }): JsonLd {
-	const identity = opts.identity ?? FLORIST_IDENTITY;
-	const services = opts.services ?? FLORIST_SERVICES;
+	const { appUrl, appName, email, identity, image, offers } = opts;
 
 	const node: JsonLd = {
 		'@context': 'https://schema.org',
 		'@type': 'LocalBusiness',
-		'@id': `${opts.appUrl}/#business`,
-		name: opts.appName,
-		url: opts.appUrl,
-		logo: `${opts.appUrl}/logo.png`,
+		'@id': `${appUrl}/#business`,
+		name: appName,
+		url: appUrl,
 	};
 
-	if (opts.image) node.image = opts.image;
-	if (!isPlaceholder(identity.description)) node.description = identity.description;
-	if (identity.telephone && !isPlaceholder(identity.telephone)) node.telephone = identity.telephone;
-	if (opts.email && !isPlaceholder(opts.email) && !/example\.com$/i.test(opts.email)) node.email = opts.email;
-	if (identity.address) node.address = identity.address;
-	if (identity.openingHours && identity.openingHours.length > 0) {
-		node.openingHoursSpecification = identity.openingHours;
-	}
-	if (identity.priceRange && !isPlaceholder(identity.priceRange)) node.priceRange = identity.priceRange;
+	if (!isUnset(identity.name)) node.legalName = identity.name;
+	if (!isUnset(identity.phone)) node.telephone = identity.phone;
+	if (!isUnset(email)) node.email = email;
 
-	const catalog = buildOfferCatalog(opts.appUrl, services);
-	if (catalog) node.hasOfferCatalog = catalog;
+	const address = parsePostalAddress(identity.address);
+	if (address) node.address = address;
+	if (!isUnset(identity.siret) && /^\d{14}$/.test(identity.siret)) node.taxID = identity.siret;
+	if (!isUnset(image)) node.image = image;
+
+	if (offers && offers.items.length > 0) {
+		node.hasOfferCatalog = {
+			'@type': 'OfferCatalog',
+			...(offers.name ? { name: offers.name } : {}),
+			itemListElement: offers.items.map((item) => ({
+				'@type': 'Offer',
+				itemOffered: {
+					'@type': item.type,
+					name: item.name,
+					...(item.description ? { description: item.description } : {}),
+				},
+			})),
+		};
+	}
 
 	return node;
+}
+
+/**
+ * Build the `BreadcrumbList` JSON-LD node for a page trail.
+ *
+ * The current page (the last crumb) is expected without `url`: it is listed
+ * by name only, per the schema.org breadcrumb guidance.
+ *
+ * @param trail - The ordered crumbs, from the site root down.
+ * @returns The `BreadcrumbList` node.
+ *
+ * @example
+ * breadcrumbJsonLd([{ name: appName, url: `${appUrl}/` }, { name: seoTitle }])
+ */
+export function breadcrumbJsonLd(trail: BreadcrumbCrumb[]): JsonLd {
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: trail.map((crumb, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			name: crumb.name,
+			...(crumb.url ? { item: crumb.url } : {}),
+		})),
+	};
 }

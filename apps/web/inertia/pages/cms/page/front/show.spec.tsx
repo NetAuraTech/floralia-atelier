@@ -7,17 +7,25 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { client } from '~/client';
 import ShowPage from '~/pages/cms/page/front/show';
 import type { ResolvedPageContent } from '#cms/types/page';
+import type { LegalIdentity } from '#types/seo';
 
 /**
- * Public page SEO contract: the `LocalBusiness` JSON-LD carries the florist's
- * identity (name, phone, Samer address, opening hours, price range, offer
- * catalog) and the per-page meta falls back from the page title to the
- * default og image when the page sets none.
+ * Public page SEO contract: the `LocalBusiness` JSON-LD carries the publisher
+ * identity resolved from the `LEGAL_*` env, the `BreadcrumbList` carries the
+ * page trail, and the per-page meta falls back to the default og image when
+ * the page sets none.
  *
  * The real page runs end to end; only Inertia's server-provided `usePage`
  * context is substituted and `Head` renders its children inline so the meta
  * and JSON-LD assertions read the real DOM.
  */
+
+const legalIdentity: LegalIdentity = {
+	name: 'Floralia Atelier',
+	siret: '12345678901234',
+	address: '62830, Samer, France',
+	phone: '+33 6 58 02 95 39',
+};
 
 const { mockPageProps, capturedHead } = vi.hoisted(() => ({
 	mockPageProps: {
@@ -25,9 +33,10 @@ const { mockPageProps, capturedHead } = vi.hoisted(() => ({
 			email: 'contact@floralia-atelier.fr',
 			app_url: 'http://localhost:3333',
 			app_name: 'Floralia Atelier',
+			legal_identity: {} as LegalIdentity,
 		},
 	},
-	capturedHead: { title: undefined as string | undefined, children: undefined as ReactNode },
+	capturedHead: { children: undefined as ReactNode },
 }));
 
 vi.mock('@inertiajs/react', async (importOriginal) => {
@@ -35,8 +44,7 @@ vi.mock('@inertiajs/react', async (importOriginal) => {
 	return {
 		...actual,
 		usePage: () => mockPageProps,
-		Head: ({ title, children }: { title?: string; children?: ReactNode }) => {
-			capturedHead.title = title;
+		Head: ({ children }: { children?: ReactNode }) => {
 			capturedHead.children = children;
 			return <>{children}</>;
 		},
@@ -49,7 +57,7 @@ let container: HTMLDivElement;
 let root: Root;
 
 beforeEach(() => {
-	capturedHead.title = undefined;
+	mockPageProps.props.legal_identity = legalIdentity;
 	capturedHead.children = undefined;
 	container = document.createElement('div');
 	document.body.appendChild(container);
@@ -78,86 +86,79 @@ function render(props: {
 	});
 }
 
-function jsonLd() {
-	const script = container.querySelector('script[type="application/ld+json"]');
-	expect(script).not.toBeNull();
-	return JSON.parse(script!.textContent!);
+function jsonLdScripts() {
+	return [...container.querySelectorAll('script[type="application/ld+json"]')].map((script) =>
+		JSON.parse(script.textContent!),
+	);
 }
 
 /**
  * React 19 hoists `<meta>` tags out of the jsdom render tree, so the meta
  * assertions read the elements captured by the `Head` mock rather than the
- * DOM. Walks the captured children and returns the `content` of the first
- * meta element whose `name`/`property` matches, or `undefined` when absent.
+ * DOM. Walks the captured children and returns the elements of a given type.
  */
-function collectMetas(node: ReactNode, out: ReactElement[] = []): ReactElement[] {
+function collect(node: ReactNode, type: string, out: ReactElement[] = []): ReactElement[] {
 	if (isValidElement(node)) {
-		if (node.type === 'meta') out.push(node);
-		collectMetas((node.props as { children?: ReactNode }).children, out);
+		if (node.type === type) out.push(node);
+		collect((node.props as { children?: ReactNode }).children, type, out);
 	} else if (Array.isArray(node)) {
-		for (const child of node) collectMetas(child, out);
+		for (const child of node) collect(child, type, out);
 	}
 
 	return out;
 }
 
 function headMetaContent(attr: 'name' | 'property', value: string): string | undefined {
-	const meta = collectMetas(capturedHead.children).find((m) => (m.props as Record<string, unknown>)[attr] === value);
+	const meta = collect(capturedHead.children, 'meta').find((m) => (m.props as Record<string, unknown>)[attr] === value);
 
 	return meta ? ((meta.props as Record<string, unknown>).content as string | undefined) : undefined;
 }
 
+function headTitle(): string | undefined {
+	const title = collect(capturedHead.children, 'title')[0];
+
+	return title ? ((title.props as { children?: string }).children ?? undefined) : undefined;
+}
+
 describe('ShowPage — SEO', () => {
-	it('emits the florist LocalBusiness JSON-LD', async () => {
+	it('emits the publisher LocalBusiness JSON-LD', async () => {
 		await render({ title: 'Accueil', metaTitle: null, metaDescription: null, metaImage: null });
 
-		const ld = jsonLd();
+		const [ld] = jsonLdScripts();
 
 		expect(ld['@type']).toBe('LocalBusiness');
 		expect(ld.name).toBe('Floralia Atelier');
 		expect(ld['@id']).toBe('http://localhost:3333/#business');
 		expect(ld.url).toBe('http://localhost:3333');
-		expect(ld.logo).toBe('http://localhost:3333/logo.png');
+		expect(ld.legalName).toBe('Floralia Atelier');
 		expect(ld.image).toBe('http://localhost:3333/og-image.jpg');
-		expect(ld.telephone).toBe('+336-58-02-95-39');
+		expect(ld.telephone).toBe('+33 6 58 02 95 39');
+		expect(ld.taxID).toBe('12345678901234');
 		expect(ld.email).toBe('contact@floralia-atelier.fr');
-		expect(ld.address).toMatchObject({
+		expect(ld.address).toEqual({
 			'@type': 'PostalAddress',
-			addressLocality: 'Samer',
 			postalCode: '62830',
+			addressLocality: 'Samer',
 			addressCountry: 'FR',
 		});
-		expect(ld.openingHoursSpecification[0]).toMatchObject({
-			opens: '09:00',
-			closes: '18:00',
-			dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-		});
-		expect(ld.priceRange).toBe('€€');
-		expect(ld.hasOfferCatalog.name).toBe('Services floraux');
-		expect(ld.hasOfferCatalog.itemListElement).toHaveLength(4);
-
-		const serviceNames = (ld.hasOfferCatalog.itemListElement as { itemOffered: { name: string } }[]).map(
-			(offer) => offer.itemOffered.name,
-		);
-		expect(serviceNames).toEqual([
-			'Nettoyage de sépultures',
-			'Fleurissement de sépultures',
-			'Bouquets & compositions sur mesure',
-			"Décoration florale d'événements",
-		]);
 	});
 
-	it('emits the default og image dimensions when the page sets no custom image', async () => {
+	it('emits the breadcrumb trail', async () => {
 		await render({ title: 'Accueil', metaTitle: null, metaDescription: null, metaImage: null });
 
-		expect(headMetaContent('property', 'og:image:width')).toBe('1200');
-		expect(headMetaContent('property', 'og:image:height')).toBe('630');
+		const [, breadcrumb] = jsonLdScripts();
+
+		expect(breadcrumb['@type']).toBe('BreadcrumbList');
+		expect(breadcrumb.itemListElement).toEqual([
+			{ '@type': 'ListItem', position: 1, name: 'Floralia Atelier', item: 'http://localhost:3333/' },
+			{ '@type': 'ListItem', position: 2, name: 'Accueil' },
+		]);
 	});
 
 	it('uses the page meta title and description when set, and the fallbacks otherwise', async () => {
 		await render({ title: 'Accueil', metaTitle: null, metaDescription: null, metaImage: null });
 
-		expect(capturedHead.title).toBe('Accueil');
+		expect(headTitle()).toBe('Accueil');
 		expect(headMetaContent('name', 'description')).toBeUndefined();
 		expect(headMetaContent('property', 'og:image')).toBe('http://localhost:3333/og-image.jpg');
 
@@ -177,7 +178,7 @@ describe('ShowPage — SEO', () => {
 			);
 		});
 
-		expect(capturedHead.title).toBe('Entretien de sépultures à Samer');
+		expect(headTitle()).toBe('Entretien de sépultures à Samer');
 		expect(headMetaContent('name', 'description')).toBe('Nous nettoyons et fleurissons votre sépulture.');
 		expect(headMetaContent('property', 'og:image')).toBe('https://files.example.com/meta.jpg');
 	});

@@ -40,3 +40,13 @@ export const MultipleLinks = () => (
 		]}
 	/>
 );
+
+export const SectionAnchors = () => (
+	<HeaderWithMenu
+		homeHref="/"
+		links={[
+			{ label: 'Services', href: '/#services' },
+			{ label: 'About', href: '/#about' },
+		]}
+	/>
+);
